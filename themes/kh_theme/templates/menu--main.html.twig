@@ -1,0 +1,7 @@
+{% if items %}
+  <ul{{ attributes }}>
+    {% for item in items %}
+      <li><a href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}

@@ -1,0 +1,9 @@
+uuid: 651e4ff4-4e70-421f-ab36-e3ccda4dc8b1
+langcode: id
+status: true
+dependencies: {  }
+name: 'Jenis Pembelajaran'
+vid: jenis_pembelajaran
+description: null
+weight: 0
+new_revision: false

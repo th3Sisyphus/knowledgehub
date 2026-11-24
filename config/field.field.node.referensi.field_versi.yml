@@ -1,0 +1,19 @@
+uuid: be611092-9a0e-43c6-b736-a05a8910a122
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_versi
+    - node.type.referensi
+id: node.referensi.field_versi
+field_name: field_versi
+entity_type: node
+bundle: referensi
+label: Versi
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

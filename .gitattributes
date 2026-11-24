@@ -1,0 +1,6 @@
+# Skrip shell dan berkas Drupal harus selalu LF. Git for Windows bisa mengubahnya
+# menjadi CRLF saat checkout, dan bash gagal membaca skrip CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+*.jpg binary

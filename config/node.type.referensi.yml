@@ -1,0 +1,11 @@
+uuid: 7793bcaf-843a-4e6b-ac3a-f2898ec5ed56
+langcode: id
+status: true
+dependencies: {  }
+name: Referensi
+type: referensi
+description: 'Konten grup Referensi.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

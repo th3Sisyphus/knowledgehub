@@ -1,0 +1,19 @@
+uuid: 2c06b7c5-e105-447a-9da6-b15ffce77515
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slug_asal
+    - node.type.bantuan
+id: node.bantuan.field_slug_asal
+field_name: field_slug_asal
+entity_type: node
+bundle: bantuan
+label: 'ID asal (prototipe)'
+description: 'Penanda impor dari prototipe. Jangan diubah.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

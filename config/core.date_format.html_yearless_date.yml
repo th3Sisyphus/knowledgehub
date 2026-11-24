@@ -1,0 +1,10 @@
+uuid: 79aa1b6f-3ebb-41d4-b743-749a8df08a85
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 5VpawMrKPEPCkoO4YpPa0TDFO2dgiIHfTziJtwlmUxc
+id: html_yearless_date
+label: 'Tanggal tanpa tahun HTML'
+locked: true
+pattern: m-d

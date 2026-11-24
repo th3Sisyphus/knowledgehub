@@ -1,0 +1,6 @@
+<article{{ attributes.addClass('teaser') }}>
+  <span class="teaser-type">{{ kh.jenis }}{% if kh.diff %} · {{ kh.diff }}{% endif %}</span>
+  <h3><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
+  <p>{{ kh.ringkasan }}</p>
+  <ul class="tags">{% for t in kh.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+</article>

@@ -1,0 +1,9 @@
+uuid: 6d89fe36-b790-4117-81cc-4b344b0402e1
+langcode: id
+status: true
+dependencies: {  }
+name: Departemen
+vid: departemen
+description: null
+weight: 0
+new_revision: false

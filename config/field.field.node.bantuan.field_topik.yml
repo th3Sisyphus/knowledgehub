@@ -1,0 +1,28 @@
+uuid: 42ecee6e-66a1-4e64-b71a-573fac0ea447
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topik
+    - node.type.bantuan
+    - taxonomy.vocabulary.topik
+id: node.bantuan.field_topik
+field_name: field_topik
+entity_type: node
+bundle: bantuan
+label: Topik
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topik: topik
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

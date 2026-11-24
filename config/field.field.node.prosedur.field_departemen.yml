@@ -1,0 +1,28 @@
+uuid: f74d7167-39b7-4e0e-a777-0c04b91e557a
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departemen
+    - node.type.prosedur
+    - taxonomy.vocabulary.departemen
+id: node.prosedur.field_departemen
+field_name: field_departemen
+entity_type: node
+bundle: prosedur
+label: Departemen
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      departemen: departemen
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

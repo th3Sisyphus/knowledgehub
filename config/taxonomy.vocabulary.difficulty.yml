@@ -1,0 +1,9 @@
+uuid: b113aced-57da-4475-884c-120b4fbe777c
+langcode: id
+status: true
+dependencies: {  }
+name: Difficulty
+vid: difficulty
+description: null
+weight: 0
+new_revision: false

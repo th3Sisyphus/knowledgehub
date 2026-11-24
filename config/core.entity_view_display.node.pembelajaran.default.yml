@@ -1,0 +1,131 @@
+uuid: f66491cb-042e-4cbe-82b8-b01d707f9470
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.field.node.pembelajaran.body
+    - field.field.node.pembelajaran.field_audience
+    - field.field.node.pembelajaran.field_departemen
+    - field.field.node.pembelajaran.field_difficulty
+    - field.field.node.pembelajaran.field_durasi
+    - field.field.node.pembelajaran.field_jenis
+    - field.field.node.pembelajaran.field_ringkasan
+    - field.field.node.pembelajaran.field_slug_asal
+    - field.field.node.pembelajaran.field_sumber
+    - field.field.node.pembelajaran.field_tanggal
+    - field.field.node.pembelajaran.field_topik
+    - node.type.pembelajaran
+  module:
+    - datetime
+    - text
+    - user
+id: node.pembelajaran.default
+targetEntityType: node
+bundle: pembelajaran
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_audience:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_departemen:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_difficulty:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_durasi:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  field_jenis:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ringkasan:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_slug_asal:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 40
+    region: content
+  field_sumber:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 25
+    region: content
+  field_tanggal:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  field_topik:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

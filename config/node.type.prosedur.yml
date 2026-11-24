@@ -1,0 +1,11 @@
+uuid: c1d28e18-3f86-4926-8bb5-d826d3c6e76d
+langcode: id
+status: true
+dependencies: {  }
+name: Prosedur
+type: prosedur
+description: 'Konten grup Prosedur.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

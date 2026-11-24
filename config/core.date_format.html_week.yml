@@ -1,0 +1,10 @@
+uuid: 1564964a-9145-48ee-bff9-f35ba9a19fbb
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: wKD4WsoV_wFgv2vgI4mcAAFSIzrye17ykzdwrnApkfY
+id: html_week
+label: 'Pekan HTML'
+locked: true
+pattern: Y-\WW

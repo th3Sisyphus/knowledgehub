@@ -1,0 +1,14 @@
+uuid: b9f06540-9b90-4f85-9c4c-c19fb4d8a60c
+langcode: id
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: kh_term
+label: 'Knowledge Hub: term'
+type: 'canonical_entities:taxonomy_term'
+pattern: '/[term:vocabulary]/[term:name]'
+selection_criteria: {  }
+selection_logic: and
+weight: 0
+relationships: {  }

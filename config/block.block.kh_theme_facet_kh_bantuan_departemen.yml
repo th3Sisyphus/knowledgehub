@@ -1,0 +1,27 @@
+uuid: 4433b2c9-16f3-4584-a62f-02d94342251f
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_bantuan_departemen
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_bantuan_departemen
+theme: kh_theme
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'facet_block:kh_bantuan_departemen'
+settings:
+  id: 'facet_block:kh_bantuan_departemen'
+  label: Departemen
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /bantuan

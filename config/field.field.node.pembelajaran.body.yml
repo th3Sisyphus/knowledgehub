@@ -1,0 +1,24 @@
+uuid: 70dd640d-fe82-4914-8353-82b1c03ab1a3
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.pembelajaran
+  module:
+    - text
+id: node.pembelajaran.body
+field_name: body
+entity_type: node
+bundle: pembelajaran
+label: Isi
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

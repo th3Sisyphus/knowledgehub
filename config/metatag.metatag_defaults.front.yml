@@ -1,0 +1,11 @@
+uuid: 5fe4de88-46ff-4358-ab31-4bf78c497972
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 1noCXlegCr5HFehQRF1ViXy1jhU1jZ_sNN99a8Sj5jo
+id: front
+label: 'Halaman depan'
+tags:
+  canonical_url: '[site:url]'
+  shortlink: '[site:url]'

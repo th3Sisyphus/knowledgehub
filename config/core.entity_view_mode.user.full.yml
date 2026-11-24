@@ -1,0 +1,13 @@
+uuid: fd65cbca-b0eb-40b6-b8ee-56be8f6bb1b1
+langcode: id
+status: false
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: ZbXunWS_xAvMZXFfinyvClDAb_RCVLt7gAzE3v16E-Q
+id: user.full
+label: 'Akun pengguna'
+description: ''
+targetEntityType: user
+cache: true

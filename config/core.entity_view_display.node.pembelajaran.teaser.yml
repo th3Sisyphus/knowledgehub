@@ -1,0 +1,61 @@
+uuid: 67f46ffe-3f23-494c-8af1-1ecd82c5a5cd
+langcode: id
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.pembelajaran.body
+    - field.field.node.pembelajaran.field_audience
+    - field.field.node.pembelajaran.field_departemen
+    - field.field.node.pembelajaran.field_difficulty
+    - field.field.node.pembelajaran.field_durasi
+    - field.field.node.pembelajaran.field_jenis
+    - field.field.node.pembelajaran.field_ringkasan
+    - field.field.node.pembelajaran.field_slug_asal
+    - field.field.node.pembelajaran.field_sumber
+    - field.field.node.pembelajaran.field_tanggal
+    - field.field.node.pembelajaran.field_topik
+    - node.type.pembelajaran
+id: node.pembelajaran.teaser
+targetEntityType: node
+bundle: pembelajaran
+mode: teaser
+content:
+  field_departemen:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_jenis:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ringkasan:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  content_moderation_control: true
+  field_audience: true
+  field_difficulty: true
+  field_durasi: true
+  field_slug_asal: true
+  field_sumber: true
+  field_tanggal: true
+  field_topik: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

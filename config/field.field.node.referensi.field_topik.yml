@@ -1,0 +1,28 @@
+uuid: 683c5b0a-85d3-41df-a58b-4c21e60105fb
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topik
+    - node.type.referensi
+    - taxonomy.vocabulary.topik
+id: node.referensi.field_topik
+field_name: field_topik
+entity_type: node
+bundle: referensi
+label: Topik
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topik: topik
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

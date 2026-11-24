@@ -1,0 +1,13 @@
+uuid: 45e862ec-0024-4439-bbd1-a5d3ba946a2e
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: lDM9mvIGAu8Sw8rt-uCO4Sr7yX5VPrDPxYcawkbKd6k
+id: node_make_unsticky_action
+label: 'Batalkan penyematan konten di bagian atas'
+type: node
+plugin: node_make_unsticky_action
+configuration: {  }

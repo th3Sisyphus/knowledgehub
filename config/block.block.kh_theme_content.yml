@@ -1,0 +1,20 @@
+uuid: e5320d2f-cd2a-456f-8566-456a4fe03422
+langcode: id
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_content
+theme: kh_theme
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Konten utama'
+  label_display: '0'
+  provider: system
+visibility: {  }

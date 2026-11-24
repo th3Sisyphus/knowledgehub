@@ -1,0 +1,13 @@
+uuid: 257ce237-f521-488a-890d-1e06f570d5be
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: sOb26JSy3fGpWkvR0WYN6_hMqj_6d1rvbvrkzp1yya0
+id: node_make_sticky_action
+label: 'Sematkan konten di bagian atas'
+type: node
+plugin: node_make_sticky_action
+configuration: {  }

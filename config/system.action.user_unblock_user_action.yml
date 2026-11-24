@@ -1,0 +1,13 @@
+uuid: 6be15df7-5abc-4462-a182-35d393898607
+langcode: id
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: SPsUXsR3Rc8d1y3gewzaAKWa1ncea_ywXX3f7LTn7k0
+id: user_unblock_user_action
+label: 'Buka blokir pengguna yang dipilih'
+type: user
+plugin: user_unblock_user_action
+configuration: {  }

@@ -1,0 +1,13 @@
+uuid: 89e0eb60-858c-4b12-bbd9-1ae98fe4c3c4
+langcode: id
+status: true
+dependencies:
+  enforced:
+    theme:
+      - olivero
+_core:
+  default_config_hash: z7ynTCss9wwEi8ojENJ08qx44RN6leI-tqoN2o5QzdE
+id: olivero_medium
+label: 'Olivero sedang'
+locked: false
+pattern: 'j F Y'

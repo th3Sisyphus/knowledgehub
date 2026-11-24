@@ -1,0 +1,13 @@
+uuid: e8944471-50b5-4385-a573-7a71a5835f0f
+langcode: id
+status: false
+dependencies:
+  module:
+    - block_content
+_core:
+  default_config_hash: Q7yUUYeRLByl-MCGveKKF_KhAtNICLCMJuKWfugCvso
+id: block_content.full
+label: Penuh
+description: ''
+targetEntityType: block_content
+cache: true

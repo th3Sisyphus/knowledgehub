@@ -1,0 +1,63 @@
+uuid: 35d60fa4-88fa-4a12-af0b-3add91cd5f54
+langcode: id
+status: true
+dependencies:
+  module:
+    - content_moderation
+_core:
+  default_config_hash: T7gMMyFbTYLalxpIOnzJebvek2OW0b1RgLVE9I2y228
+id: editorial
+label: Editorial
+type: content_moderation
+type_settings:
+  states:
+    archived:
+      label: Diarsipkan
+      weight: 5
+      published: false
+      default_revision: true
+    draft:
+      label: Draf
+      weight: -5
+      published: false
+      default_revision: false
+    published:
+      label: Diterbitkan
+      weight: 0
+      published: true
+      default_revision: true
+  transitions:
+    archive:
+      label: Arsipkan
+      from:
+        - published
+      to: archived
+      weight: 2
+    archived_draft:
+      label: 'Pulihkan ke draf'
+      from:
+        - archived
+      to: draft
+      weight: 3
+    archived_published:
+      label: Pulihkan
+      from:
+        - archived
+      to: published
+      weight: 4
+    create_new_draft:
+      label: 'Buat draf baru'
+      from:
+        - draft
+        - published
+      to: draft
+      weight: 0
+    publish:
+      label: Terbitkan
+      from:
+        - draft
+        - published
+      to: published
+      weight: 1
+  entity_types: {  }
+  default_moderation_state: draft

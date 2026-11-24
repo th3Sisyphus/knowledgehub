@@ -1,0 +1,13 @@
+uuid: bc7816c9-9410-41ae-8dc0-2518b1f75d7f
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: LhdsoZPL_pFas2fjaAWue4zvrQ_tEVofLYtcNec-JGM
+id: node_save_action
+label: 'Simpan konten'
+type: node
+plugin: 'entity:save_action:node'
+configuration: {  }

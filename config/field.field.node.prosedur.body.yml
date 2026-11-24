@@ -1,0 +1,24 @@
+uuid: 24126635-ed03-4dd0-8476-452eeb3d0f33
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.prosedur
+  module:
+    - text
+id: node.prosedur.body
+field_name: body
+entity_type: node
+bundle: prosedur
+label: Isi
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

@@ -1,0 +1,10 @@
+uuid: 116d7391-2f84-4613-b46e-404adfa7118b
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: q7pDV2d9qFh1IVqvymOxUUYGSziZDeg961wURC0cSLs
+id: medium
+label: 'Tanggal sedang bawaan'
+locked: false
+pattern: 'D, j M Y - H:i'

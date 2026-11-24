@@ -1,0 +1,38 @@
+uuid: c1861c95-b7c4-40a3-b6f5-40d2ca578c36
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.alat_kerja
+    - node.type.bantuan
+    - node.type.pembelajaran
+    - node.type.prosedur
+    - node.type.referensi
+    - workflows.workflow.kh_editorial
+  module:
+    - content_moderation
+    - navigation
+    - node
+    - system
+id: auditor
+label: Auditor
+weight: 6
+is_admin: false
+permissions:
+  - 'access content'
+  - 'access content overview'
+  - 'access navigation'
+  - 'edit any alat_kerja content'
+  - 'edit any bantuan content'
+  - 'edit any pembelajaran content'
+  - 'edit any prosedur content'
+  - 'edit any referensi content'
+  - 'use kh_editorial transition approve'
+  - 'use kh_editorial transition archive'
+  - 'use kh_editorial transition archive_review'
+  - 'use kh_editorial transition reject'
+  - 'use kh_editorial transition restore'
+  - 'view all revisions'
+  - 'view any unpublished content'
+  - 'view latest version'
+  - 'view the administration theme'

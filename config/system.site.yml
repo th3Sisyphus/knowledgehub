@@ -1,0 +1,15 @@
+_core:
+  default_config_hash: ijfbzDTN4CbE7Sr-6ubWzy_t1vH4OtU1doNCLssVz-4
+langcode: id
+uuid: b405791e-1450-4cc9-a067-4f5da788a4a0
+name: 'Knowledge Hub'
+mail: admin@example.com
+slogan: 'Pusat Pengetahuan Internal'
+page:
+  403: ''
+  404: ''
+  front: /beranda
+admin_compact_mode: false
+weight_select_max: 100
+default_langcode: id
+mail_notification: null

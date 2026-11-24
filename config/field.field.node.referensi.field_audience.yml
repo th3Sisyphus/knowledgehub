@@ -1,0 +1,28 @@
+uuid: e0a7e362-5219-4c80-9f8e-1c1be5606d91
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audience
+    - node.type.referensi
+    - taxonomy.vocabulary.audience
+id: node.referensi.field_audience
+field_name: field_audience
+entity_type: node
+bundle: referensi
+label: Audience
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      audience: audience
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

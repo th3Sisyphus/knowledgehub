@@ -1,0 +1,19 @@
+uuid: 965ec734-b32e-4e16-a6c8-35af22abdd8a
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ringkasan
+    - node.type.pembelajaran
+id: node.pembelajaran.field_ringkasan
+field_name: field_ringkasan
+entity_type: node
+bundle: pembelajaran
+label: Ringkasan
+description: 'Satu kalimat, maksimal 160 karakter. Dipakai sebagai meta description.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

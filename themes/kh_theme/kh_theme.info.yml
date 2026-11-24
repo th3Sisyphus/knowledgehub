@@ -1,0 +1,18 @@
+name: 'Knowledge Hub'
+type: theme
+description: 'Tema Knowledge Hub: modern minimalis navy, putih, dan gold lembut. Header navy, hero pencarian, kartu area, facet kiri, konten terkait kanan, mode gelap.'
+package: Knowledge Hub
+core_version_requirement: ^11
+base theme: stable9
+libraries:
+  - kh_theme/global
+regions:
+  header: Header
+  primary_menu: 'Menu utama'
+  breadcrumb: Breadcrumb
+  highlighted: Pesan
+  page_title: 'Judul halaman'
+  help: Bantuan
+  content: Konten
+  sidebar_first: 'Filter (kiri)'
+  sidebar_second: 'Terkait (kanan)'

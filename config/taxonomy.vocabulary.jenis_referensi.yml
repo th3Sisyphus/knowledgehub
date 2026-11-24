@@ -1,0 +1,9 @@
+uuid: 11bb43e2-cc0b-4c36-beac-f777f3e34875
+langcode: id
+status: true
+dependencies: {  }
+name: 'Jenis Referensi'
+vid: jenis_referensi
+description: null
+weight: 0
+new_revision: false

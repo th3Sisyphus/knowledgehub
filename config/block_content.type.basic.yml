@@ -1,0 +1,10 @@
+uuid: fb6087f1-3735-4f8d-bafe-681b52637414
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: pQP5iQy4SdhAMVcjDUncCfkJmTofnHVtXrsMzx4k6Yk
+id: basic
+label: 'Blok dasar'
+revision: false
+description: 'Blok dasar berisi judul dan isi.'

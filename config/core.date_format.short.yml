@@ -1,0 +1,10 @@
+uuid: 8bba4f65-a9a5-4205-bc92-426f67c2d0eb
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: SAeixlV7Djy_Ggv_1P95TiqD4KUihA5icvU521tA84Y
+id: short
+label: 'Tanggal singkat bawaan'
+locked: false
+pattern: 'j M Y - H:i'

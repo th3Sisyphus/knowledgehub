@@ -1,0 +1,14 @@
+uuid: 370183d4-c6bf-41c7-9d24-0aedbef3de1c
+langcode: id
+status: true
+dependencies:
+  config:
+    - user.role.kh_admin
+  module:
+    - user
+id: user_add_role_action.kh_admin
+label: 'Tambahkan peran Admin kepada pengguna yang dipilih'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: kh_admin

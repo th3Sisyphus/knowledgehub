@@ -1,0 +1,21 @@
+uuid: 5809f9a7-c980-4c38-801a-a22142eb4c5e
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_ringkasan
+field_name: field_ringkasan
+entity_type: node
+type: string
+settings:
+  max_length: 160
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

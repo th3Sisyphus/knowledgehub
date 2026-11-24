@@ -1,0 +1,28 @@
+uuid: e61375c2-fd82-489f-a693-2fdbedff9115
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topik
+    - node.type.alat_kerja
+    - taxonomy.vocabulary.topik
+id: node.alat_kerja.field_topik
+field_name: field_topik
+entity_type: node
+bundle: alat_kerja
+label: Topik
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topik: topik
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

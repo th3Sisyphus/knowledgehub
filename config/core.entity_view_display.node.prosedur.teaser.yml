@@ -1,0 +1,61 @@
+uuid: 0bcbe1e3-b099-4f70-b23f-794eb8e57443
+langcode: id
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.prosedur.body
+    - field.field.node.prosedur.field_audience
+    - field.field.node.prosedur.field_departemen
+    - field.field.node.prosedur.field_jenis
+    - field.field.node.prosedur.field_ringkasan
+    - field.field.node.prosedur.field_slug_asal
+    - field.field.node.prosedur.field_sumber
+    - field.field.node.prosedur.field_tanggal
+    - field.field.node.prosedur.field_topik
+    - field.field.node.prosedur.field_versi
+    - field.field.node.prosedur.field_wajib
+    - node.type.prosedur
+id: node.prosedur.teaser
+targetEntityType: node
+bundle: prosedur
+mode: teaser
+content:
+  field_departemen:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_jenis:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ringkasan:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  content_moderation_control: true
+  field_audience: true
+  field_slug_asal: true
+  field_sumber: true
+  field_tanggal: true
+  field_topik: true
+  field_versi: true
+  field_wajib: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

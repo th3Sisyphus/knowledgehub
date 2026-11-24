@@ -1,0 +1,21 @@
+uuid: d6f6a35e-f4e2-4d7d-afa7-8fcc9f77e9da
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_wajib
+    - node.type.referensi
+id: node.referensi.field_wajib
+field_name: field_wajib
+entity_type: node
+bundle: referensi
+label: 'Wajib dipatuhi'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Aktif
+  off_label: Nonaktif
+field_type: boolean

@@ -1,0 +1,25 @@
+uuid: 16c716ca-b7c5-4647-801a-bc40a7a1e230
+langcode: id
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_main_menu
+theme: kh_theme
+region: primary_menu
+weight: 0
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Menu utama'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

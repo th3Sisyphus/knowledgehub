@@ -1,0 +1,19 @@
+uuid: bf8fe665-5096-4475-8fe8-712b28158d2c
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sumber
+    - node.type.prosedur
+id: node.prosedur.field_sumber
+field_name: field_sumber
+entity_type: node
+bundle: prosedur
+label: 'Kode sumber (inventaris)'
+description: 'Kode dari inventaris konten Milestone 2, contoh C03.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

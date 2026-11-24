@@ -1,0 +1,28 @@
+uuid: 310b19ed-86da-4d07-82a2-90dd378203e6
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_jenis
+    - node.type.referensi
+    - taxonomy.vocabulary.jenis_referensi
+id: node.referensi.field_jenis
+field_name: field_jenis
+entity_type: node
+bundle: referensi
+label: Jenis
+description: 'Hanya jenis milik grup Referensi.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      jenis_referensi: jenis_referensi
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

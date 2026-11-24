@@ -1,0 +1,27 @@
+uuid: c099e2d0-d764-4b81-a837-2c9568c2fd41
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_pembelajaran_difficulty
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_pembelajaran_difficulty
+theme: kh_theme
+region: sidebar_first
+weight: 1
+provider: null
+plugin: 'facet_block:kh_pembelajaran_difficulty'
+settings:
+  id: 'facet_block:kh_pembelajaran_difficulty'
+  label: Difficulty
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /pembelajaran

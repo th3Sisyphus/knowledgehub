@@ -1,0 +1,10 @@
+uuid: aa10013d-62c0-446b-acb5-f37c08e09973
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: sapEi2YDGoI9yQIT_WgIV2vUdQ6DScH0V3fAyTadAL0
+id: admin
+label: Administrasi
+description: 'Tautan tugas administratif'
+locked: true

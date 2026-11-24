@@ -1,0 +1,20 @@
+uuid: 129b16b0-e61e-4a9f-a391-b1886900879b
+langcode: id
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_messages
+theme: kh_theme
+region: highlighted
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: Pesan
+  label_display: '0'
+  provider: system
+visibility: {  }

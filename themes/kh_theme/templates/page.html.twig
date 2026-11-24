@@ -1,0 +1,53 @@
+{#
+  Halaman Knowledge Hub: header, menu jenis konten, konten, footer.
+  Beranda (is_front) dirender penuh oleh modul kh_home. Halaman lain: facet kiri, konten tengah, terkait kanan.
+#}
+<header class="site-header">
+  <a class="site-branding" href="{{ path('<front>') }}" rel="home">
+    <span class="site-name">{{ site_name }}</span>
+    <span class="site-slogan">Pusat Pengetahuan Internal</span>
+  </a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+  <nav class="primary-nav" id="primary-nav" aria-label="Navigasi utama">{{ page.primary_menu }}</nav>
+  <form class="header-search" action="{{ path('view.kh_katalog.page_cari') }}" method="get" role="search">
+    <label for="q-header" class="visually-hidden">Cari di Knowledge Hub</label>
+    <input id="q-header" name="search_api_fulltext" type="search" placeholder="Cari…">
+    <button type="submit" aria-label="Cari">Cari</button>
+  </form>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Ganti mode gelap atau terang"><span class="i-sun" aria-hidden="true">☀</span><span class="i-moon" aria-hidden="true">☾</span></button>
+</header>
+
+<main id="main-content" tabindex="-1">
+  {{ page.highlighted }}
+  {% if is_front %}
+    {{ page.content }}
+  {% else %}
+    {{ page.breadcrumb }}
+    {{ page.help }}
+    <div class="layout{% if page.sidebar_first %} layout--facets{% endif %}{% if page.sidebar_second %} layout--node{% endif %}">
+      {% if page.sidebar_first %}<aside class="sidebar facets" aria-label="Filter"><h2 class="facets-title">Filter</h2>{{ page.sidebar_first }}</aside>{% endif %}
+      <div class="main-col">
+        {% if not node %}{{ page.page_title }}{% endif %}
+        {{ page.content }}
+      </div>
+      {% if page.sidebar_second %}<aside class="sidebar related">{{ page.sidebar_second }}</aside>{% endif %}
+    </div>
+  {% endif %}
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="site-name">{{ site_name }}</span>
+      <p>Pusat pengetahuan internal organisasi. Dikelola Knowledge Manager dengan review berkala.</p>
+    </div>
+    <nav aria-label="Area utama footer"><h2>Area</h2><ul>
+      <li><a href="/prosedur">Prosedur</a></li><li><a href="/referensi">Referensi</a></li><li><a href="/pembelajaran">Pembelajaran</a></li><li><a href="/bantuan">Bantuan</a></li><li><a href="/alat-kerja">Alat Kerja</a></li>
+    </ul></nav>
+    <nav aria-label="Portal"><h2>Portal</h2><ul>
+      <li><a href="{{ path('<front>') }}">Beranda</a></li><li><a href="/cari">Pencarian</a></li><li><a href="/user/login">Masuk Admin</a></li>
+    </ul></nav>
+    <div><h2>Butuh bantuan?</h2><p>Helpdesk IT ext. 300<br><a href="mailto:km@organisasi.example">km@organisasi.example</a></p></div>
+  </div>
+  <p class="footer-bottom">© 2026 Knowledge Hub Organisasi · Manajemen Konten Web · Drupal 11</p>
+</footer>

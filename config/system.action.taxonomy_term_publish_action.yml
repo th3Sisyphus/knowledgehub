@@ -1,0 +1,13 @@
+uuid: 41c7e05d-0f1c-4105-84d5-786e1059e328
+langcode: id
+status: true
+dependencies:
+  module:
+    - taxonomy
+_core:
+  default_config_hash: DoVt_VGgVLcDD4XmVbSFzr0K17SJy9imFiYusKkJBgY
+id: taxonomy_term_publish_action
+label: 'Terbitkan istilah taksonomi'
+type: taxonomy_term
+plugin: 'entity:publish_action:taxonomy_term'
+configuration: {  }

@@ -1,0 +1,14 @@
+uuid: b92f38ac-4b7f-4c7f-a274-a826af74861d
+langcode: id
+status: true
+dependencies:
+  config:
+    - user.role.kh_admin
+  module:
+    - user
+id: user_remove_role_action.kh_admin
+label: 'Hapus peran Admin dari pengguna yang dipilih'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: kh_admin

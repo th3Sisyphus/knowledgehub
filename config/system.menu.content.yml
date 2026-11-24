@@ -1,0 +1,13 @@
+uuid: f3fbd8d8-28f5-4be8-ba8c-59975818cfe7
+langcode: id
+status: true
+dependencies:
+  enforced:
+    module:
+      - navigation
+_core:
+  default_config_hash: nqVwm91Uyib_rvFaNPF1MdYqHlmZ38w5rsOVVy4uWDw
+id: content
+label: Konten
+description: 'Content task links'
+locked: true

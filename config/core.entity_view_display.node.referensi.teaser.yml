@@ -1,0 +1,65 @@
+uuid: 9bdd015c-27cf-4085-8a50-a7665c550fdc
+langcode: id
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.referensi.body
+    - field.field.node.referensi.field_audience
+    - field.field.node.referensi.field_callout
+    - field.field.node.referensi.field_departemen
+    - field.field.node.referensi.field_jenis
+    - field.field.node.referensi.field_nomor
+    - field.field.node.referensi.field_ringkasan
+    - field.field.node.referensi.field_slug_asal
+    - field.field.node.referensi.field_sumber
+    - field.field.node.referensi.field_tanggal
+    - field.field.node.referensi.field_topik
+    - field.field.node.referensi.field_versi
+    - field.field.node.referensi.field_wajib
+    - node.type.referensi
+id: node.referensi.teaser
+targetEntityType: node
+bundle: referensi
+mode: teaser
+content:
+  field_departemen:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_jenis:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ringkasan:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  content_moderation_control: true
+  field_audience: true
+  field_callout: true
+  field_nomor: true
+  field_slug_asal: true
+  field_sumber: true
+  field_tanggal: true
+  field_topik: true
+  field_versi: true
+  field_wajib: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

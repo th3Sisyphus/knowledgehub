@@ -1,0 +1,9 @@
+uuid: 293dd29b-d049-4085-b969-e9ff13943f3b
+langcode: id
+status: true
+dependencies: {  }
+name: 'Jenis Alat Kerja'
+vid: jenis_alat_kerja
+description: null
+weight: 0
+new_revision: false

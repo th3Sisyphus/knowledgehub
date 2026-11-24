@@ -1,0 +1,14 @@
+uuid: c0a3855f-23fd-4c09-82a1-50d1cd67f294
+langcode: id
+status: true
+dependencies:
+  config:
+    - user.role.auditor
+  module:
+    - user
+id: user_add_role_action.auditor
+label: 'Tambahkan peran Auditor kepada pengguna yang dipilih'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: auditor

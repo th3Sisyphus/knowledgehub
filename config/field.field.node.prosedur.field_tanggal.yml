@@ -1,0 +1,21 @@
+uuid: f307f281-adf2-413e-908a-f8a7904b3b2c
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tanggal
+    - node.type.prosedur
+  module:
+    - datetime
+id: node.prosedur.field_tanggal
+field_name: field_tanggal
+entity_type: node
+bundle: prosedur
+label: Tanggal
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,35 @@
+{#
+  Profil pengguna: inisial, role, tanggal bergabung, dan tautan cepat.
+  Tautan cepat hanya tampil di profil milik sendiri, sesuai izin role.
+#}
+<article class="profile">
+  <div class="profile-head">
+    <span class="profile-avatar" aria-hidden="true">{{ kh_profile.initial }}</span>
+    <div class="profile-info">
+      {% for role in kh_profile.roles %}
+        <span class="profile-role">{{ role }}</span>
+      {% endfor %}
+      <p class="profile-since">Anggota sejak {{ kh_profile.since }}</p>
+    </div>
+  </div>
+
+  {% for description in kh_profile.descriptions %}
+    {% if description %}<p class="profile-about">{{ description }}</p>{% endif %}
+  {% endfor %}
+
+  {% if kh_profile.links %}
+    <h2 class="section-title">Pintasan</h2>
+    <div class="profile-links">
+      {% for link in kh_profile.links %}
+        <a class="profile-link" href="{{ link.url }}">
+          <strong>{{ link.title }}</strong>
+          <span>{{ link.text }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if kh_profile.logout %}
+    <p class="profile-logout"><a class="button" href="/user/logout">Keluar</a></p>
+  {% endif %}
+</article>

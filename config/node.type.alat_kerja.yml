@@ -1,0 +1,11 @@
+uuid: 1a1bbb23-3f76-4e0f-8c21-d68dce111373
+langcode: id
+status: true
+dependencies: {  }
+name: 'Alat Kerja'
+type: alat_kerja
+description: 'Konten grup Alat Kerja.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

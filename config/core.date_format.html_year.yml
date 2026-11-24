@@ -1,0 +1,10 @@
+uuid: 38f98b9b-5873-4437-9775-04e1a85a943f
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: OjekiQuX9RbVQ2_8jOHBL94RgYLePqX7wpfNGgcQzrk
+id: html_year
+label: 'Tahun HTML'
+locked: true
+pattern: 'Y'

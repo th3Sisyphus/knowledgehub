@@ -1,0 +1,11 @@
+uuid: 3a905036-dd48-4056-9cf8-8a16cd19d61c
+langcode: id
+status: true
+dependencies: {  }
+name: Pembelajaran
+type: pembelajaran
+description: 'Konten grup Pembelajaran.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

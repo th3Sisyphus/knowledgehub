@@ -1,0 +1,20 @@
+uuid: e5c42d1c-12ac-439f-889e-8b4558f74148
+langcode: id
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - kh_theme
+id: kh_theme_help
+theme: kh_theme
+region: help
+weight: 0
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Bantuan
+  label_display: '0'
+  provider: help
+visibility: {  }

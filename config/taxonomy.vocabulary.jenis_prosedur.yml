@@ -1,0 +1,9 @@
+uuid: cf669f86-68cd-49e2-8f51-788c7ddae1ae
+langcode: id
+status: true
+dependencies: {  }
+name: 'Jenis Prosedur'
+vid: jenis_prosedur
+description: null
+weight: 0
+new_revision: false

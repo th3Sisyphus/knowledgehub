@@ -1,0 +1,21 @@
+uuid: 33dcb4ab-506b-4316-b963-37fbd0c06c83
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_wajib
+    - node.type.prosedur
+id: node.prosedur.field_wajib
+field_name: field_wajib
+entity_type: node
+bundle: prosedur
+label: 'Wajib dipatuhi'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Aktif
+  off_label: Nonaktif
+field_type: boolean

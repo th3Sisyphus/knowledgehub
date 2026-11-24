@@ -1,0 +1,27 @@
+uuid: 5dfc5433-3b4e-4a4a-b44b-f4d8353a5c7e
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_prosedur_jenis
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_prosedur_jenis
+theme: kh_theme
+region: sidebar_first
+weight: 3
+provider: null
+plugin: 'facet_block:kh_prosedur_jenis'
+settings:
+  id: 'facet_block:kh_prosedur_jenis'
+  label: Jenis
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /prosedur

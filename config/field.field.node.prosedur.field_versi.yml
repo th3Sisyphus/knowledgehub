@@ -1,0 +1,19 @@
+uuid: bc0a668c-e206-4154-b532-07e10bcab7bd
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_versi
+    - node.type.prosedur
+id: node.prosedur.field_versi
+field_name: field_versi
+entity_type: node
+bundle: prosedur
+label: Versi
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

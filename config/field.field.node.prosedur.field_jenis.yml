@@ -1,0 +1,28 @@
+uuid: 83f5378c-c81b-4d4f-986b-053d0c79eecf
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_jenis
+    - node.type.prosedur
+    - taxonomy.vocabulary.jenis_prosedur
+id: node.prosedur.field_jenis
+field_name: field_jenis
+entity_type: node
+bundle: prosedur
+label: Jenis
+description: 'Hanya jenis milik grup Prosedur.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      jenis_prosedur: jenis_prosedur
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

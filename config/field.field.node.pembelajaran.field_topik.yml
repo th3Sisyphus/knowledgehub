@@ -1,0 +1,28 @@
+uuid: f3c4efba-fc9b-4813-aea3-5df3e3ee0222
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topik
+    - node.type.pembelajaran
+    - taxonomy.vocabulary.topik
+id: node.pembelajaran.field_topik
+field_name: field_topik
+entity_type: node
+bundle: pembelajaran
+label: Topik
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topik: topik
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

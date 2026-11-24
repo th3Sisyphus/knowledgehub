@@ -1,0 +1,27 @@
+uuid: fad04013-8cb1-4e07-82cd-dc84cb8fa664
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_alat_kerja_departemen
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_alat_kerja_departemen
+theme: kh_theme
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'facet_block:kh_alat_kerja_departemen'
+settings:
+  id: 'facet_block:kh_alat_kerja_departemen'
+  label: Departemen
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /alat-kerja

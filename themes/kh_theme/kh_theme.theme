@@ -1,0 +1,413 @@
+<?php
+
+/**
+ * @file
+ * Tema Knowledge Hub: data tampilan konten dan menu aktif.
+ */
+
+const KH_BUNDLES = ['prosedur', 'referensi', 'pembelajaran', 'bantuan', 'alat_kerja'];
+
+/**
+ * Implements hook_theme_suggestions_node_alter().
+ *
+ * Konten Knowledge Hub memakai template node--kh--full dan node--kh--teaser.
+ */
+function kh_theme_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  $node = $variables['elements']['#node'];
+  $view_mode = $variables['elements']['#view_mode'];
+
+  $is_kh_bundle = in_array($node->bundle(), KH_BUNDLES);
+  $is_supported_mode = in_array($view_mode, ['full', 'teaser']);
+
+  if ($is_kh_bundle && $is_supported_mode) {
+    $suggestions[] = 'node__kh__' . $view_mode;
+  }
+}
+
+/**
+ * Tanggal Indonesia, contoh "28 Oktober 2026".
+ *
+ * $add_months menggeser tanggal ke depan (dipakai untuk Review Date).
+ */
+function kh_theme_date($ymd, $add_months = 0) {
+  $months = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+  ];
+
+  $date = new DateTimeImmutable($ymd);
+  if ($add_months > 0) {
+    $date = $date->modify('+' . $add_months . ' months');
+  }
+
+  $month_name = $months[(int) $date->format('n') - 1];
+  return $date->format('j') . ' ' . $month_name . ' ' . $date->format('Y');
+}
+
+/**
+ * Nilai teks sebuah field, atau string kosong bila field tidak ada atau kosong.
+ */
+function kh_theme_field_value($node, $field_name) {
+  if (!$node->hasField($field_name)) {
+    return '';
+  }
+  if ($node->get($field_name)->isEmpty()) {
+    return '';
+  }
+  return $node->get($field_name)->value;
+}
+
+/**
+ * Nama term dari field referensi satu nilai, atau string kosong.
+ */
+function kh_theme_term_label($node, $field_name) {
+  if (!$node->hasField($field_name)) {
+    return '';
+  }
+  if ($node->get($field_name)->isEmpty()) {
+    return '';
+  }
+  return $node->get($field_name)->entity->label();
+}
+
+/**
+ * Daftar nama term dari field referensi banyak nilai.
+ */
+function kh_theme_term_labels($node, $field_name) {
+  $labels = [];
+  if (!$node->hasField($field_name)) {
+    return $labels;
+  }
+  foreach ($node->get($field_name)->referencedEntities() as $term) {
+    $labels[] = $term->label();
+  }
+  return $labels;
+}
+
+/**
+ * Durasi detik menjadi "mm:ss menit".
+ */
+function kh_theme_duration($seconds) {
+  $minutes = intdiv($seconds, 60);
+  $rest = $seconds % 60;
+  return sprintf('%02d:%02d menit', $minutes, $rest);
+}
+
+/**
+ * Baris info di bawah judul: nomor, durasi, tanggal, kode sumber.
+ */
+function kh_theme_meta_line($node, $jenis, $date) {
+  $parts = [];
+
+  $number = kh_theme_field_value($node, 'field_nomor');
+  if ($number !== '') {
+    $parts[] = 'Nomor ' . $number;
+  }
+
+  $duration = kh_theme_field_value($node, 'field_durasi');
+  if ($duration !== '') {
+    $parts[] = kh_theme_duration((int) $duration);
+  }
+
+  if ($date !== '') {
+    $prefix = 'Diperbarui ';
+    if ($jenis === 'Kebijakan') {
+      $prefix = 'Berlaku sejak ';
+    }
+    $parts[] = $prefix . kh_theme_date($date);
+  }
+
+  $source = kh_theme_field_value($node, 'field_sumber');
+  if ($source !== '') {
+    $parts[] = 'Sumber ' . $source;
+  }
+
+  return implode(' · ', $parts);
+}
+
+/**
+ * Status moderasi sebagai kode (draft, in_review, published, archived).
+ */
+function kh_theme_state($node) {
+  if ($node->hasField('moderation_state')) {
+    return $node->get('moderation_state')->value;
+  }
+  if ($node->isPublished()) {
+    return 'published';
+  }
+  return 'draft';
+}
+
+/**
+ * Kotak ringkasan field di atas isi (Jenis, Departemen, Audience, Topik, Difficulty).
+ * Field yang kosong dilewati.
+ */
+function kh_theme_summary_fields($jenis, $dept, $audience, $topic, $difficulty) {
+  $candidates = [
+    'Jenis' => $jenis,
+    'Departemen' => $dept,
+    'Audience' => implode(', ', $audience),
+    'Topik' => $topic,
+    'Difficulty' => $difficulty,
+  ];
+
+  $fields = [];
+  foreach ($candidates as $label => $value) {
+    if ($value !== '') {
+      $fields[] = ['label' => $label, 'value' => $value];
+    }
+  }
+  return $fields;
+}
+
+/**
+ * Blok Reviewer, Review Date, Versi, dan Tautan tetap.
+ */
+function kh_theme_review_fields($node, $dept, $date) {
+  $reviewer = 'Kepala Bagian ' . $dept;
+  if ($dept === 'IT') {
+    $reviewer = 'Helpdesk IT';
+  }
+
+  $version = kh_theme_field_value($node, 'field_versi');
+  if ($version === '') {
+    $version = '1.0';
+  }
+
+  $fields = [];
+  $fields[] = ['label' => 'Reviewer', 'value' => $reviewer];
+  if ($date !== '') {
+    $fields[] = ['label' => 'Review Date', 'value' => kh_theme_date($date, 12)];
+  }
+  $fields[] = ['label' => 'Versi', 'value' => $version];
+
+  $path = $node->toUrl()->toString();
+  $fields[] = ['label' => 'Tautan tetap', 'value' => $path, 'href' => $path];
+
+  return $fields;
+}
+
+/**
+ * Tag di teaser: departemen, audience, topik. Yang kosong dilewati.
+ */
+function kh_theme_tags($dept, $audience, $topic) {
+  $tags = array_merge([$dept], $audience, [$topic]);
+
+  $result = [];
+  foreach ($tags as $tag) {
+    if ($tag !== '') {
+      $result[] = $tag;
+    }
+  }
+  return $result;
+}
+
+/**
+ * Implements hook_preprocess_node().
+ *
+ * Menyiapkan variabel $kh untuk template node--kh--full dan node--kh--teaser.
+ */
+function kh_theme_preprocess_node(array &$variables) {
+  $node = $variables['node'];
+  if (!in_array($node->bundle(), KH_BUNDLES)) {
+    return;
+  }
+
+  $jenis = kh_theme_term_label($node, 'field_jenis');
+  $dept = kh_theme_term_label($node, 'field_departemen');
+  $topic = kh_theme_term_label($node, 'field_topik');
+  $difficulty = kh_theme_term_label($node, 'field_difficulty');
+  $audience = kh_theme_term_labels($node, 'field_audience');
+  $date = kh_theme_field_value($node, 'field_tanggal');
+
+  $state = kh_theme_state($node);
+  $state_names = [
+    'draft' => 'Draft',
+    'in_review' => 'In Review',
+    'published' => 'Published',
+    'archived' => 'Archived',
+  ];
+  $state_name = $state;
+  if (isset($state_names[$state])) {
+    $state_name = $state_names[$state];
+  }
+
+  $variables['kh'] = [
+    'jenis' => $jenis,
+    'jenis_class' => preg_replace('/[^a-z0-9]+/', '-', strtolower($jenis)),
+    'diff' => $difficulty,
+    'ringkasan' => kh_theme_field_value($node, 'field_ringkasan'),
+    'tags' => kh_theme_tags($dept, $audience, $topic),
+    'meta' => kh_theme_meta_line($node, $jenis, $date),
+    'status' => $state_name,
+    'status_class' => $state,
+    'callout' => kh_theme_field_value($node, 'field_callout'),
+    'fields' => kh_theme_summary_fields($jenis, $dept, $audience, $topic, $difficulty),
+    'review' => kh_theme_review_fields($node, $dept, $date),
+  ];
+  $variables['#cache']['tags'][] = 'node:' . $node->id();
+}
+
+/**
+ * Implements hook_preprocess_menu__main().
+ *
+ * Menandai menu aktif: halaman grup dan semua konten di bawah alamatnya,
+ * contoh /prosedur/sop-perjalanan-dinas menyalakan menu Prosedur.
+ * Link ke beranda dibuang karena logo di header sudah menuju beranda.
+ */
+function kh_theme_preprocess_menu__main(array &$variables) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  $alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+  foreach ($variables['items'] as $key => &$item) {
+    $href = $item['url']->toString();
+
+    if ($href === '/' || $href === '/beranda') {
+      unset($variables['items'][$key]);
+      continue;
+    }
+
+    $is_same_page = ($alias === $href);
+    $is_child_page = (strpos($alias, $href . '/') === 0);
+    $item['is_current'] = $is_same_page || $is_child_page;
+  }
+
+  $variables['#cache']['contexts'][] = 'url.path';
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function kh_theme_preprocess_page(array &$variables) {
+  $variables['site_name'] = \Drupal::config('system.site')->get('name');
+}
+
+/**
+ * Deskripsi singkat tiap role untuk halaman profil.
+ */
+function kh_theme_role_description($role_id) {
+  $descriptions = [
+    'super_admin' => 'Akses penuh: modul, akun, role, workflow, dan semua konten.',
+    'kh_admin' => 'Membuat dan menyunting konten sendiri, mengelola term, lalu mengirim ke review.',
+    'auditor' => 'Melihat semua status konten, menyetujui atau mengembalikan konten yang direview.',
+  ];
+
+  if (isset($descriptions[$role_id])) {
+    return $descriptions[$role_id];
+  }
+  return '';
+}
+
+/**
+ * Tautan cepat di halaman profil, hanya yang boleh dipakai akun ini.
+ *
+ * Tiap tautan: judul, alamat, penjelasan, dan izin yang dibutuhkan.
+ */
+function kh_theme_profile_links($account) {
+  $candidates = [
+    [
+      'title' => 'Tambah konten',
+      'url' => '/node/add',
+      'text' => 'Buat Prosedur, Referensi, Pembelajaran, Bantuan, atau Alat Kerja.',
+      'permission' => 'create prosedur content',
+    ],
+    [
+      'title' => 'Kelola konten',
+      'url' => '/admin/content',
+      'text' => 'Daftar semua konten dan statusnya.',
+      'permission' => 'access content overview',
+    ],
+    [
+      'title' => 'Antrian moderasi',
+      'url' => '/admin/content/moderated',
+      'text' => 'Setujui atau kembalikan konten yang menunggu review.',
+      'permission' => 'view any unpublished content',
+    ],
+    [
+      'title' => 'Kelola term',
+      'url' => '/admin/structure/taxonomy',
+      'text' => 'Departemen, Topik, Audience, Difficulty, dan Jenis.',
+      'permission' => 'access taxonomy overview',
+    ],
+    [
+      'title' => 'Kelola akun',
+      'url' => '/admin/people',
+      'text' => 'Tambah akun dan atur role.',
+      'permission' => 'administer users',
+    ],
+  ];
+
+  $links = [];
+  foreach ($candidates as $candidate) {
+    if ($account->hasPermission($candidate['permission'])) {
+      $links[] = $candidate;
+    }
+  }
+
+  if ($account->hasPermission('access content overview') || $account->id() > 0) {
+    $links[] = [
+      'title' => 'Sunting profil',
+      'url' => '/user/' . $account->id() . '/edit',
+      'text' => 'Ubah nama, email, dan kata sandi.',
+    ];
+  }
+
+  return $links;
+}
+
+/**
+ * Implements hook_preprocess_user().
+ *
+ * Menyiapkan data kartu profil. Tautan cepat hanya tampil bila pemilik akun
+ * sedang melihat profilnya sendiri.
+ */
+function kh_theme_preprocess_user(array &$variables) {
+  $account = $variables['elements']['#user'];
+  $viewer = \Drupal::currentUser();
+
+  $roles = [];
+  $descriptions = [];
+  foreach ($account->getRoles(TRUE) as $role_id) {
+    $role = \Drupal\user\Entity\Role::load($role_id);
+    $roles[] = $role->label();
+    $descriptions[] = kh_theme_role_description($role_id);
+  }
+
+  $name = $account->getDisplayName();
+  $initial = strtoupper(substr($name, 0, 1));
+
+  $links = [];
+  $is_own_profile = ((int) $viewer->id() === (int) $account->id());
+  if ($is_own_profile) {
+    $links = kh_theme_profile_links($account);
+  }
+
+  $variables['kh_profile'] = [
+    'name' => $name,
+    'initial' => $initial,
+    'roles' => $roles,
+    'descriptions' => $descriptions,
+    'since' => kh_theme_date(date('Y-m-d', $account->getCreatedTime())),
+    'links' => $links,
+    'logout' => $is_own_profile,
+  ];
+  $variables['#cache']['contexts'][] = 'user';
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Toolbar admin Drupal (sidebar kiri dan bilah atas) hanya dipakai di halaman
+ * admin. Di halaman publik toolbar itu menumpuk di atas header situs, jadi
+ * dibuang. Akun admin tetap punya pintasan lewat kartu di halaman profil.
+ */
+function kh_theme_preprocess_html(array &$variables) {
+  $is_admin_page = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($is_admin_page) {
+    return;
+  }
+
+  unset($variables['page_top']['navigation']);
+  unset($variables['page_top']['top_bar']);
+  $variables['#cache']['contexts'][] = 'route';
+}

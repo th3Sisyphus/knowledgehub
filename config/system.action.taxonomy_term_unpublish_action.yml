@@ -1,0 +1,13 @@
+uuid: 15428bd4-ae3e-4b9b-bd6f-4e69300ac6e4
+langcode: id
+status: true
+dependencies:
+  module:
+    - taxonomy
+_core:
+  default_config_hash: z2sNRM3ECa7FPCGnSNje_9SmZJQgwhD_6fG_L4Mr8zI
+id: taxonomy_term_unpublish_action
+label: 'Batalkan penerbitan istilah taksonomi'
+type: taxonomy_term
+plugin: 'entity:unpublish_action:taxonomy_term'
+configuration: {  }

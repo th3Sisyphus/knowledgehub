@@ -1,0 +1,23 @@
+uuid: c50a96d8-5948-4293-be5b-fbc1859991c9
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.bantuan
+  module:
+    - node
+id: kh_bantuan
+label: 'Knowledge Hub: bantuan'
+type: 'canonical_entities:node'
+pattern: '/bantuan/[node:title]'
+selection_criteria:
+  635f5619-eda9-42fb-8c55-32f6157f7676:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      bantuan: bantuan
+selection_logic: and
+weight: 0
+relationships: {  }

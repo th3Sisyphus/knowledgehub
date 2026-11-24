@@ -1,0 +1,13 @@
+uuid: 3bef47fe-9ed5-43ad-b33e-c33ca552c2ad
+langcode: id
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: DyypzTfThX10FFQw-399qPfEbLLyrhXgQrKPVsmAoJ4
+id: user_block_user_action
+label: 'Blokir pengguna yang telah dipilih'
+type: user
+plugin: user_block_user_action
+configuration: {  }

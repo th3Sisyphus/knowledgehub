@@ -1,0 +1,11 @@
+uuid: c25ddbb9-2766-498c-b7cb-c16369b0cec5
+langcode: id
+status: true
+dependencies: {  }
+id: node__pembelajaran
+label: 'Content: pembelajaran'
+tags:
+  description: '[node:field_ringkasan]'
+  schema_course_type: Course
+  schema_course_name: '[node:title]'
+  schema_course_description: '[node:field_ringkasan]'

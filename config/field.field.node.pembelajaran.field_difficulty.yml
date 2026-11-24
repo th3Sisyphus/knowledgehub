@@ -1,0 +1,28 @@
+uuid: 8d0a23ee-90f3-49aa-9b08-8f058d09efd2
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_difficulty
+    - node.type.pembelajaran
+    - taxonomy.vocabulary.difficulty
+id: node.pembelajaran.field_difficulty
+field_name: field_difficulty
+entity_type: node
+bundle: pembelajaran
+label: Difficulty
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      difficulty: difficulty
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

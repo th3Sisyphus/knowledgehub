@@ -1,0 +1,28 @@
+uuid: d8caa1fd-28ad-438d-a54b-90205579c65f
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departemen
+    - node.type.pembelajaran
+    - taxonomy.vocabulary.departemen
+id: node.pembelajaran.field_departemen
+field_name: field_departemen
+entity_type: node
+bundle: pembelajaran
+label: Departemen
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      departemen: departemen
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,13 @@
+uuid: 17a446f7-c5e1-4509-8929-6e6f3c82c49c
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: 2B9uF8NL5gutNKSdPRAhhAsDWFZZG1PJOBmx0aBGd_0
+id: node_publish_action
+label: 'Terbitkan konten'
+type: node
+plugin: 'entity:publish_action:node'
+configuration: {  }

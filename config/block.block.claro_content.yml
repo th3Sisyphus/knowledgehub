@@ -1,0 +1,22 @@
+uuid: faef5128-dc83-4307-8c37-3a9ecb3670ef
+langcode: id
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - claro
+_core:
+  default_config_hash: a0Yyx1GeyKarZ4T_yXQBR_ZFKnXiFLtxAb6gWLd8nr0
+id: claro_content
+theme: claro
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Konten utama halaman'
+  label_display: '0'
+  provider: system
+visibility: {  }

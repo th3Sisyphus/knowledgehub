@@ -1,0 +1,13 @@
+uuid: 5087ee1d-a12c-40dc-b7af-429850907c96
+langcode: id
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: nvrL9bFilzBvm2bjO9rQnFDpBA7dBBUjShSSt6NS-DU
+id: user_cancel_user_action
+label: 'Batalkan akun pengguna yang dipilih'
+type: user
+plugin: user_cancel_user_action
+configuration: {  }

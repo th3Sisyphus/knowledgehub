@@ -1,0 +1,10 @@
+uuid: 1f86b448-48a6-4587-9f91-959663bc156a
+langcode: id
+status: true
+dependencies: {  }
+id: node__bantuan
+label: 'Content: bantuan'
+tags:
+  description: '[node:field_ringkasan]'
+  schema_web_page_type: WebPage
+  schema_web_page_description: '[node:field_ringkasan]'

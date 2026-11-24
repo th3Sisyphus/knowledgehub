@@ -1,0 +1,10 @@
+uuid: 694b3078-e079-459a-a768-42a716485eec
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: BCM-vV1zzRaLHN18dqAR_CuGOj8AFJvTx7BKl_8Gcxc
+id: tools
+label: Alat
+description: 'Tautan alat pengguna, biasanya ditambah oleh modul'
+locked: true

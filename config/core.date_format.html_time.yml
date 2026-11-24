@@ -1,0 +1,10 @@
+uuid: e14b1551-a862-4b77-b6d1-13a7fe01edd8
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: M7yqicYkU36hRy5p9drAaGBBihhUD1OyujFrAaQ93ZE
+id: html_time
+label: 'Waktu HTML'
+locked: true
+pattern: 'H:i:s'

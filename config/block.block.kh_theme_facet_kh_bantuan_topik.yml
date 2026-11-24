@@ -1,0 +1,27 @@
+uuid: aa329808-4530-4da3-bc16-053753a795fd
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_bantuan_topik
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_bantuan_topik
+theme: kh_theme
+region: sidebar_first
+weight: 1
+provider: null
+plugin: 'facet_block:kh_bantuan_topik'
+settings:
+  id: 'facet_block:kh_bantuan_topik'
+  label: Topik
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /bantuan

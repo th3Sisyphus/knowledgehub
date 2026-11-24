@@ -1,0 +1,28 @@
+uuid: 47549888-fece-4f59-8ecc-a7457ba7c1fd
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topik
+    - node.type.prosedur
+    - taxonomy.vocabulary.topik
+id: node.prosedur.field_topik
+field_name: field_topik
+entity_type: node
+bundle: prosedur
+label: Topik
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topik: topik
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

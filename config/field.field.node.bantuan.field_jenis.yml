@@ -1,0 +1,28 @@
+uuid: 1f71d3b6-4fe8-4ed3-9546-53f45bb5919c
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_jenis
+    - node.type.bantuan
+    - taxonomy.vocabulary.jenis_bantuan
+id: node.bantuan.field_jenis
+field_name: field_jenis
+entity_type: node
+bundle: bantuan
+label: Jenis
+description: 'Hanya jenis milik grup Bantuan.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      jenis_bantuan: jenis_bantuan
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

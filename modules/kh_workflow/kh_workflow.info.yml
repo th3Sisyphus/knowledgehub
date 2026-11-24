@@ -1,0 +1,7 @@
+name: 'Knowledge Hub Workflow'
+type: module
+description: 'Mengunci form edit untuk role Auditor: hanya status moderasi dan catatan revisi yang bisa diubah.'
+package: Knowledge Hub
+core_version_requirement: ^11
+dependencies:
+  - drupal:content_moderation

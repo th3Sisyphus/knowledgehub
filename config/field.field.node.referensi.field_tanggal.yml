@@ -1,0 +1,21 @@
+uuid: 630c945e-2a7b-47cd-b0aa-718a6e7fa186
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tanggal
+    - node.type.referensi
+  module:
+    - datetime
+id: node.referensi.field_tanggal
+field_name: field_tanggal
+entity_type: node
+bundle: referensi
+label: Tanggal
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

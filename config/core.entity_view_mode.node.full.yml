@@ -1,0 +1,13 @@
+uuid: 9747faae-b3b8-4d0f-b672-98e90d1826d9
+langcode: id
+status: false
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: QJ2aZ1xfVf59aq6Pz5X7fyUOa2HxuCoTwQ_RQjoulAU
+id: node.full
+label: 'Konten lengkap'
+description: ''
+targetEntityType: node
+cache: true

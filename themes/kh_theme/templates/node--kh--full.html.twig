@@ -1,0 +1,13 @@
+<article{{ attributes.addClass('node', 'jenis-' ~ kh.jenis_class) }}>
+  <span class="teaser-type">{{ kh.jenis }}{% if kh.diff %} · {{ kh.diff }}{% endif %}</span>
+  <div class="node-head"><h1 class="page-title">{{ label }}</h1></div>
+  <p class="node-meta">{{ kh.meta }} · <span class="status status--{{ kh.status_class }}">{{ kh.status }}</span></p>
+  {% if kh.callout %}<div class="callout{% if kh.jenis == 'Kebijakan' %} callout--policy{% endif %}">{{ kh.callout }}</div>{% endif %}
+  <dl class="fields">
+    {% for f in kh.fields %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
+  </dl>
+  <div class="node-body">{{ content.body }}</div>
+  <dl class="review">
+    {% for f in kh.review %}<div><dt>{{ f.label }}</dt><dd>{% if f.href %}<a href="{{ f.href }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd></div>{% endfor %}
+  </dl>
+</article>

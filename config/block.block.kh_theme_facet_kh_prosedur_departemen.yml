@@ -1,0 +1,27 @@
+uuid: ecb3cf6e-4aeb-43db-8702-c7a1c9f748c4
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_prosedur_departemen
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_prosedur_departemen
+theme: kh_theme
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'facet_block:kh_prosedur_departemen'
+settings:
+  id: 'facet_block:kh_prosedur_departemen'
+  label: Departemen
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /prosedur

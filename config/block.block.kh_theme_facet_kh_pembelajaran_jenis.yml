@@ -1,0 +1,27 @@
+uuid: 23de64c7-ccc1-451a-836e-677eb93d0a34
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_pembelajaran_jenis
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_pembelajaran_jenis
+theme: kh_theme
+region: sidebar_first
+weight: 3
+provider: null
+plugin: 'facet_block:kh_pembelajaran_jenis'
+settings:
+  id: 'facet_block:kh_pembelajaran_jenis'
+  label: Jenis
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /pembelajaran

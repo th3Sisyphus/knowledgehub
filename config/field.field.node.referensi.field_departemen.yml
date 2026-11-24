@@ -1,0 +1,28 @@
+uuid: efb793a8-f791-4a1e-a3d7-0641eac7c5e9
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departemen
+    - node.type.referensi
+    - taxonomy.vocabulary.departemen
+id: node.referensi.field_departemen
+field_name: field_departemen
+entity_type: node
+bundle: referensi
+label: Departemen
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      departemen: departemen
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

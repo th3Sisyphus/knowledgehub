@@ -1,0 +1,11 @@
+uuid: 4fe25607-6fc6-4665-94c1-7b49dbf12278
+langcode: id
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 4nSkHydKpiJerqf_crDChEGAq39ncKB34q5xk9Ycmgo
+id: '404'
+label: '404 halaman tidak ditemukan'
+tags:
+  canonical_url: '<none>'
+  shortlink: '<none>'

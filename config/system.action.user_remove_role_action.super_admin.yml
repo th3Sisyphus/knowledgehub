@@ -1,0 +1,14 @@
+uuid: 72ccabb7-fd9f-426c-9203-24fc5efd7967
+langcode: id
+status: true
+dependencies:
+  config:
+    - user.role.super_admin
+  module:
+    - user
+id: user_remove_role_action.super_admin
+label: 'Hapus peran Super Admin dari pengguna yang dipilih'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: super_admin

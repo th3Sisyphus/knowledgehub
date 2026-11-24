@@ -1,0 +1,23 @@
+uuid: 69c7f3f2-a5c6-48f9-bca8-b422a858b226
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.alat_kerja
+  module:
+    - node
+id: kh_alat_kerja
+label: 'Knowledge Hub: alat_kerja'
+type: 'canonical_entities:node'
+pattern: '/alat-kerja/[node:title]'
+selection_criteria:
+  248d2dae-53e9-41c9-ab5b-0222db72b4ad:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      alat_kerja: alat_kerja
+selection_logic: and
+weight: 0
+relationships: {  }

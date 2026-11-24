@@ -1,0 +1,8 @@
+name: 'Knowledge Hub Beranda'
+type: module
+description: 'Halaman beranda: hero, kartu 5 area utama, info terbaru, dan pintasan.'
+package: Knowledge Hub
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:taxonomy

@@ -1,0 +1,28 @@
+uuid: f77d9de4-26bc-4a94-b8ea-f5659b2078c3
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departemen
+    - node.type.alat_kerja
+    - taxonomy.vocabulary.departemen
+id: node.alat_kerja.field_departemen
+field_name: field_departemen
+entity_type: node
+bundle: alat_kerja
+label: Departemen
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      departemen: departemen
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

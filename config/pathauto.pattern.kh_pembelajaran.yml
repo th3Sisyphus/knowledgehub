@@ -1,0 +1,23 @@
+uuid: a411f494-37be-4bb1-958e-8f14bc88fc27
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.pembelajaran
+  module:
+    - node
+id: kh_pembelajaran
+label: 'Knowledge Hub: pembelajaran'
+type: 'canonical_entities:node'
+pattern: '/pembelajaran/[node:title]'
+selection_criteria:
+  bfa2d7b5-ce54-4667-903a-d32b4eabc4e0:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      pembelajaran: pembelajaran
+selection_logic: and
+weight: 0
+relationships: {  }

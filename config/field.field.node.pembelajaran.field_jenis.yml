@@ -1,0 +1,28 @@
+uuid: 256db7b7-42ad-43b2-92e9-8d86c6808f22
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_jenis
+    - node.type.pembelajaran
+    - taxonomy.vocabulary.jenis_pembelajaran
+id: node.pembelajaran.field_jenis
+field_name: field_jenis
+entity_type: node
+bundle: pembelajaran
+label: Jenis
+description: 'Hanya jenis milik grup Pembelajaran.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      jenis_pembelajaran: jenis_pembelajaran
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,21 @@
+uuid: c7c74c0f-1db7-4148-93f3-b88f21538e45
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tanggal
+    - node.type.alat_kerja
+  module:
+    - datetime
+id: node.alat_kerja.field_tanggal
+field_name: field_tanggal
+entity_type: node
+bundle: alat_kerja
+label: Tanggal
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

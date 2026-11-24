@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Kunci form edit node untuk Auditor.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form.
+ *
+ * Auditor butuh izin edit supaya bisa memakai transisi moderasi. Semua field
+ * isi dikunci. Hanya status moderasi dan catatan revisi yang tetap terbuka.
+ * Super Admin dan akun administrator tidak dikunci.
+ */
+function kh_workflow_form_node_form_alter(array &$form, FormStateInterface $form_state): void {
+  $account = \Drupal::currentUser();
+  if (!in_array('auditor', $account->getRoles(), TRUE) || in_array('super_admin', $account->getRoles(), TRUE) || $account->id() == 1) {
+    return;
+  }
+  // Tetap terbuka: status moderasi, catatan revisi, tombol, dan token form.
+  $open = ['moderation_state', 'revision_log', 'revision_information', 'actions', 'form_build_id', 'form_token', 'form_id'];
+  foreach (array_keys($form) as $key) {
+    if (is_string($key) && $key[0] !== '#' && !in_array($key, $open, TRUE) && is_array($form[$key])) {
+      $form[$key]['#disabled'] = TRUE;
+    }
+  }
+}

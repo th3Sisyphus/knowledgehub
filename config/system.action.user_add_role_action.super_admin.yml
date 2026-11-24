@@ -1,0 +1,14 @@
+uuid: 009b0703-901b-4b58-bdcf-6dbc4cd8efc0
+langcode: id
+status: true
+dependencies:
+  config:
+    - user.role.super_admin
+  module:
+    - user
+id: user_add_role_action.super_admin
+label: 'Tambahkan peran Super Admin kepada pengguna yang dipilih'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: super_admin

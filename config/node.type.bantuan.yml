@@ -1,0 +1,11 @@
+uuid: 7ba8c3c5-0b3a-4cf9-b4d3-d1915fef26ec
+langcode: id
+status: true
+dependencies: {  }
+name: Bantuan
+type: bantuan
+description: 'Konten grup Bantuan.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

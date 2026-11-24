@@ -1,0 +1,7 @@
+kh_home.front:
+  path: '/beranda'
+  defaults:
+    _controller: '\Drupal\kh_home\Controller\HomeController::page'
+    _title: 'Knowledge Hub'
+  requirements:
+    _permission: 'access content'

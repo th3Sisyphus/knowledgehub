@@ -1,0 +1,19 @@
+uuid: 18b056ee-97d5-4b61-8769-abaa8da390a5
+langcode: id
+status: true
+dependencies:
+  module:
+    - search_api_db
+id: kh_db
+name: 'Database Knowledge Hub'
+description: ''
+backend: search_api_db
+backend_config:
+  database: 'default:default'
+  min_chars: 2
+  matching: words
+  phrase: none
+  autocomplete:
+    suggest_suffix: true
+    suggest_words: true
+    min_chars: 1

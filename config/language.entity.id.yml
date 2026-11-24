@@ -1,0 +1,9 @@
+uuid: 4630a149-a804-4f47-9b8c-3b99b0971c32
+langcode: id
+status: true
+dependencies: {  }
+id: id
+label: 'Bahasa Indonesia'
+direction: ltr
+weight: 0
+locked: false

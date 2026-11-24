@@ -1,0 +1,20 @@
+uuid: 96ed55bb-7b60-42b0-b147-744381244a6b
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_topik
+field_name: field_topik
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,21 @@
+uuid: e952a759-940b-4b50-baf4-64dc4d996f57
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tanggal
+    - node.type.bantuan
+  module:
+    - datetime
+id: node.bantuan.field_tanggal
+field_name: field_tanggal
+entity_type: node
+bundle: bantuan
+label: Tanggal
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,28 @@
+uuid: 7dfd3f0d-ebb7-44c0-9194-ed372b68a1b3
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audience
+    - node.type.prosedur
+    - taxonomy.vocabulary.audience
+id: node.prosedur.field_audience
+field_name: field_audience
+entity_type: node
+bundle: prosedur
+label: Audience
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      audience: audience
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+field_type: entity_reference

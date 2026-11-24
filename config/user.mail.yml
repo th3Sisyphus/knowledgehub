@@ -1,0 +1,30 @@
+_core:
+  default_config_hash: 6CZIzFifRq3qbdq3n3nDpEOO4hWIQtKOAQNPvGNGKeM
+langcode: id
+cancel_confirm:
+  subject: 'Permohonan pembatalan akun untuk [user:display-name] di [site:name]'
+  body: "[user:display-name]\r\n\r\nPermintaan untuk membatalkan akun Anda telah diajukan di [site:name].\r\n\r\nAnda sekarang dapat membatalkan akun Anda di [site:url-brief] dengan mengeklik tautan ini atau menyalin dan menempelkannya ke peramban Anda:\r\n\r\n[user:cancel-url]\r\n\r\nCATATAN: Pembatalan akun Anda tidak dapat dibatalkan.\r\n\r\nTautan ini akan kedaluwarsa dalam satu hari dan tidak akan terjadi apa-apa jika tidak digunakan.\r\n\r\n--  Tim [site:name]"
+password_reset:
+  subject: 'Informasi masuk pengganti untuk [user:display-name] di [site:name]'
+  body: "[user:display-name],\r\n\r\nTelah diajukan permintaan untuk mengatur ulang kata sandi akun Anda di [site:name].\r\n\r\nAnda sekarang dapat masuk dengan mengeklik tautan ini atau menyalin dan menempelkannya ke peramban Anda:\r\n\r\n[user:one-time-login-url]\r\n\r\nTautan ini hanya dapat digunakan sekali untuk masuk dan akan mengarahkan Anda ke halaman tempat Anda dapat mengatur kata sandi Anda. Tautan ini akan kedaluwarsa setelah satu hari dan tidak akan terjadi apa-apa jika tidak digunakan.\r\n\r\n--  Tim [site:name]"
+register_admin_created:
+  subject: 'Administrator membuat akun untuk Anda di [site:name]'
+  body: "[user:display-name],\r\n\r\nAdministrator situs di [site:name] telah membuat akun untuk Anda. Sekarang Anda dapat masuk dengan mengeklik tautan ini atau menyalin dan menempelkannya ke peramban Anda:\r\n\r\n[user:one-time-login-url]\r\n\r\nTautan ini hanya dapat digunakan sekali untuk masuk dan akan mengarahkan Anda ke halaman tempat Anda dapat mengatur kata sandi Anda.\r\n\r\nSetelah mengatur kata sandi Anda, Anda akan dapat masuk ke [site:login-url] menggunakan:\r\n\r\nnama pengguna: [user:name]\r\nkata sandi: Kata sandi Anda\r\n\r\n--  Tim [site:name]"
+register_no_approval_required:
+  subject: 'Detail akun untuk [user:display-name] di [site:name]'
+  body: "[user:display-name],\r\n\r\nTerima kasih telah mendaftar di [site:name]. Anda sekarang dapat masuk dengan mengeklik tautan ini atau menyalin dan menempelkannya ke peramban Anda:\r\n\r\n[user:one-time-login-url]\r\n\r\nTautan ini hanya dapat digunakan sekali untuk masuk dan akan mengarahkan Anda ke halaman tempat Anda dapat mengatur kata sandi Anda.\r\n\r\nSetelah mengatur kata sandi Anda, Anda akan dapat masuk ke [site:login-url] menggunakan:\r\n\r\nnama pengguna: [user:name]\r\nkata sandi: Kata sandi Anda\r\n\r\n--  Tim [site:name]"
+register_pending_approval:
+  subject: 'Detail akun untuk [user:display-name] di [site:name] (menunggu persetujuan admin)'
+  body: "[user:display-name],\r\n\r\nTerima kasih telah mendaftar di [site:name]. Permohonan pembuatan akun Anda saat ini sedang menunggu persetujuan. Setelah disetujui, Anda akan menerima email lain yang berisi informasi tentang cara masuk, mengatur kata sandi, dan detail lainnya.\r\n\r\n--  Tim [site:name]"
+register_pending_approval_admin:
+  subject: 'Detail akun untuk [user:display-name] di [site:name] (menunggu persetujuan admin)'
+  body: "[user:display-name] telah mengajukan permohonan akun.\r\n\r\n[user:edit-url]"
+status_activated:
+  subject: 'Detail akun untuk [user:display-name] di [site:name] (disetujui)'
+  body: "[user:display-name],\r\n\r\nAkun Anda di [site:name] telah diaktifkan.\r\n\r\nAnda sekarang dapat masuk dengan mengeklik tautan ini atau menyalin dan menempelkannya ke peramban Anda:\r\n\r\n[user:one-time-login-url]\r\n\r\nTautan ini hanya dapat digunakan sekali untuk masuk dan akan mengarahkan Anda ke halaman tempat Anda dapat mengatur kata sandi Anda.\r\n\r\nSetelah mengatur kata sandi Anda, Anda akan dapat masuk ke [site:login-url] dengan menggunakan:\r\n\r\nnama pengguna: [user:account-name]\r\nkata sandi: Kata sandi Anda\r\n\r\n--  Tim [site:name]"
+status_blocked:
+  subject: 'Detail akun untuk [user:display-name] di [site:name] (diblokir)'
+  body: "[user:display-name],\r\n\r\nAkun Anda di [site:name] telah diblokir.\r\n\r\n--  Tim [site:name]"
+status_canceled:
+  subject: 'Detail akun untuk [user:display-name] di [site:name] (dibatalkan)'
+  body: "[user:display-name],\r\n\r\nAkun Anda di [site:name] telah dibatalkan.\r\n\r\n--  Tim [site:name]"

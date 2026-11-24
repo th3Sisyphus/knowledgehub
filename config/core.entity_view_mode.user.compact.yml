@@ -1,0 +1,13 @@
+uuid: 3cb900ce-1ec5-4142-8c34-429233d5a085
+langcode: id
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: TtD7OuGskOsQfoGyxXkrdtllBpR37J19d5BMQDZWJgA
+id: user.compact
+label: Ringkas
+description: ''
+targetEntityType: user
+cache: true

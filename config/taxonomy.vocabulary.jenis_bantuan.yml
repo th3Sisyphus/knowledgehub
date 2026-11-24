@@ -1,0 +1,9 @@
+uuid: 8b0e1235-4592-480e-9225-0034236dcc94
+langcode: id
+status: true
+dependencies: {  }
+name: 'Jenis Bantuan'
+vid: jenis_bantuan
+description: null
+weight: 0
+new_revision: false

@@ -1,0 +1,55 @@
+uuid: af85f88c-f894-4ed4-875a-b2a201003f21
+langcode: id
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.bantuan.body
+    - field.field.node.bantuan.field_callout
+    - field.field.node.bantuan.field_departemen
+    - field.field.node.bantuan.field_jenis
+    - field.field.node.bantuan.field_ringkasan
+    - field.field.node.bantuan.field_slug_asal
+    - field.field.node.bantuan.field_tanggal
+    - field.field.node.bantuan.field_topik
+    - node.type.bantuan
+id: node.bantuan.teaser
+targetEntityType: node
+bundle: bantuan
+mode: teaser
+content:
+  field_departemen:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_jenis:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ringkasan:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  content_moderation_control: true
+  field_callout: true
+  field_slug_asal: true
+  field_tanggal: true
+  field_topik: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

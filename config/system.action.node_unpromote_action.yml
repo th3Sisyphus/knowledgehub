@@ -1,0 +1,13 @@
+uuid: 1ddc31a6-238b-4bed-a7c5-580558c16867
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: JBptjnfuOMtsdKygklXxoOgeOCTMtQxlkymjnnj-cC0
+id: node_unpromote_action
+label: 'Hapus konten dari halaman depan'
+type: node
+plugin: node_unpromote_action
+configuration: {  }

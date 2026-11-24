@@ -1,0 +1,27 @@
+uuid: e3e64e23-9b21-4fa1-ade4-0bc9ad88e81d
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_pembelajaran_topik
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_pembelajaran_topik
+theme: kh_theme
+region: sidebar_first
+weight: 2
+provider: null
+plugin: 'facet_block:kh_pembelajaran_topik'
+settings:
+  id: 'facet_block:kh_pembelajaran_topik'
+  label: Topik
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /pembelajaran

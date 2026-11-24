@@ -1,0 +1,20 @@
+uuid: 58db07ff-67eb-461f-a4df-778b5a1cb023
+langcode: id
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_breadcrumb
+theme: kh_theme
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumb
+  label_display: '0'
+  provider: system
+visibility: {  }

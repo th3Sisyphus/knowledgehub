@@ -1,0 +1,13 @@
+uuid: d38e6f36-4909-489c-a1df-25a41aae9b7d
+langcode: id
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: 1TFiplNN7Wmj_DtVLLLP-NLPYpZJdAswKY-vTrYgFyo
+id: user.register
+label: Daftar
+description: null
+targetEntityType: user
+cache: true

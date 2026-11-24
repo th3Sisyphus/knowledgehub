@@ -1,0 +1,44 @@
+# Drupal 11 + MariaDB untuk tahap awal Project Akhir MKW.
+# Jalankan: docker compose up -d, lalu buka http://127.0.0.1:8080 dan ikuti installer.
+services:
+  drupal:
+    image: drupal:11-apache
+    ports:
+      - "127.0.0.1:${DRUPAL_PORT:-8080}:80"
+    volumes:
+      # Seluruh kode Drupal di volume bernama supaya `composer require` (modul, drush) tetap ada setelah restart.
+      - drupal-code:/opt/drupal
+      - drupal-files:/opt/drupal/web/sites/default/files
+      # Konfigurasi ekspor masuk repo: `drush config:export` menulis ke sini.
+      - ./config:/opt/drupal/config
+      # Modul custom dan skrip setup di repo.
+      - ./modules:/opt/drupal/web/modules/custom
+      - ./themes:/opt/drupal/web/themes/custom
+      - ./setup:/opt/drupal/setup
+      # Instalasi dari config repo butuh lebih dari 128M bawaan.
+      - ./php-memory.ini:/usr/local/etc/php/conf.d/zz-memory.ini:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-drupal}
+      MARIADB_USER: ${DB_USER:-drupal}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-drupal}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  drupal-code:
+  drupal-files:
+  db-data:

@@ -1,0 +1,27 @@
+uuid: d6813c17-5a5e-428d-8e79-9bf809ed7ddd
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_pembelajaran_audience
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_pembelajaran_audience
+theme: kh_theme
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'facet_block:kh_pembelajaran_audience'
+settings:
+  id: 'facet_block:kh_pembelajaran_audience'
+  label: Audience
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /pembelajaran

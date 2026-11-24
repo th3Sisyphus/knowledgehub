@@ -1,0 +1,55 @@
+uuid: 18b9bbdd-a19d-4499-8399-95d6c969980f
+langcode: id
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.alat_kerja.body
+    - field.field.node.alat_kerja.field_departemen
+    - field.field.node.alat_kerja.field_jenis
+    - field.field.node.alat_kerja.field_ringkasan
+    - field.field.node.alat_kerja.field_slug_asal
+    - field.field.node.alat_kerja.field_tanggal
+    - field.field.node.alat_kerja.field_topik
+    - field.field.node.alat_kerja.field_versi
+    - node.type.alat_kerja
+id: node.alat_kerja.teaser
+targetEntityType: node
+bundle: alat_kerja
+mode: teaser
+content:
+  field_departemen:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_jenis:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ringkasan:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  content_moderation_control: true
+  field_slug_asal: true
+  field_tanggal: true
+  field_topik: true
+  field_versi: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

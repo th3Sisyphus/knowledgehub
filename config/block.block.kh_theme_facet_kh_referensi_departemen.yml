@@ -1,0 +1,27 @@
+uuid: dbb7db7b-98cb-4ee4-be08-9cee45abc9fd
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_referensi_departemen
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_referensi_departemen
+theme: kh_theme
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'facet_block:kh_referensi_departemen'
+settings:
+  id: 'facet_block:kh_referensi_departemen'
+  label: Departemen
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /referensi

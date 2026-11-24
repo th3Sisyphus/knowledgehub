@@ -1,0 +1,23 @@
+uuid: b15cc48f-88c1-4a3b-9ab8-cc6b2a801e7c
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_durasi
+    - node.type.pembelajaran
+id: node.pembelajaran.field_durasi
+field_name: field_durasi
+entity_type: node
+bundle: pembelajaran
+label: 'Durasi (detik)'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

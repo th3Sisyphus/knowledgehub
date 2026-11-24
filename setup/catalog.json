@@ -1,0 +1,677 @@
+[
+ {
+  "id": "sop-perjalanan-dinas",
+  "group": "prosedur",
+  "type": "SOP",
+  "title": "SOP Perjalanan Dinas",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Perjalanan Dinas",
+  "wajib": true,
+  "date": "2026-10-28",
+  "desc": "Langkah baku mengajukan, menjalankan, dan melaporkan perjalanan dinas.",
+  "version": "1.2",
+  "body": [
+   "Isi Formulir Pengajuan Perjalanan Dinas dari Alat Kerja.",
+   "Minta persetujuan atasan langsung paling lambat tiga hari kerja sebelum berangkat.",
+   "Serahkan formulir yang sudah disetujui ke Bagian Administrasi.",
+   "Simpan bukti pengeluaran selama perjalanan.",
+   "Kirim laporan dan bukti pengeluaran paling lambat lima hari kerja sesudah kembali."
+  ]
+ },
+ {
+  "id": "sop-pengajuan-cuti",
+  "group": "prosedur",
+  "type": "SOP",
+  "title": "SOP Pengajuan Cuti",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Cuti",
+  "date": "2026-07-01",
+  "desc": "Langkah mengajukan cuti tahunan sampai disetujui atasan.",
+  "body": [
+   "Buka Template Formulir Cuti dan isi tanggal cuti.",
+   "Kirim formulir ke atasan langsung paling lambat 7 hari kerja sebelum cuti.",
+   "Atasan memberi keputusan paling lambat 3 hari kerja.",
+   "HR mencatat cuti yang disetujui ke sistem kepegawaian."
+  ]
+ },
+ {
+  "id": "sop-pelaporan-bulanan",
+  "group": "prosedur",
+  "type": "SOP",
+  "title": "SOP Pelaporan Bulanan",
+  "dept": "Finance",
+  "aud": [
+   "Pegawai Lama",
+   "Supervisor"
+  ],
+  "topic": "Pelaporan",
+  "date": "2026-09-15",
+  "desc": "Alur menyusun dan mengirim laporan bulanan departemen.",
+  "body": [
+   "Unduh Template Laporan Bulanan versi terbaru.",
+   "Isi sheet Rincian sampai tanggal 3.",
+   "Supervisor memeriksa angka realisasi.",
+   "Kirim laporan ke Kepala Bagian paling lambat tanggal 5."
+  ]
+ },
+ {
+  "id": "sop-lembur",
+  "group": "prosedur",
+  "type": "SOP",
+  "title": "SOP Lembur",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Lama"
+  ],
+  "topic": "Cuti",
+  "status": "Draft",
+  "date": "2026-11-01",
+  "desc": "Masih draft. Tidak tampil di daftar dan pencarian."
+ },
+ {
+  "id": "checklist-perjalanan-dinas",
+  "group": "prosedur",
+  "type": "Checklist",
+  "title": "Checklist Dokumen Perjalanan Dinas",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Perjalanan Dinas",
+  "date": "2026-10-28",
+  "desc": "Daftar dokumen yang dicentang sebelum berangkat dan sesudah kembali.",
+  "body": [
+   "Formulir pengajuan sudah ditandatangani atasan",
+   "Surat tugas dari Bagian Administrasi",
+   "Tiket dan bukti pemesanan hotel",
+   "Bukti pengeluaran selama perjalanan",
+   "Laporan perjalanan dinas"
+  ]
+ },
+ {
+  "id": "checklist-onboarding",
+  "group": "prosedur",
+  "type": "Checklist",
+  "title": "Checklist Onboarding Pegawai Baru",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Supervisor"
+  ],
+  "topic": "Rekrutmen",
+  "wajib": true,
+  "date": "2026-08-10",
+  "desc": "Hal yang diselesaikan pegawai baru pada minggu pertama.",
+  "body": [
+   "Aktivasi akun SSO dan email kantor",
+   "Membaca SOP Perjalanan Dinas",
+   "Membaca Kebijakan Cuti Tahunan",
+   "Menyelesaikan MOOC IKPA modul 1 dan 2",
+   "Bertemu Knowledge Manager"
+  ]
+ },
+ {
+  "id": "panduan-cascading",
+  "group": "prosedur",
+  "type": "Panduan Kerja",
+  "title": "Panduan Cascading Kinerja",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Supervisor"
+  ],
+  "topic": "Kinerja",
+  "source": "C03",
+  "date": "2026-06-20",
+  "desc": "Penjelasan cara menurunkan target kinerja organisasi ke unit dan pegawai.",
+  "body": [
+   "Cascading menurunkan sasaran organisasi menjadi sasaran unit, lalu sasaran pegawai.",
+   "Setiap sasaran pegawai harus bisa ditelusuri ke sasaran unit di atasnya.",
+   "Supervisor menyepakati target bersama pegawai pada awal tahun."
+  ]
+ },
+ {
+  "id": "panduan-akun-erp",
+  "group": "prosedur",
+  "type": "Panduan Kerja",
+  "title": "Panduan Membuat Akun ERP",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Penggunaan Sistem",
+  "date": "2026-09-02",
+  "desc": "Cara mendapatkan dan mengaktifkan akun ERP untuk pegawai baru.",
+  "body": [
+   "Akun ERP dibuat oleh Helpdesk IT setelah formulir permintaan akses disetujui.",
+   "Login pertama memakai kata sandi sementara yang dikirim ke email kantor.",
+   "Ganti kata sandi pada login pertama."
+  ]
+ },
+ {
+  "id": "kebijakan-cuti",
+  "group": "referensi",
+  "type": "Kebijakan",
+  "title": "Kebijakan Cuti Tahunan Pegawai Kontrak",
+  "dept": "HR",
+  "aud": [
+   "Supervisor",
+   "Pegawai Lama",
+   "Pegawai Baru"
+  ],
+  "topic": "Cuti",
+  "wajib": true,
+  "date": "2026-07-01",
+  "desc": "Aturan resmi hak dan prosedur cuti bagi pegawai kontrak.",
+  "number": "KEB-HR/07/2026",
+  "version": "2.0",
+  "callout": "Wajib dipatuhi. Kebijakan ini mengikat semua pegawai kontrak dan atasan langsung.",
+  "body": [
+   "## Pasal 1. Hak Cuti",
+   "Pegawai kontrak berhak atas 12 hari cuti tahunan setelah bekerja 12 bulan berturut-turut.",
+   "Pegawai dengan masa kerja di bawah 12 bulan mendapat cuti proporsional, 1 hari per bulan kerja.",
+   "## Pasal 2. Pengajuan",
+   "Pegawai mengajukan cuti paling lambat 7 hari kerja sebelum tanggal cuti.",
+   "Atasan langsung memberi keputusan paling lambat 3 hari kerja.",
+   "## Pasal 3. Sisa Cuti",
+   "Sisa cuti tidak dapat diuangkan dan hangus saat kontrak berakhir."
+  ]
+ },
+ {
+  "id": "kebijakan-sdmk",
+  "group": "referensi",
+  "type": "Kebijakan",
+  "title": "Rencana Aksi Program SDMK 2025-2029",
+  "dept": "HR",
+  "aud": [
+   "Supervisor"
+  ],
+  "topic": "Kinerja",
+  "source": "C04",
+  "date": "2025-12-01",
+  "desc": "Arah program pengembangan SDM organisasi untuk lima tahun.",
+  "body": [
+   "Rencana aksi memuat target pengembangan kompetensi pegawai per tahun.",
+   "Setiap unit menyusun rencana pelatihan yang mengacu pada rencana aksi ini.",
+   "Capaian dievaluasi setiap akhir tahun anggaran."
+  ]
+ },
+ {
+  "id": "ka-perjalanan-dinas",
+  "group": "referensi",
+  "type": "Knowledge Article",
+  "title": "Penjelasan Ketentuan Perjalanan Dinas",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Perjalanan Dinas",
+  "date": "2026-10-05",
+  "desc": "Latar belakang dan dasar aturan perjalanan dinas.",
+  "body": [
+   "Perjalanan dinas adalah perjalanan ke luar tempat kedudukan untuk kepentingan organisasi.",
+   "Uang harian dihitung per hari sesuai standar biaya yang berlaku.",
+   "Pertanggungjawaban wajib disertai bukti pengeluaran asli."
+  ]
+ },
+ {
+  "id": "ka-public-speaking",
+  "group": "referensi",
+  "type": "Knowledge Article",
+  "title": "Public Speaking untuk Presentasi Kerja",
+  "dept": "Operations",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Komunikasi",
+  "source": "C01",
+  "date": "2026-03-14",
+  "desc": "Konsep dasar berbicara di depan forum internal.",
+  "body": [
+   "Siapkan satu pesan utama sebelum menyusun slide.",
+   "Latih pembukaan 30 detik sampai lancar.",
+   "Akhiri presentasi dengan tindakan yang diminta dari audiens."
+  ]
+ },
+ {
+  "id": "ka-k3",
+  "group": "referensi",
+  "type": "Knowledge Article",
+  "title": "K3 Perkantoran",
+  "dept": "Operations",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Keselamatan Kerja",
+  "source": "C05",
+  "date": "2026-02-08",
+  "desc": "Prinsip keselamatan dan kesehatan kerja di lingkungan kantor.",
+  "body": [
+   "Kenali jalur evakuasi dan titik kumpul di gedung Anda.",
+   "Atur posisi monitor sejajar mata untuk mencegah nyeri leher.",
+   "Laporkan kabel terkelupas atau lantai licin ke Bagian Umum."
+  ]
+ },
+ {
+  "id": "glossary-kepegawaian",
+  "group": "referensi",
+  "type": "Glossary",
+  "title": "Glossary Istilah Kepegawaian",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Rekrutmen",
+  "date": "2026-10-02",
+  "desc": "Daftar istilah kepegawaian beserta artinya.",
+  "body": [
+   "Cuti proporsional: cuti yang dihitung 1 hari per bulan kerja",
+   "Cascading: penurunan sasaran organisasi ke unit dan pegawai",
+   "IKPA: Indikator Kinerja Pelaksanaan Anggaran",
+   "Uang harian: biaya per hari selama perjalanan dinas",
+   "SME: Subject Matter Expert, pegawai yang menguasai satu bidang"
+  ]
+ },
+ {
+  "id": "studi-kasus-erp",
+  "group": "referensi",
+  "type": "Studi Kasus",
+  "title": "Studi Kasus: Migrasi Data ERP 2025",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Lama",
+   "SME"
+  ],
+  "topic": "Penggunaan Sistem",
+  "date": "2026-01-20",
+  "desc": "Kejadian nyata migrasi ERP beserta pelajarannya.",
+  "body": [
+   "Masalah: 12% data vendor gagal dipindahkan karena format NPWP berbeda.",
+   "Tindakan: tim IT membuat skrip validasi sebelum migrasi ulang.",
+   "Pelajaran: validasi format data dilakukan sebelum migrasi, bukan sesudahnya."
+  ]
+ },
+ {
+  "id": "tutorial-ikpa",
+  "group": "pembelajaran",
+  "type": "Tutorial",
+  "title": "MOOC IKPA",
+  "dept": "Finance",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Pelaporan",
+  "diff": "Dasar",
+  "source": "C18",
+  "date": "2026-09-01",
+  "desc": "Kursus daring indikator kinerja pelaksanaan anggaran.",
+  "body": [
+   "Apa itu IKPA",
+   "Delapan indikator IKPA",
+   "Membaca nilai IKPA unit",
+   "Kuis akhir"
+  ]
+ },
+ {
+  "id": "tutorial-seleksi",
+  "group": "pembelajaran",
+  "type": "Tutorial",
+  "title": "Seleksi Substansi",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "SME"
+  ],
+  "topic": "Rekrutmen",
+  "diff": "Menengah",
+  "source": "C02",
+  "date": "2026-05-11",
+  "desc": "Tahapan seleksi substansi dari awal sampai akhir.",
+  "body": [
+   "Tahap 1: menyusun kriteria penilaian.",
+   "Tahap 2: menilai dokumen peserta.",
+   "Tahap 3: wawancara substansi.",
+   "Tahap 4: menyusun berita acara hasil seleksi."
+  ]
+ },
+ {
+  "id": "tutorial-ai",
+  "group": "pembelajaran",
+  "type": "Tutorial",
+  "title": "MOOC AI Smart Governance",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Lama",
+   "SME"
+  ],
+  "topic": "Penggunaan Sistem",
+  "diff": "Lanjutan",
+  "source": "C20",
+  "date": "2026-10-14",
+  "desc": "Pemanfaatan kecerdasan buatan untuk tata kelola pemerintahan.",
+  "body": [
+   "Modul 1: konsep dasar kecerdasan buatan.",
+   "Modul 2: contoh AI di layanan publik.",
+   "Modul 3: etika dan risiko pemakaian AI."
+  ]
+ },
+ {
+  "id": "video-cascading",
+  "group": "pembelajaran",
+  "type": "Video Tutorial",
+  "title": "Cascading Kinerja",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Kinerja",
+  "diff": "Dasar",
+  "source": "C15",
+  "duration": 724,
+  "date": "2026-06-20",
+  "desc": "Versi video dari Panduan Cascading Kinerja.",
+  "body": [
+   "00:00 Pengantar cascading",
+   "03:10 Target organisasi ke unit",
+   "07:45 Target unit ke pegawai"
+  ]
+ },
+ {
+  "id": "video-pembicara",
+  "group": "pembelajaran",
+  "type": "Video Tutorial",
+  "title": "Pembicara Serba Bisa",
+  "dept": "Operations",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Komunikasi",
+  "diff": "Menengah",
+  "source": "C17",
+  "duration": 540,
+  "date": "2026-04-02",
+  "desc": "Latihan menjadi pembicara di berbagai forum.",
+  "body": [
+   "00:00 Mengenal audiens",
+   "03:00 Menyusun pesan utama",
+   "06:20 Latihan pembukaan"
+  ]
+ },
+ {
+  "id": "video-pelaksanaan-kinerja",
+  "group": "pembelajaran",
+  "type": "Video Tutorial",
+  "title": "Pelaksanaan Kinerja",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Lama",
+   "Supervisor"
+  ],
+  "topic": "Kinerja",
+  "diff": "Menengah",
+  "source": "C19",
+  "duration": 610,
+  "date": "2026-06-25",
+  "desc": "Cara memantau dan mendokumentasikan kinerja selama tahun berjalan.",
+  "body": [
+   "00:00 Siklus kinerja tahunan",
+   "04:10 Catatan kinerja bulanan",
+   "07:30 Umpan balik supervisor"
+  ]
+ },
+ {
+  "id": "video-perjalanan-dinas",
+  "group": "pembelajaran",
+  "type": "Video Tutorial",
+  "title": "Video Cara Mengajukan Perjalanan Dinas",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Perjalanan Dinas",
+  "diff": "Dasar",
+  "duration": 240,
+  "date": "2026-10-28",
+  "desc": "Demo pengisian formulir dalam empat menit.",
+  "body": [
+   "00:00 Membuka formulir",
+   "01:20 Mengisi rincian perjalanan",
+   "02:50 Mengirim ke atasan"
+  ]
+ },
+ {
+  "id": "ts-erp",
+  "group": "bantuan",
+  "type": "Troubleshooting",
+  "title": "ERP Tidak Bisa Dibuka",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Penggunaan Sistem",
+  "date": "2026-10-22",
+  "desc": "Langkah mengatasi ERP yang gagal dimuat atau menolak login.",
+  "callout": "Gejala: halaman ERP putih, berputar terus, atau muncul pesan \"Session expired\".",
+  "body": [
+   "Hapus cache browser|Tekan Ctrl+Shift+Delete, pilih \"Cached images and files\", lalu muat ulang ERP.",
+   "Cek koneksi VPN kantor|ERP hanya bisa dibuka lewat jaringan kantor atau VPN. Pastikan ikon VPN berwarna hijau.",
+   "Login ulang lewat portal SSO|Buka portal SSO, keluar, lalu masuk lagi. Sesi lama sering menolak login."
+  ]
+ },
+ {
+  "id": "ts-vpn",
+  "group": "bantuan",
+  "type": "Troubleshooting",
+  "title": "VPN Kantor Tidak Terhubung",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Lama"
+  ],
+  "topic": "Penggunaan Sistem",
+  "date": "2026-09-30",
+  "desc": "Langkah mengatasi VPN yang gagal tersambung dari luar kantor.",
+  "body": [
+   "Matikan lalu nyalakan ulang aplikasi VPN.",
+   "Pastikan jam komputer sesuai jam internet.",
+   "Hubungi Helpdesk IT bila muncul kode error 809."
+  ]
+ },
+ {
+  "id": "faq-hub",
+  "group": "bantuan",
+  "type": "FAQ",
+  "title": "FAQ Memakai Knowledge Hub",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Penggunaan Sistem",
+  "date": "2026-10-01",
+  "desc": "Cara mencari, memakai filter, dan mengusulkan konten baru.",
+  "body": [
+   "Bagaimana cara mencari dokumen kalau lupa namanya?|Ketik masalah atau tugasnya, misalnya \"mengajukan perjalanan dinas\". Pencarian membaca topik dan departemen, bukan hanya judul.",
+   "Apa beda Prosedur dan Referensi?|Prosedur berisi langkah yang harus diikuti. Referensi berisi informasi untuk dipahami atau dirujuk.",
+   "Bagaimana memakai filter?|Centang Departemen, Audience, atau Topik di kolom kiri. Hasil langsung berubah.",
+   "Kenapa ada dokumen yang tidak muncul?|Hanya konten berstatus Published yang tampil. Draft dan Archived disembunyikan.",
+   "Bagaimana mengusulkan konten baru?|Masuk ke akun Anda, lalu pilih \"Usulkan Konten\" di dashboard."
+  ]
+ },
+ {
+  "id": "faq-perjalanan-dinas",
+  "group": "bantuan",
+  "type": "FAQ",
+  "title": "FAQ Perjalanan Dinas",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Perjalanan Dinas",
+  "date": "2026-10-28",
+  "desc": "Pertanyaan umum soal uang harian, tiket, dan batas laporan.",
+  "body": [
+   "Uang harian dihitung per hari atau per malam?|Per hari, termasuk hari berangkat dan hari kembali.",
+   "Siapa yang memesan tiket?|Bagian Administrasi memesan tiket setelah formulir disetujui.",
+   "Kapan batas laporan?|Paling lambat 5 hari kerja sesudah kembali."
+  ]
+ },
+ {
+  "id": "faq-cuti",
+  "group": "bantuan",
+  "type": "FAQ",
+  "title": "FAQ Sisa Cuti dan Kontrak",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Lama",
+   "Supervisor"
+  ],
+  "topic": "Cuti",
+  "date": "2026-07-05",
+  "desc": "Jawaban soal sisa cuti saat kontrak diperpanjang atau berakhir.",
+  "body": [
+   "Apakah sisa cuti bisa diuangkan?|Tidak. Sisa cuti hangus saat kontrak berakhir.",
+   "Kontrak diperpanjang, sisa cuti bagaimana?|Sisa cuti dibawa ke kontrak baru paling banyak 6 hari."
+  ]
+ },
+ {
+  "id": "faq-rumus-laporan",
+  "group": "bantuan",
+  "type": "FAQ",
+  "title": "FAQ Rumus Sheet Ringkasan",
+  "dept": "Finance",
+  "aud": [
+   "Pegawai Lama"
+  ],
+  "topic": "Pelaporan",
+  "date": "2026-10-20",
+  "desc": "Kenapa sheet Ringkasan kosong atau menampilkan #REF!.",
+  "body": [
+   "Sheet Ringkasan kosong, kenapa?|Sheet Rincian belum diisi. Ringkasan mengambil angka dari Rincian.",
+   "Muncul #REF!, apa yang salah?|Ada baris yang dihapus di Rincian. Unduh ulang template dan salin datanya."
+  ]
+ },
+ {
+  "id": "template-laporan",
+  "group": "alat-kerja",
+  "type": "Template",
+  "title": "Template Laporan Bulanan",
+  "dept": "Finance",
+  "aud": [
+   "Pegawai Lama",
+   "Supervisor"
+  ],
+  "topic": "Pelaporan",
+  "date": "2026-10-20",
+  "desc": "Format laporan bulanan departemen Finance, siap diisi.",
+  "version": "3.0",
+  "body": [
+   "Periode",
+   "Akun anggaran",
+   "Pagu",
+   "Realisasi",
+   "Persentase",
+   "Kendala",
+   "Tanda tangan Kepala Bagian"
+  ]
+ },
+ {
+  "id": "template-perjalanan-dinas",
+  "group": "alat-kerja",
+  "type": "Template",
+  "title": "Formulir Pengajuan Perjalanan Dinas",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Perjalanan Dinas",
+  "date": "2026-10-28",
+  "desc": "Formulir yang diisi sebelum meminta persetujuan atasan.",
+  "body": [
+   "Nama pegawai",
+   "Unit kerja",
+   "Tujuan perjalanan",
+   "Tanggal berangkat",
+   "Tanggal kembali",
+   "Keperluan",
+   "Persetujuan atasan"
+  ]
+ },
+ {
+  "id": "template-cuti",
+  "group": "alat-kerja",
+  "type": "Template",
+  "title": "Formulir Cuti",
+  "dept": "HR",
+  "aud": [
+   "Pegawai Baru",
+   "Pegawai Lama"
+  ],
+  "topic": "Cuti",
+  "date": "2026-07-01",
+  "desc": "Formulir pengajuan cuti tahunan.",
+  "body": [
+   "Nama pegawai",
+   "Jenis cuti",
+   "Tanggal mulai",
+   "Tanggal selesai",
+   "Alamat selama cuti",
+   "Persetujuan atasan"
+  ]
+ },
+ {
+  "id": "template-onboarding",
+  "group": "alat-kerja",
+  "type": "Template",
+  "title": "Template Rencana Onboarding 30 Hari",
+  "dept": "HR",
+  "aud": [
+   "Supervisor"
+  ],
+  "topic": "Rekrutmen",
+  "date": "2026-08-10",
+  "desc": "Rencana kerja 30 hari pertama untuk pegawai baru.",
+  "body": [
+   "Minggu",
+   "Target",
+   "Materi yang dibaca",
+   "Pendamping",
+   "Catatan"
+  ]
+ },
+ {
+  "id": "template-akses-sistem",
+  "group": "alat-kerja",
+  "type": "Template",
+  "title": "Formulir Permintaan Akses Sistem",
+  "dept": "IT",
+  "aud": [
+   "Pegawai Baru"
+  ],
+  "topic": "Penggunaan Sistem",
+  "date": "2026-09-02",
+  "desc": "Formulir meminta akun atau hak akses aplikasi kantor.",
+  "body": [
+   "Nama pegawai",
+   "NIP",
+   "Aplikasi yang diminta",
+   "Hak akses",
+   "Alasan",
+   "Persetujuan atasan"
+  ]
+ }
+]

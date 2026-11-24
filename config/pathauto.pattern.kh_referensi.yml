@@ -1,0 +1,23 @@
+uuid: eb4c031c-1dad-4c9a-a5b1-0565f7cef8b6
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.referensi
+  module:
+    - node
+id: kh_referensi
+label: 'Knowledge Hub: referensi'
+type: 'canonical_entities:node'
+pattern: '/referensi/[node:title]'
+selection_criteria:
+  18c4d92d-0506-4660-a358-579581869314:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      referensi: referensi
+selection_logic: and
+weight: 0
+relationships: {  }

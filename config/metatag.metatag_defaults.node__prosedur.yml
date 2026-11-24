@@ -1,0 +1,10 @@
+uuid: 11c27f2a-b40f-4449-b6c5-b5fdc8bbee9a
+langcode: id
+status: true
+dependencies: {  }
+id: node__prosedur
+label: 'Content: prosedur'
+tags:
+  description: '[node:field_ringkasan]'
+  schema_web_page_type: WebPage
+  schema_web_page_description: '[node:field_ringkasan]'

@@ -1,0 +1,19 @@
+uuid: d975c442-998f-459a-8cea-4a8c42dc5051
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ringkasan
+    - node.type.referensi
+id: node.referensi.field_ringkasan
+field_name: field_ringkasan
+entity_type: node
+bundle: referensi
+label: Ringkasan
+description: 'Satu kalimat, maksimal 160 karakter. Dipakai sebagai meta description.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

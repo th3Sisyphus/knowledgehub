@@ -1,0 +1,13 @@
+uuid: 1334e056-c73e-4ff2-ae4c-3eb11f9d9266
+langcode: id
+status: true
+dependencies: {  }
+id: node__referensi
+label: 'Content: referensi'
+tags:
+  description: '[node:field_ringkasan]'
+  schema_article_type: Article
+  schema_article_headline: '[node:title]'
+  schema_article_description: '[node:field_ringkasan]'
+  schema_article_date_published: '[node:created:custom:c]'
+  schema_article_date_modified: '[node:changed:custom:c]'

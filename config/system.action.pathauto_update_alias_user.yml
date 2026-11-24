@@ -1,0 +1,16 @@
+uuid: 62522d46-4158-4078-ba45-4d706a8de8db
+langcode: id
+status: true
+dependencies:
+  module:
+    - pathauto
+  enforced:
+    module:
+      - user
+_core:
+  default_config_hash: 6eiNWATGTd3lUEKuxNPNyDRDVMsUlM0HS90_R6JJLUI
+id: pathauto_update_alias_user
+label: 'Memperbarui Alias URL'
+type: user
+plugin: pathauto_update_alias
+configuration: {  }

@@ -1,0 +1,204 @@
+uuid: 467cecf3-f336-4010-970f-e9dc9ce79aa4
+langcode: id
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - field.storage.node.field_audience
+    - field.storage.node.field_departemen
+    - field.storage.node.field_difficulty
+    - field.storage.node.field_jenis
+    - field.storage.node.field_ringkasan
+    - field.storage.node.field_topik
+    - search_api.server.kh_db
+  module:
+    - node
+id: kh_index
+name: 'Indeks Knowledge Hub'
+description: null
+read_only: false
+field_settings:
+  body:
+    label: Isi
+    datasource_id: 'entity:node'
+    property_path: body
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.body
+  field_audience:
+    label: Audience
+    datasource_id: 'entity:node'
+    property_path: field_audience
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_audience
+  field_departemen:
+    label: Departemen
+    datasource_id: 'entity:node'
+    property_path: field_departemen
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_departemen
+  field_difficulty:
+    label: Difficulty
+    datasource_id: 'entity:node'
+    property_path: field_difficulty
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_difficulty
+  field_jenis:
+    label: Jenis
+    datasource_id: 'entity:node'
+    property_path: field_jenis
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_jenis
+  field_ringkasan:
+    label: Ringkasan
+    datasource_id: 'entity:node'
+    property_path: field_ringkasan
+    type: text
+    boost: 3.0
+    dependencies:
+      config:
+        - field.storage.node.field_ringkasan
+  field_topik:
+    label: Topik
+    datasource_id: 'entity:node'
+    property_path: field_topik
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_topik
+  node_grants:
+    label: 'Informasi akses node'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+  status:
+    label: Boolean
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  title:
+    label: Judul
+    datasource_id: 'entity:node'
+    property_path: title
+    type: text
+    boost: 5.0
+    dependencies:
+      module:
+        - node
+  title_sort:
+    label: 'Judul (urut)'
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+  type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  uid:
+    label: 'Referensi entitas'
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - alat_kerja
+        - bantuan
+        - pembelajaran
+        - prosedur
+        - referensi
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  content_access:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -4
+  custom_value: {  }
+  entity_status:
+    weights:
+      preprocess_index: -30
+  entity_type: {  }
+  html_filter:
+    weights:
+      preprocess_index: -3
+      preprocess_query: -3
+    all_fields: false
+    fields:
+      - body
+    title: true
+    alt: true
+    tags:
+      b: 2.0
+      h1: 5.0
+      h2: 3.0
+      h3: 2.0
+      strong: 2.0
+  ignorecase:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
+    all_fields: true
+    fields:
+      - body
+      - field_ringkasan
+      - title
+      - title_sort
+      - type
+  language_with_fallback: {  }
+  rendered_item: {  }
+  tokenizer:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -6
+    all_fields: true
+    fields:
+      - body
+      - field_ringkasan
+      - title
+    spaces: ''
+    ignored: ._-
+    overlap_cjk: 1
+    minimum_word_size: '2'
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  delete_on_fail: true
+  index_directly: true
+  track_changes_in_references: true
+server: kh_db

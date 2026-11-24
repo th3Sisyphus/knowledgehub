@@ -1,0 +1,93 @@
+uuid: 5d644ae5-fec9-4ead-a6a4-b9803bef282e
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.alat_kerja
+    - node.type.bantuan
+    - node.type.pembelajaran
+    - node.type.prosedur
+    - node.type.referensi
+  module:
+    - content_moderation
+id: kh_editorial
+label: 'Editorial Knowledge Hub'
+type: content_moderation
+type_settings:
+  states:
+    archived:
+      label: Archived
+      weight: 3
+      published: false
+      default_revision: true
+    draft:
+      label: Draft
+      weight: 0
+      published: false
+      default_revision: false
+    in_review:
+      label: 'In Review'
+      weight: 1
+      published: false
+      default_revision: false
+    published:
+      label: Published
+      weight: 2
+      published: true
+      default_revision: true
+  transitions:
+    approve:
+      label: 'Setujui (Publish)'
+      from:
+        - in_review
+      to: published
+      weight: 3
+    archive:
+      label: Arsipkan
+      from:
+        - published
+      to: archived
+      weight: 6
+    archive_review:
+      label: 'Arsipkan dari Review'
+      from:
+        - in_review
+      to: archived
+      weight: 5
+    reject:
+      label: 'Kembalikan ke Draft'
+      from:
+        - in_review
+      to: draft
+      weight: 4
+    restore:
+      label: 'Pulihkan ke Draft'
+      from:
+        - archived
+      to: draft
+      weight: 7
+    revise:
+      label: 'Revisi konten terbit'
+      from:
+        - published
+      to: draft
+      weight: 2
+    save_draft:
+      label: 'Simpan Draft'
+      from:
+        - draft
+      to: draft
+      weight: 0
+    submit_review:
+      label: 'Kirim ke Review'
+      from:
+        - draft
+      to: in_review
+      weight: 1
+  entity_types:
+    node:
+      - alat_kerja
+      - bantuan
+      - pembelajaran
+      - prosedur
+      - referensi

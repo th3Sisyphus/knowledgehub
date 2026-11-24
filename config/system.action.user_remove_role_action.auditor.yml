@@ -1,0 +1,14 @@
+uuid: a3f107a2-0704-46aa-aa9f-19f96b0564b4
+langcode: id
+status: true
+dependencies:
+  config:
+    - user.role.auditor
+  module:
+    - user
+id: user_remove_role_action.auditor
+label: 'Hapus peran Auditor dari pengguna yang dipilih'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: auditor

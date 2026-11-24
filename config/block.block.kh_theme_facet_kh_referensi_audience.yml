@@ -1,0 +1,27 @@
+uuid: 8aa50205-b987-48f5-85d1-d3de350a258a
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_referensi_audience
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_referensi_audience
+theme: kh_theme
+region: sidebar_first
+weight: 1
+provider: null
+plugin: 'facet_block:kh_referensi_audience'
+settings:
+  id: 'facet_block:kh_referensi_audience'
+  label: Audience
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /referensi

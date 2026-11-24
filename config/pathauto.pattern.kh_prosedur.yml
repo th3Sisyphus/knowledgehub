@@ -1,0 +1,23 @@
+uuid: d5dabfd6-60a7-4170-b550-fb5bb0a0550e
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.prosedur
+  module:
+    - node
+id: kh_prosedur
+label: 'Knowledge Hub: prosedur'
+type: 'canonical_entities:node'
+pattern: '/prosedur/[node:title]'
+selection_criteria:
+  48f36daf-003d-43ad-8c30-3760cebca835:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      prosedur: prosedur
+selection_logic: and
+weight: 0
+relationships: {  }

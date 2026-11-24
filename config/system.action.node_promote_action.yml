@@ -1,0 +1,13 @@
+uuid: e860c02a-2a7a-487f-b0c0-8a3d985eb239
+langcode: id
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: N0RDBTqiK4dKoN4p4oW2j0SGWycdHyALUe9M-Ofp89U
+id: node_promote_action
+label: 'Promosikan konten ke halaman depan'
+type: node
+plugin: node_promote_action
+configuration: {  }

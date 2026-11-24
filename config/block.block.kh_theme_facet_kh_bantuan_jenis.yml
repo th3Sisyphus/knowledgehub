@@ -1,0 +1,27 @@
+uuid: b5f8f182-239f-4f8f-bc4e-3174321de59b
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_bantuan_jenis
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_bantuan_jenis
+theme: kh_theme
+region: sidebar_first
+weight: 2
+provider: null
+plugin: 'facet_block:kh_bantuan_jenis'
+settings:
+  id: 'facet_block:kh_bantuan_jenis'
+  label: Jenis
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /bantuan

@@ -1,0 +1,75 @@
+uuid: 2536adbf-5029-42c0-b6e9-42c69569bd86
+langcode: id
+status: true
+dependencies:
+  config:
+    - node.type.alat_kerja
+    - node.type.bantuan
+    - node.type.pembelajaran
+    - node.type.prosedur
+    - node.type.referensi
+    - taxonomy.vocabulary.audience
+    - taxonomy.vocabulary.departemen
+    - taxonomy.vocabulary.difficulty
+    - taxonomy.vocabulary.jenis_alat_kerja
+    - taxonomy.vocabulary.jenis_bantuan
+    - taxonomy.vocabulary.jenis_pembelajaran
+    - taxonomy.vocabulary.jenis_prosedur
+    - taxonomy.vocabulary.jenis_referensi
+    - taxonomy.vocabulary.topik
+    - workflows.workflow.kh_editorial
+  module:
+    - content_moderation
+    - navigation
+    - node
+    - system
+    - taxonomy
+id: kh_admin
+label: Admin
+weight: 5
+is_admin: false
+permissions:
+  - 'access content'
+  - 'access content overview'
+  - 'access navigation'
+  - 'access taxonomy overview'
+  - 'create alat_kerja content'
+  - 'create bantuan content'
+  - 'create pembelajaran content'
+  - 'create prosedur content'
+  - 'create referensi content'
+  - 'create terms in audience'
+  - 'create terms in departemen'
+  - 'create terms in difficulty'
+  - 'create terms in jenis_alat_kerja'
+  - 'create terms in jenis_bantuan'
+  - 'create terms in jenis_pembelajaran'
+  - 'create terms in jenis_prosedur'
+  - 'create terms in jenis_referensi'
+  - 'create terms in topik'
+  - 'edit own alat_kerja content'
+  - 'edit own bantuan content'
+  - 'edit own pembelajaran content'
+  - 'edit own prosedur content'
+  - 'edit own referensi content'
+  - 'edit terms in audience'
+  - 'edit terms in departemen'
+  - 'edit terms in difficulty'
+  - 'edit terms in jenis_alat_kerja'
+  - 'edit terms in jenis_bantuan'
+  - 'edit terms in jenis_pembelajaran'
+  - 'edit terms in jenis_prosedur'
+  - 'edit terms in jenis_referensi'
+  - 'edit terms in topik'
+  - 'use kh_editorial transition revise'
+  - 'use kh_editorial transition save_draft'
+  - 'use kh_editorial transition submit_review'
+  - 'view alat_kerja revisions'
+  - 'view bantuan revisions'
+  - 'view latest version'
+  - 'view own unpublished content'
+  - 'view pembelajaran revisions'
+  - 'view prosedur revisions'
+  - 'view referensi revisions'
+  - 'view the administration theme'
+  - 'view vocabulary labels'

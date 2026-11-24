@@ -1,0 +1,27 @@
+uuid: e9158794-b311-4e86-87b2-101979636799
+langcode: id
+status: true
+dependencies:
+  config:
+    - facets.facet.kh_prosedur_audience
+  module:
+    - facets
+    - system
+  theme:
+    - kh_theme
+id: kh_theme_facet_kh_prosedur_audience
+theme: kh_theme
+region: sidebar_first
+weight: 1
+provider: null
+plugin: 'facet_block:kh_prosedur_audience'
+settings:
+  id: 'facet_block:kh_prosedur_audience'
+  label: Audience
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /prosedur
