@@ -1,13 +1,33 @@
+{#
+  Node penuh Knowledge Hub: kartu besar dengan kicker, judul, meta, callout,
+  chip field, daftar isi, isi, dan blok review.
+#}
 <article{{ attributes.addClass('node', 'jenis-' ~ kh.jenis_class) }}>
-  <span class="teaser-type">{{ kh.jenis }}{% if kh.diff %} · {{ kh.diff }}{% endif %}</span>
-  <div class="node-head"><h1 class="page-title">{{ label }}</h1></div>
-  <p class="node-meta">{{ kh.meta }} · <span class="status status--{{ kh.status_class }}">{{ kh.status }}</span></p>
-  {% if kh.callout %}<div class="callout{% if kh.jenis == 'Kebijakan' %} callout--policy{% endif %}">{{ kh.callout }}</div>{% endif %}
-  <dl class="fields">
-    {% for f in kh.fields %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
-  </dl>
-  <div class="node-body">{{ content.body }}</div>
-  <dl class="review">
-    {% for f in kh.review %}<div><dt>{{ f.label }}</dt><dd>{% if f.href %}<a href="{{ f.href }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd></div>{% endfor %}
-  </dl>
+  <div class="node-card">
+    <div class="node-kicker">
+      {% if kh.jenis %}<span class="pill pill--jenis">{{ kh.jenis }}</span>{% endif %}
+      {% if kh.diff %}<span class="pill pill--level">{{ kh.diff }}</span>{% endif %}
+      <span class="status status--{{ kh.status_class }}">{{ kh.status }}</span>
+    </div>
+    <div class="node-head"><h1 class="page-title">{{ label }}</h1></div>
+    {% if kh.meta %}<p class="node-meta">{{ kh.meta }}</p>{% endif %}
+    {% if kh.callout %}<div class="callout{% if kh.jenis == 'Kebijakan' %} callout--policy{% endif %}">{{ kh.callout }}</div>{% endif %}
+    {% if kh.fields %}
+      <dl class="fields">
+        {% for f in kh.fields %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
+      </dl>
+    {% endif %}
+    {% if kh.toc %}
+      <nav class="toc" aria-label="Daftar isi">
+        <p>Di halaman ini</p>
+        <ol>
+          {% for item in kh.toc %}<li><a href="#{{ item.id }}">{{ item.text }}</a></li>{% endfor %}
+        </ol>
+      </nav>
+    {% endif %}
+    <div class="node-body">{{ content.body }}</div>
+    <dl class="review">
+      {% for f in kh.review %}<div><dt>{{ f.label }}</dt><dd>{% if f.href %}<a href="{{ f.href }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd></div>{% endfor %}
+    </dl>
+  </div>
 </article>

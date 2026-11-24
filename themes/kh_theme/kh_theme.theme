@@ -1,11 +1,41 @@
 <?php
 
+use Drupal\Core\Render\Markup;
+
 /**
  * @file
  * Tema Knowledge Hub: data tampilan konten dan menu aktif.
  */
 
 const KH_BUNDLES = ['prosedur', 'referensi', 'pembelajaran', 'bantuan', 'alat_kerja'];
+
+/**
+ * Simbol logo Knowledge Hub (squircle + huruf K + titik node).
+ *
+ * $variant: gradient (default), putih untuk latar gelap, dan mono untuk satu warna.
+ */
+function kh_theme_logo_mark($variant = 'gradient', $size = 36) {
+  $styles = [
+    'gradient' => ['fill' => 'url(#kh-logo-grad)', 'glyph' => '#fff', 'dot' => '#fff'],
+    'putih' => ['fill' => '#fff', 'glyph' => '#0B1437', 'dot' => '#0B1437'],
+    'mono' => ['fill' => 'currentColor', 'glyph' => 'var(--surface, #fff)', 'dot' => 'var(--surface, #fff)'],
+  ];
+  $style = $styles[$variant] ?? $styles['gradient'];
+
+  $defs = '';
+  if ($variant === 'gradient') {
+    $defs = '<defs><linearGradient id="kh-logo-grad" x1="0" y1="0" x2="1" y2="1">'
+      . '<stop offset="0" stop-color="#4F46E5"/><stop offset="1" stop-color="#8B5CF6"/>'
+      . '</linearGradient></defs>';
+  }
+
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="' . $size . '" height="' . $size . '" aria-hidden="true" focusable="false">'
+    . $defs
+    . '<rect width="32" height="32" rx="10" fill="' . $style['fill'] . '"/>'
+    . '<path d="M11.5 8.5v15M11.5 17l6-5.5M14.5 18.5l5 5" fill="none" stroke="' . $style['glyph'] . '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'
+    . '<circle cx="22" cy="9.5" r="2.4" fill="' . $style['dot'] . '"/>'
+    . '</svg>';
+}
 
 /**
  * Implements hook_theme_suggestions_node_alter().
@@ -202,6 +232,38 @@ function kh_theme_tags($dept, $audience, $topic) {
   return $result;
 }
 
+
+/**
+ * Id anchor untuk daftar isi: "Langkah Penting" menjadi "langkah-penting".
+ */
+function kh_theme_anchor($text) {
+  $slug = strtolower(preg_replace('/[^a-z0-9]+/', '-', strip_tags($text)));
+  return trim($slug, '-');
+}
+
+/**
+ * Tambahkan id ke setiap h2 tanpa id di dalam HTML isi.
+ *
+ * Daftar isi (TOC) dibangun dari daftar id yang dihasilkan fungsi ini.
+ */
+function kh_theme_heading_ids($html, array &$toc) {
+  return preg_replace_callback('/<h2(\s[^>]*)?>(.*?)<\/h2>/is', function ($match) use (&$toc) {
+    $attrs = isset($match[1]) ? $match[1] : '';
+    $text = $match[2];
+
+    if (preg_match('/id="([^"]+)"/', $attrs, $found)) {
+      $id = $found[1];
+    }
+    else {
+      $id = kh_theme_anchor($text);
+      $attrs .= ' id="' . $id . '"';
+    }
+
+    $toc[] = ['id' => $id, 'text' => trim(strip_tags($text))];
+    return '<h2' . $attrs . '>' . $text . '</h2>';
+  }, $html);
+}
+
 /**
  * Implements hook_preprocess_node().
  *
@@ -244,7 +306,16 @@ function kh_theme_preprocess_node(array &$variables) {
     'callout' => kh_theme_field_value($node, 'field_callout'),
     'fields' => kh_theme_summary_fields($jenis, $dept, $audience, $topic, $difficulty),
     'review' => kh_theme_review_fields($node, $dept, $date),
+    'toc' => [],
   ];
+
+  // Daftar isi dari heading h2 isi konten, plus id anchor agar bisa dilompati.
+  if (isset($variables['content']['body'][0]) && isset($variables['content']['body'][0]['#text'])) {
+    $toc = [];
+    $variables['content']['body'][0]['#text'] = kh_theme_heading_ids($variables['content']['body'][0]['#text'], $toc);
+    $variables['kh']['toc'] = count($toc) > 1 ? $toc : [];
+  }
+
   $variables['#cache']['tags'][] = 'node:' . $node->id();
 }
 
@@ -280,6 +351,9 @@ function kh_theme_preprocess_menu__main(array &$variables) {
  */
 function kh_theme_preprocess_page(array &$variables) {
   $variables['site_name'] = \Drupal::config('system.site')->get('name');
+  // Simbol logo header (gradient) dan footer (putih), dipakai page.html.twig.
+  $variables['kh_mark_gradient'] = Markup::create(kh_theme_logo_mark('gradient', 36));
+  $variables['kh_mark_white'] = Markup::create(kh_theme_logo_mark('putih', 40));
 }
 
 /**

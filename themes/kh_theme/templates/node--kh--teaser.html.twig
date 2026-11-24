@@ -1,6 +1,13 @@
+{#
+  Teaser Knowledge Hub: kartu dengan pill jenis, pill tingkat kesulitan, judul,
+  ringkasan, dan tag. Seluruh kartu bisa diklik lewat pseudo-element di tautan judul.
+#}
 <article{{ attributes.addClass('teaser') }}>
-  <span class="teaser-type">{{ kh.jenis }}{% if kh.diff %} · {{ kh.diff }}{% endif %}</span>
+  <div class="teaser-row">
+    {% if kh.jenis %}<span class="teaser-type">{{ kh.jenis }}</span>{% endif %}
+    {% if kh.diff %}<span class="teaser-level">{{ kh.diff }}</span>{% endif %}
+  </div>
   <h3><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
-  <p>{{ kh.ringkasan }}</p>
-  <ul class="tags">{% for t in kh.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+  {% if kh.ringkasan %}<p>{{ kh.ringkasan }}</p>{% endif %}
+  {% if kh.tags %}<ul class="tags">{% for t in kh.tags %}<li>{{ t }}</li>{% endfor %}</ul>{% endif %}
 </article>

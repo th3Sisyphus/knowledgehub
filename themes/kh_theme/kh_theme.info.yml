@@ -1,11 +1,17 @@
 name: 'Knowledge Hub'
 type: theme
-description: 'Tema Knowledge Hub: modern minimalis navy, putih, dan gold lembut. Header navy, hero pencarian, kartu area, facet kiri, konten terkait kanan, mode gelap.'
+description: 'Tema Knowledge Hub. Modern minimalis dengan token warna, kartu rounded, header pill, satu aksen ungu, dan mode terang/gelap lengkap.'
 package: Knowledge Hub
 core_version_requirement: ^11
 base theme: stable9
 libraries:
   - kh_theme/global
+libraries-override:
+  core/drupal.dialog.ajax: false
+  core/drupal.progress: false
+libraries-extend:
+  core/drupal.message:
+    - kh_theme/global
 regions:
   header: Header
   primary_menu: 'Menu utama'
