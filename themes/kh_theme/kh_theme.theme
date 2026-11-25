@@ -218,6 +218,53 @@ function kh_theme_review_fields($node, $dept, $date) {
 }
 
 /**
+ * Banner kesegaran dan status konten.
+ *
+ * Review Date = tanggal konten + 12 bulan (sama dengan blok review). Level:
+ * archived, preview (belum terbit), overdue (lewat review), soon (30 hari lagi).
+ * Hasil kosong berarti tidak ada banner.
+ */
+function kh_theme_freshness($state, $date) {
+  if ($state === 'archived') {
+    return [
+      'level' => 'archived',
+      'title' => 'Konten diarsipkan.',
+      'text' => 'Dokumen ini tidak lagi berlaku dan hanya disimpan sebagai riwayat.',
+    ];
+  }
+  if ($state !== 'published') {
+    return [
+      'level' => 'preview',
+      'title' => 'Pratinjau.',
+      'text' => 'Konten ini belum dipublikasikan dan hanya terlihat oleh pengguna yang berhak.',
+    ];
+  }
+  if ($date === '') {
+    return [];
+  }
+
+  $review_on = (new DateTimeImmutable($date))->modify('+12 months');
+  $today = new DateTimeImmutable('today');
+  $days_left = (int) $today->diff($review_on)->format('%r%a');
+
+  if ($days_left < 0) {
+    return [
+      'level' => 'overdue',
+      'title' => 'Perlu review.',
+      'text' => 'Jadwal review terlewat sejak ' . kh_theme_date($review_on->format('Y-m-d')) . '. Pastikan isinya masih berlaku sebelum dipakai.',
+    ];
+  }
+  if ($days_left <= 30) {
+    return [
+      'level' => 'soon',
+      'title' => 'Segera direview.',
+      'text' => 'Jadwal review pada ' . kh_theme_date($review_on->format('Y-m-d')) . '.',
+    ];
+  }
+  return [];
+}
+
+/**
  * Tag di teaser: departemen, audience, topik. Yang kosong dilewati.
  */
 function kh_theme_tags($dept, $audience, $topic) {
@@ -307,6 +354,8 @@ function kh_theme_preprocess_node(array &$variables) {
     'fields' => kh_theme_summary_fields($jenis, $dept, $audience, $topic, $difficulty),
     'review' => kh_theme_review_fields($node, $dept, $date),
     'toc' => [],
+    'freshness' => kh_theme_freshness($state, $date),
+    'feedback' => \Drupal::moduleHandler()->moduleExists('kh_feedback') && $state === 'published',
   ];
 
   // Daftar isi dari heading h2 isi konten, plus id anchor agar bisa dilompati.
@@ -317,6 +366,8 @@ function kh_theme_preprocess_node(array &$variables) {
   }
 
   $variables['#cache']['tags'][] = 'node:' . $node->id();
+  // Banner kesegaran berubah menurut tanggal, jadi cache dibatasi satu hari.
+  $variables['#cache']['max-age'] = 86400;
 }
 
 /**
@@ -484,4 +535,53 @@ function kh_theme_preprocess_html(array &$variables) {
   unset($variables['page_top']['navigation']);
   unset($variables['page_top']['top_bar']);
   $variables['#cache']['contexts'][] = 'route';
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ *
+ * Favicon dan gambar OG dari folder branding tema. Gambar OG hanya dipasang bila
+ * modul metatag belum mengisinya.
+ */
+function kh_theme_page_attachments_alter(array &$attachments) {
+  $base = '/' . \Drupal::service('extension.list.theme')->getPath('kh_theme') . '/branding/';
+
+  // Buang favicon bawaan Drupal supaya tidak bentrok dengan ikon tema.
+  foreach ($attachments['#attached']['html_head_link'] ?? [] as $key => $link) {
+    $rel = $link[0]['rel'] ?? '';
+    if ($rel === 'icon' || $rel === 'shortcut icon') {
+      unset($attachments['#attached']['html_head_link'][$key]);
+    }
+  }
+
+  $icons = [
+    ['rel' => 'icon', 'href' => $base . 'favicon.svg', 'type' => 'image/svg+xml'],
+    ['rel' => 'icon', 'href' => $base . 'favicon-32.png', 'type' => 'image/png', 'sizes' => '32x32'],
+    ['rel' => 'apple-touch-icon', 'href' => $base . 'apple-touch-icon.png'],
+  ];
+  foreach ($icons as $i => $icon) {
+    $attachments['#attached']['html_head'][] = [
+      ['#tag' => 'link', '#attributes' => $icon],
+      'kh_theme_icon_' . $i,
+    ];
+  }
+
+  $has_og_image = FALSE;
+  foreach ($attachments['#attached']['html_head'] ?? [] as $item) {
+    if (($item[0]['#attributes']['property'] ?? '') === 'og:image' || ($item[0]['#attributes']['name'] ?? '') === 'og:image') {
+      $has_og_image = TRUE;
+    }
+  }
+  if (!$has_og_image) {
+    $origin = \Drupal::request()->getSchemeAndHttpHost();
+    $attachments['#attached']['html_head'][] = [
+      ['#tag' => 'meta', '#attributes' => ['property' => 'og:image', 'content' => $origin . $base . 'og-image.png']],
+      'kh_theme_og_image',
+    ];
+    $attachments['#attached']['html_head'][] = [
+      ['#tag' => 'meta', '#attributes' => ['name' => 'twitter:card', 'content' => 'summary_large_image']],
+      'kh_theme_twitter_card',
+    ];
+    $attachments['#cache']['contexts'][] = 'url.site';
+  }
 }

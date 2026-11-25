@@ -1,0 +1,564 @@
+diff --git a/config/core.extension.yml b/config/core.extension.yml
+index 5b05dfe..bbe6105 100644
+--- a/config/core.extension.yml
++++ b/config/core.extension.yml
+@@ -24,6 +24,7 @@ module:
+   image: 0
+   kh_feedback: 0
+   kh_home: 0
++  kh_search: 0
+   kh_workflow: 0
+   language: 0
+   layout_builder: 0
+diff --git a/modules/kh_search/kh_search.info.yml b/modules/kh_search/kh_search.info.yml
+new file mode 100644
+index 0000000..10b183a
+--- /dev/null
++++ b/modules/kh_search/kh_search.info.yml
+@@ -0,0 +1,8 @@
++name: 'KH Pencarian Cepat'
++type: module
++description: 'Endpoint JSON untuk command palette (Ctrl+K): judul berawalan kata + teks lengkap Search API.'
++package: Knowledge Hub
++core_version_requirement: ^11
++dependencies:
++  - drupal:node
++  - search_api:search_api
+diff --git a/modules/kh_search/kh_search.routing.yml b/modules/kh_search/kh_search.routing.yml
+new file mode 100644
+index 0000000..d24122e
+--- /dev/null
++++ b/modules/kh_search/kh_search.routing.yml
+@@ -0,0 +1,7 @@
++kh_search.quick:
++  path: '/kh/cari-cepat'
++  defaults:
++    _controller: '\Drupal\kh_search\Controller\QuickSearchController::results'
++  methods: [GET]
++  requirements:
++    _permission: 'access content'
+diff --git a/modules/kh_search/src/Controller/QuickSearchController.php b/modules/kh_search/src/Controller/QuickSearchController.php
+new file mode 100644
+index 0000000..c39c6f7
+--- /dev/null
++++ b/modules/kh_search/src/Controller/QuickSearchController.php
+@@ -0,0 +1,150 @@
++<?php
++
++namespace Drupal\kh_search\Controller;
++
++use Drupal\Core\Cache\CacheableJsonResponse;
++use Drupal\Core\Cache\CacheableMetadata;
++use Drupal\Core\Controller\ControllerBase;
++use Drupal\search_api\Entity\Index;
++use Symfony\Component\HttpFoundation\Request;
++
++/**
++ * Hasil cepat untuk command palette.
++ *
++ * Index Search API memakai matching "words", jadi kata yang belum selesai diketik
++ * ("prose") tidak cocok. Karena itu hasil digabung dari dua sumber: judul yang
++ * memuat kata (cocok saat mengetik) dan teks lengkap Search API (cocok ke isi).
++ */
++class QuickSearchController extends ControllerBase {
++
++  const BUNDLES = ['prosedur', 'referensi', 'pembelajaran', 'bantuan', 'alat_kerja'];
++  const MAX_ITEMS = 8;
++  const INDEX_ID = 'kh_index';
++
++  /**
++   * GET /kh/cari-cepat?q=... mengembalikan {"items": [...]}.
++   */
++  public function results(Request $request) {
++    $q = trim(preg_replace('/\s+/u', ' ', (string) $request->query->get('q', '')));
++    $q = mb_substr($q, 0, 80);
++
++    $meta = new CacheableMetadata();
++    $meta->setCacheMaxAge(60);
++    $meta->addCacheContexts(['url.query_args:q', 'user.node_grants:view', 'user.permissions']);
++    $meta->addCacheTags(['node_list', 'search_api_list:' . self::INDEX_ID]);
++
++    $items = [];
++    if (mb_strlen($q) >= 2) {
++      $title_hits = $this->titleHits($q);
++      $text_hits = $this->textHits($q);
++
++      $storage = $this->entityTypeManager()->getStorage('node');
++      $seen = [];
++      $ordered = [];
++      foreach ([['judul', $title_hits], ['isi', $text_hits]] as [$match, $nids]) {
++        foreach ($nids as $nid) {
++          if (!isset($seen[$nid])) {
++            $seen[$nid] = TRUE;
++            $ordered[$nid] = $match;
++          }
++        }
++      }
++      $nodes = $storage->loadMultiple(array_slice(array_keys($ordered), 0, self::MAX_ITEMS));
++
++      foreach ($ordered as $nid => $match) {
++        if (count($items) >= self::MAX_ITEMS) {
++          break;
++        }
++        $node = $nodes[$nid] ?? NULL;
++        if (!$node || !$node->isPublished() || !$node->access('view')) {
++          continue;
++        }
++        $meta->addCacheableDependency($node);
++        $items[] = [
++          'title' => $node->label(),
++          'url' => $node->toUrl()->toString(TRUE)->getGeneratedUrl(),
++          'jenis' => $this->termLabel($node, 'field_jenis'),
++          'snippet' => $this->snippet($node),
++          'match' => $match,
++        ];
++      }
++    }
++
++    $response = new CacheableJsonResponse(['items' => $items]);
++    $response->addCacheableDependency($meta);
++    return $response;
++  }
++
++  /**
++   * Node yang judulnya memuat semua kata. Yang berawalan kata pertama didahulukan.
++   */
++  protected function titleHits($q) {
++    $storage = $this->entityTypeManager()->getStorage('node');
++    $query = $storage->getQuery()
++      ->accessCheck(TRUE)
++      ->condition('status', 1)
++      ->condition('type', self::BUNDLES, 'IN');
++    foreach (array_slice(explode(' ', $q), 0, 5) as $word) {
++      if ($word !== '') {
++        $query->condition('title', $word, 'CONTAINS');
++      }
++    }
++    $nids = array_values($query->sort('changed', 'DESC')->range(0, 20)->execute());
++    if (!$nids) {
++      return [];
++    }
++
++    $nodes = $storage->loadMultiple($nids);
++    $needle = mb_strtolower($q);
++    usort($nids, function ($a, $b) use ($nodes, $needle) {
++      $a_start = mb_strpos(mb_strtolower($nodes[$a]->label()), $needle) === 0 ? 0 : 1;
++      $b_start = mb_strpos(mb_strtolower($nodes[$b]->label()), $needle) === 0 ? 0 : 1;
++      return $a_start <=> $b_start;
++    });
++    return array_slice($nids, 0, self::MAX_ITEMS);
++  }
++
++  /**
++   * Hasil teks lengkap dari index Search API. Gagal diam-diam bila index belum siap.
++   */
++  protected function textHits($q) {
++    $nids = [];
++    try {
++      $index = Index::load(self::INDEX_ID);
++      if (!$index || !$index->status()) {
++        return [];
++      }
++      $query = $index->query();
++      $query->setParseMode(\Drupal::service('plugin.manager.search_api.parse_mode')->createInstance('terms'));
++      $query->keys($q);
++      $query->setFulltextFields(['title', 'field_ringkasan', 'body']);
++      $query->sort('search_api_relevance', 'DESC');
++      $query->range(0, self::MAX_ITEMS);
++      foreach ($query->execute()->getResultItems() as $item) {
++        if (preg_match('/^entity:node\/(\d+):/', $item->getId(), $m)) {
++          $nids[] = (int) $m[1];
++        }
++      }
++    }
++    catch (\Exception $e) {
++      $this->getLogger('kh_search')->warning('Pencarian teks lengkap gagal: @msg', ['@msg' => $e->getMessage()]);
++    }
++    return $nids;
++  }
++
++  protected function termLabel($node, $field) {
++    if ($node->hasField($field) && !$node->get($field)->isEmpty() && $node->get($field)->entity) {
++      return $node->get($field)->entity->label();
++    }
++    return '';
++  }
++
++  protected function snippet($node) {
++    if (!$node->hasField('field_ringkasan') || $node->get('field_ringkasan')->isEmpty()) {
++      return '';
++    }
++    $text = trim(strip_tags($node->get('field_ringkasan')->value));
++    return mb_strlen($text) > 110 ? mb_substr($text, 0, 107) . '…' : $text;
++  }
++
++}
+diff --git a/setup/modules.sh b/setup/modules.sh
+index 79ccb2b..a2e24e5 100644
+--- a/setup/modules.sh
++++ b/setup/modules.sh
+@@ -29,4 +29,4 @@ if [ "$state" -eq 1 ]; then
+   fi
+ fi
+ 
+-dc vendor/bin/drush en -y pathauto token schema_metatag schema_article schema_web_page schema_course facets search_api search_api_db content_moderation workflows kh_workflow kh_home kh_feedback
++dc vendor/bin/drush en -y pathauto token schema_metatag schema_article schema_web_page schema_course facets search_api search_api_db content_moderation workflows kh_workflow kh_home kh_feedback kh_search
+diff --git a/themes/kh_theme/css/style.css b/themes/kh_theme/css/style.css
+index cd76603..fc8d9e9 100644
+--- a/themes/kh_theme/css/style.css
++++ b/themes/kh_theme/css/style.css
+@@ -488,6 +488,40 @@ main form input.error, main form textarea.error { border-color: var(--danger); }
+ .freshness--archived { border-left-color: var(--mute); background: var(--bg); }
+ .freshness--preview { border-left-color: var(--accent); background: var(--accent-soft); }
+ 
++/* ---------- Command palette (Ctrl+K) ---------- */
++kbd { display: inline-block; padding: .1rem .4rem; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: var(--bg); color: var(--ink-soft); font: 500 .7rem/1.3 var(--font); }
++.header-search input[data-kh-palette] { cursor: pointer; }
++.kbd-hint { flex: none; margin-right: .25rem; }
++html.palette-open { overflow: hidden; }
++dialog.palette { width: min(640px, calc(100vw - 1.5rem)); max-height: min(560px, calc(100vh - 6rem)); margin: 12vh auto 0; padding: 0; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); color: var(--ink); box-shadow: var(--shadow-lift); overflow: hidden; }
++dialog.palette[open] { display: flex; flex-direction: column; animation: palette-in .14s ease-out; }
++dialog.palette::backdrop { background: rgba(11, 20, 55, .45); backdrop-filter: blur(4px); }
++.palette-box { display: flex; flex-direction: column; min-height: 0; }
++.palette-field { display: flex; align-items: center; gap: .75rem; padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); }
++.palette-field svg { width: 1.15rem; height: 1.15rem; flex: none; color: var(--mute); }
++.palette-input { flex: 1; min-width: 0; padding: .25rem 0; border: 0; background: none; color: var(--ink); font: 400 1.05rem var(--font); }
++.palette-input:focus, .palette-input:focus-visible { outline: none; }
++.palette-input::placeholder { color: var(--mute); }
++.palette-list { margin: 0; padding: .5rem; list-style: none; overflow-y: auto; overscroll-behavior: contain; }
++.palette-group { padding: .6rem .75rem .25rem; font: 600 .7rem var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
++.palette-option { display: grid; grid-template-columns: 1fr auto; gap: .1rem .75rem; align-items: center; padding: .6rem .75rem; border-radius: var(--r-md); cursor: pointer; }
++.palette-option.is-active { background: var(--accent-soft); }
++.palette-main { font-weight: 500; color: var(--ink); }
++.palette-main mark { background: none; color: var(--accent); font-weight: 700; }
++.palette-snippet { grid-column: 1; font-size: .85rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
++.palette-tag { grid-row: 1; grid-column: 2; padding: .1rem .55rem; border-radius: var(--r-pill); background: var(--bg); border: 1px solid var(--line); font: 500 .7rem var(--font); color: var(--ink-soft); }
++.palette-option.is-active .palette-tag { background: var(--surface); }
++.palette-list[aria-busy="true"] { opacity: .6; }
++.palette-foot { display: flex; gap: 1rem; padding: .6rem 1.1rem; border-top: 1px solid var(--line); background: var(--bg); font-size: .75rem; color: var(--mute); }
++.palette-foot kbd { margin-right: .15rem; }
++@keyframes palette-in { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: none; } }
++@media (max-width: 760px) {
++  .kbd-hint, .palette-foot { display: none; }
++  dialog.palette { margin-top: .75rem; max-height: calc(100vh - 1.5rem); }
++  .palette-input { font-size: 1rem; }
++}
++@media (prefers-reduced-motion: reduce) { dialog.palette[open] { animation: none; } }
++
+ /* ---------- Cetak (SOP, Template, Kebijakan) ---------- */
+ @media print {
+   :root, [data-theme="dark"] { --bg: #fff; --surface: #fff; --ink: #000; --ink-soft: #333; --line: #bbb; --accent: #000; --accent-soft: #fff; --mute: #444; --shadow: none; color-scheme: light; }
+diff --git a/themes/kh_theme/js/palette.js b/themes/kh_theme/js/palette.js
+new file mode 100644
+index 0000000..b6f8dba
+--- /dev/null
++++ b/themes/kh_theme/js/palette.js
+@@ -0,0 +1,282 @@
++/**
++ * @file
++ * Command palette (Ctrl+K atau /): pintasan, pencarian terakhir, dan hasil cepat.
++ *
++ * Tanpa JS, form pencarian di header tetap bekerja seperti biasa. Palette memakai
++ * <dialog> bawaan browser (fokus terkurung, Esc menutup) dengan pola combobox.
++ */
++(function (Drupal, once) {
++  const RECENT_KEY = 'kh-recent-q';
++  const MAX_RECENT = 5;
++  const MIN_CHARS = 2;
++  const DEBOUNCE_MS = 180;
++  const SVG_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
++
++  function readRecent() {
++    try {
++      const list = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
++      return Array.isArray(list) ? list.filter((x) => typeof x === 'string').slice(0, MAX_RECENT) : [];
++    } catch (e) { return []; }
++  }
++  function saveRecent(q) {
++    const term = q.trim();
++    if (term.length < MIN_CHARS) return;
++    const list = [term].concat(readRecent().filter((x) => x.toLowerCase() !== term.toLowerCase())).slice(0, MAX_RECENT);
++    try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch (e) { /* abaikan */ }
++  }
++
++  function el(tag, className, text) {
++    const node = document.createElement(tag);
++    if (className) node.className = className;
++    if (text !== undefined) node.textContent = text;
++    return node;
++  }
++
++  /** Teks dengan kata kunci dibungkus <mark>, dibangun lewat DOM agar aman dari XSS. */
++  function highlight(text, query) {
++    const frag = document.createDocumentFragment();
++    const words = query.split(/\s+/).filter(Boolean).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
++    if (!words.length) {
++      frag.append(text);
++      return frag;
++    }
++    const re = new RegExp('(' + words.join('|') + ')', 'gi');
++    text.split(re).forEach((part, i) => {
++      if (i % 2 === 1) frag.append(el('mark', '', part));
++      else if (part) frag.append(part);
++    });
++    return frag;
++  }
++
++  function buildDialog() {
++    const dialog = el('dialog', 'palette');
++    dialog.setAttribute('aria-label', 'Cari di Knowledge Hub');
++    dialog.innerHTML =
++      '<div class="palette-box">' +
++        '<div class="palette-field">' + SVG_SEARCH +
++          '<input class="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" ' +
++          'autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Cari prosedur, referensi, tutorial…" aria-label="Cari di Knowledge Hub">' +
++          '<kbd aria-hidden="true">Esc</kbd>' +
++        '</div>' +
++        '<p class="visually-hidden" role="status" aria-live="polite"></p>' +
++        '<ul class="palette-list" id="palette-list" role="listbox" aria-label="Hasil pencarian"></ul>' +
++        '<div class="palette-foot" aria-hidden="true">' +
++          '<span><kbd>↑</kbd><kbd>↓</kbd> pilih</span><span><kbd>↵</kbd> buka</span><span><kbd>Esc</kbd> tutup</span>' +
++        '</div>' +
++      '</div>';
++    document.body.appendChild(dialog);
++    return dialog;
++  }
++
++  Drupal.behaviors.khPalette = {
++    attach(context) {
++      once('kh-palette', 'body', context).forEach(() => {
++        if (typeof HTMLDialogElement === 'undefined') return;
++
++        const searchPath = Drupal.url('cari');
++        const dialog = buildDialog();
++        const input = dialog.querySelector('.palette-input');
++        const list = dialog.querySelector('.palette-list');
++        const status = dialog.querySelector('[role="status"]');
++        let options = [];
++        let active = -1;
++        let timer = null;
++        let controller = null;
++        let opener = null;
++        let counter = 0;
++
++        const go = (href, q) => {
++          if (q) saveRecent(q);
++          window.location.href = href;
++        };
++        const fullSearchUrl = (q) => searchPath + '?search_api_fulltext=' + encodeURIComponent(q);
++
++        function setActive(index) {
++          options.forEach((o, i) => {
++            const on = i === index;
++            o.el.setAttribute('aria-selected', on ? 'true' : 'false');
++            o.el.classList.toggle('is-active', on);
++          });
++          active = index;
++          if (index >= 0) {
++            input.setAttribute('aria-activedescendant', options[index].el.id);
++            options[index].el.scrollIntoView({ block: 'nearest' });
++          } else {
++            input.removeAttribute('aria-activedescendant');
++          }
++        }
++
++        function addGroup(title) {
++          list.appendChild(el('li', 'palette-group', title)).setAttribute('role', 'presentation');
++        }
++
++        function addOption(spec) {
++          const li = el('li', 'palette-option');
++          li.id = 'palette-opt-' + (++counter);
++          li.setAttribute('role', 'option');
++          li.setAttribute('aria-selected', 'false');
++          const main = el('span', 'palette-main');
++          main.appendChild(spec.title instanceof Node ? spec.title : document.createTextNode(spec.title));
++          li.appendChild(main);
++          if (spec.snippet) li.appendChild(el('span', 'palette-snippet', spec.snippet));
++          if (spec.tag) li.appendChild(el('span', 'palette-tag', spec.tag));
++          li.addEventListener('click', () => go(spec.href, spec.remember));
++          li.addEventListener('mousemove', () => {
++            const idx = options.findIndex((o) => o.el === li);
++            if (idx !== active) setActive(idx);
++          });
++          list.appendChild(li);
++          options.push({ el: li, href: spec.href, remember: spec.remember });
++        }
++
++        function reset() {
++          list.textContent = '';
++          options = [];
++          active = -1;
++          input.removeAttribute('aria-activedescendant');
++        }
++
++        function renderIdle() {
++          reset();
++          const links = Array.from(document.querySelectorAll('.primary-nav a[href]'));
++          if (links.length) {
++            addGroup('Pintasan');
++            links.forEach((a) => addOption({ title: a.textContent.trim(), href: a.getAttribute('href'), tag: 'Buka' }));
++          }
++          const recent = readRecent();
++          if (recent.length) {
++            addGroup('Pencarian terakhir');
++            recent.forEach((r) => addOption({ title: r, href: fullSearchUrl(r), remember: r }));
++          }
++          status.textContent = '';
++          if (options.length) setActive(0);
++        }
++
++        function renderResults(q, items) {
++          reset();
++          if (items.length) {
++            addGroup('Konten');
++            items.forEach((it) => addOption({
++              title: highlight(it.title, q),
++              snippet: it.snippet,
++              tag: it.jenis || '',
++              href: it.url,
++              remember: q,
++            }));
++          }
++          addGroup('Semua hasil');
++          addOption({ title: 'Cari “' + q + '” di semua konten →', href: fullSearchUrl(q), remember: q });
++          status.textContent = items.length
++            ? items.length + ' hasil. Gunakan panah atas dan bawah untuk memilih.'
++            : 'Tidak ada hasil cepat. Tekan Enter untuk mencari di semua konten.';
++          setActive(0);
++        }
++
++        async function search(q) {
++          if (controller) controller.abort();
++          controller = new AbortController();
++          list.setAttribute('aria-busy', 'true');
++          try {
++            const res = await fetch(Drupal.url('kh/cari-cepat') + '?q=' + encodeURIComponent(q), {
++              credentials: 'same-origin',
++              headers: { Accept: 'application/json' },
++              signal: controller.signal,
++            });
++            if (!res.ok) throw new Error('HTTP ' + res.status);
++            const data = await res.json();
++            if (input.value.trim() === q) renderResults(q, Array.isArray(data.items) ? data.items : []);
++          } catch (e) {
++            if (e.name === 'AbortError') return;
++            // Endpoint gagal: tetap beri jalan ke pencarian penuh.
++            renderResults(q, []);
++          } finally {
++            list.removeAttribute('aria-busy');
++          }
++        }
++
++        input.addEventListener('input', () => {
++          clearTimeout(timer);
++          const q = input.value.trim();
++          if (q.length < MIN_CHARS) {
++            if (controller) controller.abort();
++            renderIdle();
++            return;
++          }
++          timer = setTimeout(() => search(q), DEBOUNCE_MS);
++        });
++
++        input.addEventListener('keydown', (e) => {
++          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
++            if (!options.length) return;
++            e.preventDefault();
++            const step = e.key === 'ArrowDown' ? 1 : -1;
++            setActive((active + step + options.length) % options.length);
++          } else if (e.key === 'Enter') {
++            e.preventDefault();
++            const q = input.value.trim();
++            if (active >= 0 && options[active]) {
++              go(options[active].href, options[active].remember);
++            } else if (q) {
++              go(fullSearchUrl(q), q);
++            }
++          }
++        });
++
++        // Klik di luar kotak (pada backdrop) menutup palette.
++        dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
++        dialog.addEventListener('close', () => {
++          clearTimeout(timer);
++          if (controller) controller.abort();
++          document.documentElement.classList.remove('palette-open');
++          if (opener && document.contains(opener)) opener.focus();
++          opener = null;
++        });
++
++        function open(from) {
++          if (dialog.open) return;
++          opener = from || document.activeElement;
++          input.value = '';
++          renderIdle();
++          document.documentElement.classList.add('palette-open');
++          dialog.showModal();
++          input.focus();
++        }
++        Drupal.khPalette = { open, close: () => dialog.close() };
++
++        document.addEventListener('keydown', (e) => {
++          const meta = e.ctrlKey || e.metaKey;
++          if (meta && e.key.toLowerCase() === 'k') {
++            e.preventDefault();
++            if (dialog.open) dialog.close(); else open();
++            return;
++          }
++          if (e.key === '/' && !meta && !e.altKey && !dialog.open) {
++            const t = e.target;
++            const typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
++            if (!typing) {
++              e.preventDefault();
++              open();
++            }
++          }
++        });
++
++        // Petunjuk tombol: ⌘ K di Mac, Ctrl K di lainnya.
++        if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) {
++          document.querySelectorAll('.kbd-hint').forEach((k) => { k.textContent = '⌘ K'; });
++        }
++
++        // Kolom cari di header jadi pemicu: klik, atau Enter/Spasi/panah bawah saat fokus.
++        document.querySelectorAll('[data-kh-palette]').forEach((trigger) => {
++          trigger.readOnly = true;
++          trigger.addEventListener('click', (e) => { e.preventDefault(); open(trigger); });
++          trigger.addEventListener('keydown', (e) => {
++            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
++              e.preventDefault();
++              open(trigger);
++            }
++          });
++        });
++      });
++    },
++  };
++})(Drupal, once);
+diff --git a/themes/kh_theme/kh_theme.libraries.yml b/themes/kh_theme/kh_theme.libraries.yml
+index 043da6c..ff48910 100644
+--- a/themes/kh_theme/kh_theme.libraries.yml
++++ b/themes/kh_theme/kh_theme.libraries.yml
+@@ -4,6 +4,7 @@ global:
+       css/style.css: {}
+   js:
+     js/theme.js: {}
++    js/palette.js: {}
+   dependencies:
+     - core/drupal
+     - core/once
+diff --git a/themes/kh_theme/templates/page.html.twig b/themes/kh_theme/templates/page.html.twig
+index 40c6708..e5ba724 100644
+--- a/themes/kh_theme/templates/page.html.twig
++++ b/themes/kh_theme/templates/page.html.twig
+@@ -19,7 +19,8 @@
+   <form class="header-search" action="{{ path('view.kh_katalog.page_cari') }}" method="get" role="search">
+     <label for="q-header" class="visually-hidden">Cari di Knowledge Hub</label>
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+-    <input id="q-header" name="search_api_fulltext" type="search" placeholder="Cari…">
++    <input id="q-header" name="search_api_fulltext" type="search" placeholder="Cari…" data-kh-palette autocomplete="off">
++    <kbd class="kbd-hint" aria-hidden="true">Ctrl K</kbd>
+     <button type="submit" aria-label="Cari">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+     </button>

@@ -1,0 +1,7 @@
+kh_search.quick:
+  path: '/kh/cari-cepat'
+  defaults:
+    _controller: '\Drupal\kh_search\Controller\QuickSearchController::results'
+  methods: [GET]
+  requirements:
+    _permission: 'access content'

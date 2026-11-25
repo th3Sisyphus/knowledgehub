@@ -1,0 +1,20 @@
+kh_feedback.submit:
+  path: '/kh/feedback/{node}'
+  defaults:
+    _controller: '\Drupal\kh_feedback\Controller\FeedbackController::submit'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+    _csrf_request_header_mode: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: 'entity:node'
+
+kh_feedback.report:
+  path: '/admin/reports/kh-feedback'
+  defaults:
+    _controller: '\Drupal\kh_feedback\Controller\FeedbackController::report'
+    _title: 'Umpan balik konten'
+  requirements:
+    _permission: 'access content overview'
