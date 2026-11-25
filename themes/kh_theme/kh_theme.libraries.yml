@@ -5,6 +5,7 @@ global:
   js:
     js/theme.js: {}
     js/palette.js: {}
+    js/facets.js: {}
   dependencies:
     - core/drupal
     - core/once

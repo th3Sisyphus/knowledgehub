@@ -1,0 +1,279 @@
+diff --git a/README.md b/README.md
+index 6940a8b..8eb9a1c 100644
+--- a/README.md
++++ b/README.md
+@@ -79,6 +79,7 @@ Untuk mengubah tampilan beranda tanpa menyentuh modul, salin `kh-home.html.twig`
+ | Fitur | Cara pakai atau memeriksa | Berkas |
+ |-------|---------------------------|--------|
+ | Command palette | Tekan **Ctrl+K** (⌘K di Mac) atau **/**, atau klik kolom cari di header. Kolom kosong menampilkan pintasan menu dan pencarian terakhir. Mengetik dua huruf atau lebih memunculkan hasil langsung. Panah memilih, Enter membuka, Esc menutup. | `themes/kh_theme/js/palette.js`, `modules/kh_search` |
++| Filter di mobile | Di layar ≤860px muncul tombol **Filter** (dengan jumlah filter aktif) di atas hasil. Ketuk untuk membuka panel dari bawah; Esc, Tutup, atau ketuk di luar panel menutupnya. Setiap pilihan memuat ulang halaman dan panel terbuka lagi. Filter aktif tampil sebagai chip di semua ukuran layar, bisa dihapus satu per satu atau lewat "Hapus semua". | `themes/kh_theme/js/facets.js` |
+ | Umpan balik "Apakah halaman ini membantu?" | Muncul di bawah isi konten Published. Pilih 👍 atau 👎 (👎 membuka kolom komentar). Laporan: `/admin/reports/kh-feedback`. | `modules/kh_feedback`, `templates/node--kh--full.html.twig` |
+ | Banner kesegaran | Di halaman konten: "Perlu review" bila Review Date terlewat, "Segera direview" 30 hari sebelumnya, "Diarsipkan", dan "Pratinjau" untuk konten belum terbit. | `kh_theme_freshness()` di `kh_theme.theme` |
+ | Cetak | Ctrl+P di halaman konten. Header, footer, facet, dan umpan balik disembunyikan, warna dipaksa terang, URL tautan eksternal dicetak. | `@media print` di `css/style.css` |
+diff --git a/themes/kh_theme/css/style.css b/themes/kh_theme/css/style.css
+index fc8d9e9..0fced8e 100644
+--- a/themes/kh_theme/css/style.css
++++ b/themes/kh_theme/css/style.css
+@@ -522,6 +522,34 @@ dialog.palette::backdrop { background: rgba(11, 20, 55, .45); backdrop-filter: b
+ }
+ @media (prefers-reduced-motion: reduce) { dialog.palette[open] { animation: none; } }
+ 
++/* ---------- Filter aktif dan drawer facet (mobile) ---------- */
++.facets-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: 0 0 1.25rem; }
++.facets-toggle { display: none; align-items: center; gap: .5rem; height: 2.5rem; padding: 0 1rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--surface); color: var(--ink); font: 500 .9rem var(--font); cursor: pointer; box-shadow: var(--shadow); }
++.facets-count { min-width: 1.35rem; height: 1.35rem; padding: 0 .35rem; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font: 600 .75rem/1.35rem var(--font); text-align: center; }
++.facets-count[hidden] { display: none; }
++.active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
++.active-filters ul { display: contents; margin: 0; padding: 0; list-style: none; }
++.active-filters li { list-style: none; }
++.chip--removable { display: inline-flex; align-items: center; gap: .45rem; }
++.chip-x { font-size: 1.05em; line-height: 1; color: var(--mute); }
++.chip--removable:hover .chip-x { color: var(--accent); }
++.active-filters-clear, .facets-clear { font: 500 .85rem var(--font); color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; }
++.facets-head, .facets-foot, .facets-backdrop { display: none; }
++@media (min-width: 861px) { .facets-bar.is-empty { display: none; } }
++@media (max-width: 860px) {
++  .facets-toggle { display: inline-flex; }
++  html.facets-open { overflow: hidden; }
++  .facets-js .facets { position: fixed; inset: auto 0 0 0; z-index: 70; max-height: min(85vh, 720px); padding: 0 1.25rem; overflow-y: auto; overscroll-behavior: contain; border-bottom: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: var(--shadow-lift); transform: translateY(100%); visibility: hidden; transition: transform .25s ease, visibility 0s linear .25s; }
++  .facets-open .facets { transform: none; visibility: visible; transition: transform .25s ease, visibility 0s; }
++  .facets-js .facets-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; margin: 0 -1.25rem 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 1.05rem; }
++  .facets-close { padding: .35rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg); color: var(--ink); font: 500 .85rem var(--font); cursor: pointer; }
++  .facets-js .facets-foot { position: sticky; bottom: 0; display: flex; align-items: center; gap: 1rem; margin: 1rem -1.25rem 0; padding: .9rem 1.25rem calc(.9rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--surface); }
++  .facets-js .facets-backdrop { position: fixed; inset: 0; z-index: 65; display: block; background: rgba(11, 20, 55, .45); opacity: 0; pointer-events: none; transition: opacity .25s ease; }
++  .facets-open .facets-backdrop { opacity: 1; pointer-events: auto; }
++}
++@media (prefers-reduced-motion: reduce) { .facets-js .facets, .facets-js .facets-backdrop { transition: none !important; } }
++@media print { .facets-bar, .facets-backdrop { display: none !important; } }
++
+ /* ---------- Cetak (SOP, Template, Kebijakan) ---------- */
+ @media print {
+   :root, [data-theme="dark"] { --bg: #fff; --surface: #fff; --ink: #000; --ink-soft: #333; --line: #bbb; --accent: #000; --accent-soft: #fff; --mute: #444; --shadow: none; color-scheme: light; }
+diff --git a/themes/kh_theme/js/facets.js b/themes/kh_theme/js/facets.js
+new file mode 100644
+index 0000000..c53c094
+--- /dev/null
++++ b/themes/kh_theme/js/facets.js
+@@ -0,0 +1,210 @@
++/**
++ * @file
++ * Facet di mobile: tombol "Filter" membuka panel dari bawah (drawer), dan filter
++ * aktif tampil sebagai chip yang bisa dihapus satu per satu atau sekaligus.
++ *
++ * Tanpa JS, facet tetap tampil biasa di atas hasil. Di desktop hanya chip filter
++ * aktif yang ditambahkan; sidebar tidak berubah.
++ */
++(function (Drupal, once) {
++  const MOBILE = '(max-width: 860px)';
++  const REOPEN_KEY = 'kh-facets-reopen';
++  const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
++
++  function el(tag, className, text) {
++    const node = document.createElement(tag);
++    if (className) node.className = className;
++    if (text !== undefined) node.textContent = text;
++    return node;
++  }
++
++  function store(action, value) {
++    try {
++      if (action === 'set') sessionStorage.setItem(REOPEN_KEY, value);
++      else if (action === 'clear') sessionStorage.removeItem(REOPEN_KEY);
++      else return sessionStorage.getItem(REOPEN_KEY);
++    } catch (e) { /* abaikan */ }
++    return null;
++  }
++
++  /** Facet aktif: tautan is-active (tanpa JS facets) atau kotak centang terpilih (dengan JS facets). */
++  function isActive(item) {
++    return item.classList.contains('is-active')
++      || !!item.querySelector('a.is-active, .facet-item__status.is-active, input:checked');
++  }
++
++  function itemLabel(item) {
++    const value = item.querySelector('.facet-item__value');
++    let text;
++    if (value) {
++      text = value.textContent;
++    } else {
++      const link = item.querySelector('a') || item;
++      const clone = link.cloneNode(true);
++      clone.querySelectorAll('.facet-item__count, .count, input').forEach((n) => n.remove());
++      text = clone.textContent;
++    }
++    return text.replace(/\s+/g, ' ').trim();
++  }
++
++  function groupLabel(item) {
++    const block = item.closest('.block-facets, .block');
++    const heading = block && block.querySelector('h2, h3, legend');
++    return heading ? heading.textContent.replace(/\s+/g, ' ').trim() : '';
++  }
++
++  /** Alamat halaman ini tanpa parameter facet (f[0], f[1], ...) dan tanpa nomor halaman. */
++  function clearAllUrl() {
++    const url = new URL(window.location.href);
++    Array.from(url.searchParams.keys()).forEach((key) => {
++      if (key === 'page' || /^f(\[\d*\])?$/.test(key)) url.searchParams.delete(key);
++    });
++    return url.pathname + (url.search || '');
++  }
++
++  Drupal.behaviors.khFacets = {
++    attach(context) {
++      once('kh-facets', '.sidebar.facets', context).forEach((panel) => {
++        const items = Array.from(panel.querySelectorAll('.facet-item'));
++        if (!items.length) return;
++
++        const root = document.documentElement;
++        const mq = window.matchMedia ? window.matchMedia(MOBILE) : { matches: false, addEventListener() {} };
++        panel.id = panel.id || 'facets-panel';
++        root.classList.add('facets-js');
++
++        const active = items.filter(isActive);
++
++        // ---- Panel: kepala (judul + tutup) dan kaki (terapkan + hapus semua).
++        const head = el('div', 'facets-head');
++        head.appendChild(el('strong', '', 'Filter'));
++        const closeBtn = el('button', 'facets-close', 'Tutup');
++        closeBtn.type = 'button';
++        closeBtn.setAttribute('aria-label', 'Tutup filter');
++        head.appendChild(closeBtn);
++        panel.insertBefore(head, panel.firstChild);
++
++        const foot = el('div', 'facets-foot');
++        const applyBtn = el('button', 'button button--primary', 'Tampilkan hasil');
++        applyBtn.type = 'button';
++        foot.appendChild(applyBtn);
++        if (active.length) {
++          const clear = el('a', 'facets-clear', 'Hapus semua');
++          clear.href = clearAllUrl();
++          foot.appendChild(clear);
++        }
++        panel.appendChild(foot);
++
++        const backdrop = el('div', 'facets-backdrop');
++        document.body.appendChild(backdrop);
++
++        // ---- Bar di atas hasil: tombol Filter (mobile) dan chip filter aktif.
++        const bar = el('div', 'facets-bar');
++        const toggle = el('button', 'facets-toggle');
++        toggle.type = 'button';
++        toggle.setAttribute('aria-expanded', 'false');
++        toggle.setAttribute('aria-controls', panel.id);
++        toggle.appendChild(el('span', '', 'Filter'));
++        const badge = el('span', 'facets-count', String(active.length));
++        badge.hidden = active.length === 0;
++        toggle.appendChild(badge);
++        toggle.setAttribute('aria-label', active.length ? 'Filter, ' + active.length + ' aktif' : 'Filter');
++        bar.appendChild(toggle);
++
++        if (active.length) {
++          const wrap = el('div', 'active-filters');
++          wrap.setAttribute('role', 'group');
++          wrap.setAttribute('aria-label', 'Filter aktif');
++          const list = el('ul');
++          active.forEach((item) => {
++            const link = item.querySelector('a[href]');
++            if (!link) return;
++            const group = groupLabel(item);
++            const label = itemLabel(item);
++            const li = el('li');
++            const chip = el('a', 'chip chip--removable');
++            chip.href = link.getAttribute('href');
++            chip.setAttribute('aria-label', 'Hapus filter ' + (group ? group + ': ' : '') + label);
++            chip.appendChild(el('span', '', label));
++            const x = el('span', 'chip-x', '×');
++            x.setAttribute('aria-hidden', 'true');
++            chip.appendChild(x);
++            li.appendChild(chip);
++            list.appendChild(li);
++          });
++          wrap.appendChild(list);
++          const clearAll = el('a', 'active-filters-clear', 'Hapus semua');
++          clearAll.href = clearAllUrl();
++          wrap.appendChild(clearAll);
++          bar.appendChild(wrap);
++        } else {
++          bar.classList.add('is-empty');
++        }
++
++        const main = document.querySelector('.main-col');
++        if (main) {
++          const view = main.querySelector('.view');
++          if (view && view.parentNode) view.parentNode.insertBefore(bar, view);
++          else main.insertBefore(bar, main.firstChild);
++        }
++
++        // ---- Buka dan tutup drawer.
++        let opener = null;
++        function open() {
++          if (!mq.matches || root.classList.contains('facets-open')) return;
++          opener = document.activeElement;
++          root.classList.add('facets-open');
++          panel.setAttribute('role', 'dialog');
++          panel.setAttribute('aria-modal', 'true');
++          toggle.setAttribute('aria-expanded', 'true');
++          closeBtn.focus();
++        }
++        function close(returnFocus) {
++          if (!root.classList.contains('facets-open')) return;
++          root.classList.remove('facets-open');
++          panel.removeAttribute('role');
++          panel.removeAttribute('aria-modal');
++          toggle.setAttribute('aria-expanded', 'false');
++          store('clear');
++          if (returnFocus !== false) (opener && document.contains(opener) ? opener : toggle).focus();
++          opener = null;
++        }
++
++        toggle.addEventListener('click', open);
++        closeBtn.addEventListener('click', () => close());
++        applyBtn.addEventListener('click', () => close());
++        backdrop.addEventListener('click', () => close());
++
++        document.addEventListener('keydown', (e) => {
++          if (!root.classList.contains('facets-open')) return;
++          if (e.key === 'Escape') {
++            e.preventDefault();
++            close();
++          } else if (e.key === 'Tab') {
++            // Fokus tetap di dalam panel selama terbuka.
++            const nodes = Array.from(panel.querySelectorAll(FOCUSABLE)).filter((n) => !n.closest('[hidden], [inert]'));
++            if (!nodes.length) return;
++            const first = nodes[0];
++            const last = nodes[nodes.length - 1];
++            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
++            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
++          }
++        });
++
++        // Tiap pilihan facet memuat ulang halaman: ingat agar panel terbuka lagi.
++        panel.addEventListener('click', (e) => {
++          if (e.target.closest('.facet-item') && root.classList.contains('facets-open')) store('set', '1');
++        });
++
++        const onChange = (e) => { if (!e.matches) close(false); };
++        if (mq.addEventListener) mq.addEventListener('change', onChange);
++        else if (mq.addListener) mq.addListener(onChange);
++
++        if (store('get') === '1') {
++          store('clear');
++          open();
++        }
++      });
++    },
++  };
++})(Drupal, once);
+diff --git a/themes/kh_theme/kh_theme.libraries.yml b/themes/kh_theme/kh_theme.libraries.yml
+index ff48910..9a1719f 100644
+--- a/themes/kh_theme/kh_theme.libraries.yml
++++ b/themes/kh_theme/kh_theme.libraries.yml
+@@ -5,6 +5,7 @@ global:
+   js:
+     js/theme.js: {}
+     js/palette.js: {}
++    js/facets.js: {}
+   dependencies:
+     - core/drupal
+     - core/once

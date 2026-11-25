@@ -79,6 +79,7 @@ Untuk mengubah tampilan beranda tanpa menyentuh modul, salin `kh-home.html.twig`
 | Fitur | Cara pakai atau memeriksa | Berkas |
 |-------|---------------------------|--------|
 | Command palette | Tekan **Ctrl+K** (⌘K di Mac) atau **/**, atau klik kolom cari di header. Kolom kosong menampilkan pintasan menu dan pencarian terakhir. Mengetik dua huruf atau lebih memunculkan hasil langsung. Panah memilih, Enter membuka, Esc menutup. | `themes/kh_theme/js/palette.js`, `modules/kh_search` |
+| Filter di mobile | Di layar ≤860px muncul tombol **Filter** (dengan jumlah filter aktif) di atas hasil. Ketuk untuk membuka panel dari bawah; Esc, Tutup, atau ketuk di luar panel menutupnya. Setiap pilihan memuat ulang halaman dan panel terbuka lagi. Filter aktif tampil sebagai chip di semua ukuran layar, bisa dihapus satu per satu atau lewat "Hapus semua". | `themes/kh_theme/js/facets.js` |
 | Umpan balik "Apakah halaman ini membantu?" | Muncul di bawah isi konten Published. Pilih 👍 atau 👎 (👎 membuka kolom komentar). Laporan: `/admin/reports/kh-feedback`. | `modules/kh_feedback`, `templates/node--kh--full.html.twig` |
 | Banner kesegaran | Di halaman konten: "Perlu review" bila Review Date terlewat, "Segera direview" 30 hari sebelumnya, "Diarsipkan", dan "Pratinjau" untuk konten belum terbit. | `kh_theme_freshness()` di `kh_theme.theme` |
 | Cetak | Ctrl+P di halaman konten. Header, footer, facet, dan umpan balik disembunyikan, warna dipaksa terang, URL tautan eksternal dicetak. | `@media print` di `css/style.css` |
