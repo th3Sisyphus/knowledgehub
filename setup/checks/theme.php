@@ -25,17 +25,19 @@ if (\Drupal::config('system.theme')->get('default') !== 'kh_theme') {
   $bad[] = 'tema default bukan kh_theme';
 }
 
-// ---- Beranda: hero, tombol mode gelap, Info Terbaru, dan lima kartu area.
+// ---- Beranda: hero, tombol mode gelap, Baru diperbarui, dan lima kartu area.
+// Markup beranda dari modul kh_home (templates/kh-home.html.twig).
 $home = kh_check_page('/', $bad);
 kh_theme_expect_all($home, [
-  'Temukan cara kerja',
+  'Temukan jawaban untuk',
   'id="theme-toggle"',
   'class="site-branding"',
-  'class="hero"',
-  'Info Terbaru',
+  'class="hero blob-field"',
+  'Baru diperbarui',
+  'Jelajahi lima area',
 ], 'beranda', $bad);
 
-$card_count = substr_count($home, 'class="card c-');
+$card_count = substr_count($home, 'class="area-card"');
 if ($card_count !== 5) {
   $bad[] = 'beranda harus punya 5 kartu area, ada ' . $card_count;
 }

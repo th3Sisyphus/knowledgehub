@@ -4,7 +4,6 @@ namespace Drupal\kh_home\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 
 /**
@@ -56,17 +55,6 @@ class HomeController extends ControllerBase {
     ],
   ];
 
-  /**
-   * Ikon SVG outline 24x24 untuk kartu area. Dekoratif, jadi aria-hidden.
-   */
-  const ICONS = [
-    'steps' => '<path d="M4 7h16M4 12h10M4 17h13"/>',
-    'book' => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7h8M8 11h6"/>',
-    'play' => '<circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5z"/>',
-    'help' => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8v.5"/><path d="M12 17.2h.01"/>',
-    'doc' => '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/>',
-  ];
-
   const MONTHS = [
     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
@@ -105,15 +93,6 @@ class HomeController extends ControllerBase {
   }
 
   /**
-   * Ikon SVG untuk kartu area.
-   */
-  private function icon($key) {
-    $path = self::ICONS[$key] ?? self::ICONS['doc'];
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
-      . 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $path . '</svg>';
-  }
-
-  /**
    * URL daftar konten dengan filter facet opsional.
    *
    * $facets = [['audience', 12], ['difficulty', 3]] menghasilkan ?f[0]=audience:12&f[1]=difficulty:3.
@@ -123,37 +102,41 @@ class HomeController extends ControllerBase {
     foreach ($facets as $i => $facet) {
       $query['f[' . $i . ']'] = $facet[0] . ':' . $facet[1];
     }
-    return $path . ($query ? '?' . http_build_query($query, '', '&amp;') : '');
+    return $path . ($query ? '?' . http_build_query($query, '', '&') : '');
   }
 
   /**
-   * HTML kartu lima area, lengkap dengan jumlah konten.
+   * Data kartu lima area, lengkap dengan jumlah konten.
+   *
+   * Tiap item: label, url, description, types, icon (nama ikon), count.
    */
-  private function buildAreaCards() {
-    $html = '';
+  private function buildAreas() {
+    $areas = [];
     foreach (self::AREAS as $bundle => $area) {
       $count = $this->publishedQuery()
         ->condition('type', $bundle)
         ->count()
         ->execute();
 
-      $html .= '<article class="area-card">';
-      $html .= '<span class="area-icon">' . $this->icon($area['icon']) . '</span>';
-      $html .= '<h3><a href="' . $area['path'] . '">' . Html::escape($area['label']) . '</a></h3>';
-      $html .= '<p>' . Html::escape($area['description']) . '</p>';
-      $html .= '<div class="area-foot"><span>' . $count . ' konten</span>';
-      $html .= '<span class="goto" aria-hidden="true">Buka &rarr;</span></div>';
-      $html .= '</article>';
+      $areas[] = [
+        'label' => $area['label'],
+        'url' => $area['path'],
+        'description' => $area['description'],
+        'types' => $area['types'],
+        'icon' => $area['icon'],
+        'count' => (int) $count,
+      ];
     }
-    return $html;
+    return $areas;
   }
 
   /**
-   * HTML kartu konten terbaru: enam konten dengan tanggal terbaru.
+   * Render array teaser untuk enam konten dengan tanggal terbaru.
    *
    * Bila tanggal sama, judul menentukan urutan supaya daftar tidak berganti-ganti.
+   * Render array (bukan HTML jadi) dikembalikan agar cache tag tiap node ikut naik.
    */
-  private function buildLatestCards() {
+  private function buildLatest() {
     $ids = $this->publishedQuery()
       ->condition('type', array_keys(self::AREAS), 'IN')
       ->condition('field_tanggal', '', '<>')
@@ -165,12 +148,11 @@ class HomeController extends ControllerBase {
     $nodes = $this->entityTypeManager()->getStorage('node')->loadMultiple($ids);
     $view_builder = $this->entityTypeManager()->getViewBuilder('node');
 
-    $html = '';
+    $cards = [];
     foreach ($nodes as $node) {
-      $build = $view_builder->view($node, 'teaser');
-      $html .= \Drupal::service('renderer')->renderPlain($build);
+      $cards[] = $view_builder->view($node, 'teaser');
     }
-    return $html;
+    return $cards;
   }
 
   /**
@@ -178,12 +160,15 @@ class HomeController extends ControllerBase {
    *
    * shortcut: hitung dari node Published per term, cukup untuk 33 konten seed.
    * Ganti ke View agregasi bila katalog tumbuh besar.
+   *
+   * @return array
+   *   Daftar ['label' => ..., 'url' => ...].
    */
   private function buildTopicChips() {
     $storage = $this->entityTypeManager()->getStorage('taxonomy_term');
     $terms = $storage->loadByProperties(['vid' => 'topik']);
     if (empty($terms)) {
-      return '';
+      return [];
     }
 
     $counts = [];
@@ -198,18 +183,24 @@ class HomeController extends ControllerBase {
     }
     arsort($counts);
 
-    $html = '';
+    $chips = [];
     foreach (array_slice($counts, 0, 5, TRUE) as $tid => $count) {
-      $html .= '<li><a class="chip" href="/cari?' . Html::escape('search_api_fulltext=' . rawurlencode($terms[$tid]->label())) . '">'
-        . Html::escape($terms[$tid]->label()) . '</a></li>';
+      $label = $terms[$tid]->label();
+      $chips[] = [
+        'label' => $label,
+        'url' => '/cari?search_api_fulltext=' . rawurlencode($label),
+      ];
     }
-    return $html;
+    return $chips;
   }
 
   /**
-   * Pertanyaan populer: chip kategori di kiri dan akordeon <details> di kanan.
+   * Pertanyaan populer, dikelompokkan menurut Topik.
    *
-   * Sumber: FAQ dan Troubleshooting di area Bantuan, dikelompokkan menurut Topik.
+   * Sumber: FAQ dan Troubleshooting di area Bantuan.
+   *
+   * @return array
+   *   Daftar grup: ['label', 'anchor', 'questions' => [['title', 'url', 'answer']]].
    */
   private function buildFaq() {
     $ids = $this->publishedQuery()
@@ -219,9 +210,6 @@ class HomeController extends ControllerBase {
       ->execute();
 
     $nodes = $this->entityTypeManager()->getStorage('node')->loadMultiple($ids);
-    if (empty($nodes)) {
-      return '';
-    }
 
     $groups = [];
     foreach ($nodes as $node) {
@@ -236,117 +224,61 @@ class HomeController extends ControllerBase {
       $groups[$label][] = ['title' => $node->label(), 'url' => $node->toUrl()->toString(), 'answer' => $answer];
     }
 
-    $side = '';
-    $panels = '';
-    $first = TRUE;
+    $result = [];
     foreach ($groups as $label => $items) {
-      $anchor = Html::cleanCssIdentifier($label);
-      $side .= '<a href="#faq-' . $anchor . '"' . ($first ? ' aria-current="true"' : '') . '>'
-        . Html::escape($label) . '</a>';
-
-      $panels .= '<div class="accordion" id="faq-' . $anchor . '">';
-      foreach ($items as $item) {
-        $panels .= '<details>';
-        $panels .= '<summary>' . Html::escape($item['title']) . '</summary>';
-        $panels .= '<p>' . Html::escape($item['answer']);
-        $panels .= ' <a href="' . $item['url'] . '">Buka jawaban lengkap</a></p>';
-        $panels .= '</details>';
-      }
-      $panels .= '</div>';
-      $first = FALSE;
+      $result[] = [
+        'label' => $label,
+        'anchor' => 'faq-' . Html::cleanCssIdentifier($label),
+        'questions' => $items,
+      ];
     }
-
-    return '<div class="faq-layout"><div class="faq-side">' . $side . '</div><div>' . $panels . '</div></div>';
+    return $result;
   }
 
   /**
-   * Chip di bawah pencarian: pintasan ke filter bawaan.
+   * Chip pintasan di bawah pencarian: filter bawaan dan jalan pintas ke area.
+   *
+   * @return array
+   *   Daftar ['label' => ..., 'url' => ...].
    */
   private function buildShortcuts() {
-    $html = '';
+    $chips = [];
 
     $new_employee = $this->findTermId('audience', 'Pegawai Baru');
     $basic = $this->findTermId('difficulty', 'Dasar');
     if ($new_employee && $basic) {
-      $html .= '<li><a class="chip" href="'
-        . $this->filteredUrl('/pembelajaran', [['audience', $new_employee], ['difficulty', $basic]])
-        . '">Pegawai baru</a></li>';
+      $chips[] = [
+        'label' => 'Pegawai baru',
+        'url' => $this->filteredUrl('/pembelajaran', [['audience', $new_employee], ['difficulty', $basic]]),
+      ];
     }
 
     $troubleshooting = $this->findTermId('jenis_bantuan', 'Troubleshooting');
     if ($troubleshooting) {
-      $html .= '<li><a class="chip" href="'
-        . $this->filteredUrl('/bantuan', [['jenis', $troubleshooting]])
-        . '">Ada kendala sistem</a></li>';
+      $chips[] = [
+        'label' => 'Ada kendala sistem',
+        'url' => $this->filteredUrl('/bantuan', [['jenis', $troubleshooting]]),
+      ];
     }
 
-    $html .= '<li><a class="chip" href="/prosedur">Prosedur kerja</a></li>';
-    $html .= '<li><a class="chip" href="/alat-kerja">Template siap pakai</a></li>';
-    return $html;
+    $chips[] = ['label' => 'Prosedur kerja', 'url' => '/prosedur'];
+    $chips[] = ['label' => 'Template siap pakai', 'url' => '/alat-kerja'];
+    return $chips;
   }
 
   /**
-   * HTML hero dengan pencarian besar dan chip topik populer.
-   */
-  private function buildHero() {
-    $search_url = Url::fromRoute('view.kh_katalog.page_cari')->toString();
-
-    $html = '<section class="hero blob-field">';
-    $html .= '<h1>Temukan jawaban untuk<span>setiap pertanyaan kerja</span></h1>';
-    $html .= '<p>SOP, kebijakan, tutorial, FAQ, dan template untuk satu proses ada di satu tempat.</p>';
-    $html .= '<form class="hero-search" action="' . $search_url . '" method="get" role="search">';
-    $html .= '<label for="q-hero" class="visually-hidden">Cari di Knowledge Hub</label>';
-    $html .= '<input id="q-hero" name="search_api_fulltext" type="search" ';
-    $html .= 'placeholder="Contoh: bagaimana mengajukan perjalanan dinas?">';
-    $html .= '<button class="button button--primary" type="submit">Cari</button>';
-    $html .= '</form>';
-    $html .= '<p class="chip-label">Topik populer</p>';
-    $html .= '<ul class="chips">' . $this->buildShortcuts() . $this->buildTopicChips() . '</ul>';
-    $html .= '</section>';
-    return $html;
-  }
-
-  /**
-   * Halaman beranda.
+   * Halaman beranda. Markup ada di templates/kh-home.html.twig.
    */
   public function page() {
-    $html = '<div class="wrap">';
-    $html .= $this->buildHero();
-
-    $html .= '<section class="section">';
-    $html .= '<div class="section-head"><div><h2>Jelajahi lima area</h2>';
-    $html .= '<p>Mulai dari jenis bantuan yang paling dekat dengan kebutuhan Anda.</p></div></div>';
-    $html .= '<div class="area-grid">' . $this->buildAreaCards() . '</div>';
-    $html .= '</section>';
-
-    $html .= '<section class="section">';
-    $html .= '<div class="section-head"><div><h2>Baru diperbarui</h2>';
-    $html .= '<p>Dokumen dengan pembaruan terakhir.</p></div>';
-    $html .= '<a class="section-link" href="/cari">Lihat semua</a></div>';
-    $html .= '<div class="teaser-grid">' . $this->buildLatestCards() . '</div>';
-    $html .= '</section>';
-
-    $faq = $this->buildFaq();
-    if ($faq) {
-      $html .= '<section class="section">';
-      $html .= '<div class="section-head"><div><h2>Pertanyaan populer</h2>';
-      $html .= '<p>Jawaban singkat untuk kendala yang paling sering muncul.</p></div></div>';
-      $html .= $faq;
-      $html .= '</section>';
-    }
-
-    $html .= '<section class="section"><div class="cta">';
-    $html .= '<h2>Butuh jawaban yang belum ada di sini?</h2>';
-    $html .= '<p>Hubungi Helpdesk IT atau kirim pertanyaan ke Knowledge Manager. Kami bantu arahkan ke dokumen yang tepat.</p>';
-    $html .= '<div class="cta-actions">';
-    $html .= '<a class="button button--primary" href="/bantuan">Lihat Bantuan</a>';
-    $html .= '<a class="button" href="/cari">Telusuri semua konten</a>';
-    $html .= '</div></div></section>';
-
-    $html .= '</div>';
-
     return [
-      '#markup' => Markup::create($html),
+      '#theme' => 'kh_home',
+      '#hero' => [
+        'search_url' => Url::fromRoute('view.kh_katalog.page_cari')->toString(),
+        'chips' => array_merge($this->buildShortcuts(), $this->buildTopicChips()),
+      ],
+      '#areas' => $this->buildAreas(),
+      '#latest' => $this->buildLatest(),
+      '#faq' => $this->buildFaq(),
       '#cache' => [
         'tags' => ['node_list', 'taxonomy_term_list'],
         'contexts' => ['user.permissions'],

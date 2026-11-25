@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Beranda Knowledge Hub.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * Markup beranda ada di templates/kh-home.html.twig. Untuk mengubah teks atau
+ * urutan bagian tanpa menyentuh modul, salin file itu ke templates/ tema
+ * (themes/kh_theme/templates/kh-home.html.twig) lalu kosongkan cache.
+ */
+function kh_home_theme() {
+  return [
+    'kh_home' => [
+      'variables' => [
+        'hero' => [],
+        'areas' => [],
+        'latest' => [],
+        'faq' => [],
+      ],
+      'template' => 'kh-home',
+    ],
+  ];
+}

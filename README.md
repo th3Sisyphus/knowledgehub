@@ -60,7 +60,48 @@ Panduan admin panel (alamat, hak tiap role, cara menambah konten): `docs/admin-p
 
 Frontend (responsif, aksesibilitas, SEO, cara uji di browser): `docs/frontend.md`.
 
-Tampilan: tema `themes/kh_theme` (meniru prototipe), beranda dari modul `modules/kh_home`, bentuk isi per jenis dari `setup/body.php`.
+Tampilan: tema `themes/kh_theme` (modern minimalis: token warna, header pill, kartu rounded, satu aksen indigo, font Inter lokal, mode terang dan gelap). Beranda dari modul `modules/kh_home`, bentuk isi per jenis dari `setup/body.php`.
+
+### Beranda (`modules/kh_home`)
+
+`HomeController` hanya menyiapkan data (hero, lima area, konten terbaru, FAQ). Markup ada di Twig:
+
+| Berkas | Isi |
+|--------|-----|
+| `templates/kh-home.html.twig` | Susunan beranda: hero, kartu area, Baru diperbarui, Pertanyaan populer, banner bantuan. Teks tetap bisa diubah langsung di sini. |
+| `templates/kh-home-icon.html.twig` | Ikon SVG kartu area (`steps`, `book`, `play`, `help`, `doc`). |
+| `kh_home.module` | Mendaftarkan theme hook `kh_home`. |
+
+Untuk mengubah tampilan beranda tanpa menyentuh modul, salin `kh-home.html.twig` ke `themes/kh_theme/templates/` lalu `drush cr`. Salinan di tema yang dipakai.
+
+### Fitur antarmuka
+
+| Fitur | Cara pakai atau memeriksa | Berkas |
+|-------|---------------------------|--------|
+| Command palette | Tekan **Ctrl+K** (⌘K di Mac) atau **/**, atau klik kolom cari di header. Kolom kosong menampilkan pintasan menu dan pencarian terakhir. Mengetik dua huruf atau lebih memunculkan hasil langsung. Panah memilih, Enter membuka, Esc menutup. | `themes/kh_theme/js/palette.js`, `modules/kh_search` |
+| Umpan balik "Apakah halaman ini membantu?" | Muncul di bawah isi konten Published. Pilih 👍 atau 👎 (👎 membuka kolom komentar). Laporan: `/admin/reports/kh-feedback`. | `modules/kh_feedback`, `templates/node--kh--full.html.twig` |
+| Banner kesegaran | Di halaman konten: "Perlu review" bila Review Date terlewat, "Segera direview" 30 hari sebelumnya, "Diarsipkan", dan "Pratinjau" untuk konten belum terbit. | `kh_theme_freshness()` di `kh_theme.theme` |
+| Cetak | Ctrl+P di halaman konten. Header, footer, facet, dan umpan balik disembunyikan, warna dipaksa terang, URL tautan eksternal dicetak. | `@media print` di `css/style.css` |
+| Mode gelap | Tombol di header. Pilihan disimpan di browser. | `js/theme.js`, `templates/html.html.twig` |
+| Branding | Logo (simbol, horizontal, putih, mono), favicon, apple-touch-icon, dan gambar OG. Aturan pakai ada di `branding/README.md`. | `themes/kh_theme/branding/` |
+
+Catatan teknis:
+
+- **Umpan balik tanpa login**, sesuai arahan dosen. Dibatasi 5 kiriman per jam per perangkat per konten, komentar maksimal 500 karakter, dan hanya untuk konten Published dari lima content type Knowledge Hub. Data disimpan di tabel `kh_feedback` dan ikut terhapus bersama kontennya. Laporan perlu role dengan izin *access content overview*.
+- **Pencarian cepat** (`/kh/cari-cepat?q=...`) menggabungkan dua sumber: judul yang memuat kata (supaya kata yang belum selesai diketik cocok) dan teks lengkap dari indeks Search API `kh_index` (yang memakai `matching: words`). Hanya konten yang boleh dilihat pengguna yang dikembalikan.
+- Favicon dan gambar OG dipasang oleh `kh_theme_page_attachments_alter()`. Gambar OG tidak ditimpa bila modul metatag sudah mengisinya.
+- Banner kesegaran membatasi cache node menjadi satu hari agar tanggalnya ikut berganti.
+
+### Memperbarui situs yang sudah berjalan
+
+Instalasi bersih (`setup.bat` atau `setup/restore.sh`) sudah mengaktifkan semuanya. Untuk situs yang sudah jalan:
+
+```bash
+docker compose exec drupal vendor/bin/drush en kh_feedback kh_search -y
+docker compose exec drupal vendor/bin/drush cr
+```
+
+Lalu tekan Ctrl+F5 di browser agar CSS dan JS baru terbaca. Jalankan `bash setup/verify.sh` untuk memastikan tidak ada yang rusak.
 
 ### Cek tiga kriteria nilai
 
@@ -88,7 +129,7 @@ docker compose down -v         # hapus semua data (instalasi mulai dari nol)
 
 ### Catatan
 
-- Kode Drupal ada di volume `drupal-code`, bukan di folder ini. Hanya `config/` yang masuk repo.
+- Kode inti Drupal ada di volume `drupal-code`, bukan di folder ini. Yang masuk repo: `config/`, `modules/` (modul custom), `themes/` (tema `kh_theme`), dan `setup/`. Ketiganya di-mount ke container, jadi perubahan file langsung terbaca setelah `drush cr`.
 - Kata sandi di file ini hanya untuk lokal. Jangan dipakai di server publik.
 - Port 8080 dipakai aplikasi lain? Set `DRUPAL_PORT=8081` (dan `BASE_URL=http://127.0.0.1:8081` untuk `verify.sh`) sebelum `docker compose up -d`.
 - Drupal core diperbarui dengan `docker compose exec drupal composer update "drupal/core-*" -W`, lalu `drush updatedb -y` dan `drush cr`.

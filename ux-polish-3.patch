@@ -1,0 +1,596 @@
+diff --git a/README.md b/README.md
+index f4efd9b..6940a8b 100644
+--- a/README.md
++++ b/README.md
+@@ -60,7 +60,48 @@ Panduan admin panel (alamat, hak tiap role, cara menambah konten): `docs/admin-p
+ 
+ Frontend (responsif, aksesibilitas, SEO, cara uji di browser): `docs/frontend.md`.
+ 
+-Tampilan: tema `themes/kh_theme` (meniru prototipe), beranda dari modul `modules/kh_home`, bentuk isi per jenis dari `setup/body.php`.
++Tampilan: tema `themes/kh_theme` (modern minimalis: token warna, header pill, kartu rounded, satu aksen indigo, font Inter lokal, mode terang dan gelap). Beranda dari modul `modules/kh_home`, bentuk isi per jenis dari `setup/body.php`.
++
++### Beranda (`modules/kh_home`)
++
++`HomeController` hanya menyiapkan data (hero, lima area, konten terbaru, FAQ). Markup ada di Twig:
++
++| Berkas | Isi |
++|--------|-----|
++| `templates/kh-home.html.twig` | Susunan beranda: hero, kartu area, Baru diperbarui, Pertanyaan populer, banner bantuan. Teks tetap bisa diubah langsung di sini. |
++| `templates/kh-home-icon.html.twig` | Ikon SVG kartu area (`steps`, `book`, `play`, `help`, `doc`). |
++| `kh_home.module` | Mendaftarkan theme hook `kh_home`. |
++
++Untuk mengubah tampilan beranda tanpa menyentuh modul, salin `kh-home.html.twig` ke `themes/kh_theme/templates/` lalu `drush cr`. Salinan di tema yang dipakai.
++
++### Fitur antarmuka
++
++| Fitur | Cara pakai atau memeriksa | Berkas |
++|-------|---------------------------|--------|
++| Command palette | Tekan **Ctrl+K** (⌘K di Mac) atau **/**, atau klik kolom cari di header. Kolom kosong menampilkan pintasan menu dan pencarian terakhir. Mengetik dua huruf atau lebih memunculkan hasil langsung. Panah memilih, Enter membuka, Esc menutup. | `themes/kh_theme/js/palette.js`, `modules/kh_search` |
++| Umpan balik "Apakah halaman ini membantu?" | Muncul di bawah isi konten Published. Pilih 👍 atau 👎 (👎 membuka kolom komentar). Laporan: `/admin/reports/kh-feedback`. | `modules/kh_feedback`, `templates/node--kh--full.html.twig` |
++| Banner kesegaran | Di halaman konten: "Perlu review" bila Review Date terlewat, "Segera direview" 30 hari sebelumnya, "Diarsipkan", dan "Pratinjau" untuk konten belum terbit. | `kh_theme_freshness()` di `kh_theme.theme` |
++| Cetak | Ctrl+P di halaman konten. Header, footer, facet, dan umpan balik disembunyikan, warna dipaksa terang, URL tautan eksternal dicetak. | `@media print` di `css/style.css` |
++| Mode gelap | Tombol di header. Pilihan disimpan di browser. | `js/theme.js`, `templates/html.html.twig` |
++| Branding | Logo (simbol, horizontal, putih, mono), favicon, apple-touch-icon, dan gambar OG. Aturan pakai ada di `branding/README.md`. | `themes/kh_theme/branding/` |
++
++Catatan teknis:
++
++- **Umpan balik tanpa login**, sesuai arahan dosen. Dibatasi 5 kiriman per jam per perangkat per konten, komentar maksimal 500 karakter, dan hanya untuk konten Published dari lima content type Knowledge Hub. Data disimpan di tabel `kh_feedback` dan ikut terhapus bersama kontennya. Laporan perlu role dengan izin *access content overview*.
++- **Pencarian cepat** (`/kh/cari-cepat?q=...`) menggabungkan dua sumber: judul yang memuat kata (supaya kata yang belum selesai diketik cocok) dan teks lengkap dari indeks Search API `kh_index` (yang memakai `matching: words`). Hanya konten yang boleh dilihat pengguna yang dikembalikan.
++- Favicon dan gambar OG dipasang oleh `kh_theme_page_attachments_alter()`. Gambar OG tidak ditimpa bila modul metatag sudah mengisinya.
++- Banner kesegaran membatasi cache node menjadi satu hari agar tanggalnya ikut berganti.
++
++### Memperbarui situs yang sudah berjalan
++
++Instalasi bersih (`setup.bat` atau `setup/restore.sh`) sudah mengaktifkan semuanya. Untuk situs yang sudah jalan:
++
++```bash
++docker compose exec drupal vendor/bin/drush en kh_feedback kh_search -y
++docker compose exec drupal vendor/bin/drush cr
++```
++
++Lalu tekan Ctrl+F5 di browser agar CSS dan JS baru terbaca. Jalankan `bash setup/verify.sh` untuk memastikan tidak ada yang rusak.
+ 
+ ### Cek tiga kriteria nilai
+ 
+@@ -88,7 +129,7 @@ docker compose down -v         # hapus semua data (instalasi mulai dari nol)
+ 
+ ### Catatan
+ 
+-- Kode Drupal ada di volume `drupal-code`, bukan di folder ini. Hanya `config/` yang masuk repo.
++- Kode inti Drupal ada di volume `drupal-code`, bukan di folder ini. Yang masuk repo: `config/`, `modules/` (modul custom), `themes/` (tema `kh_theme`), dan `setup/`. Ketiganya di-mount ke container, jadi perubahan file langsung terbaca setelah `drush cr`.
+ - Kata sandi di file ini hanya untuk lokal. Jangan dipakai di server publik.
+ - Port 8080 dipakai aplikasi lain? Set `DRUPAL_PORT=8081` (dan `BASE_URL=http://127.0.0.1:8081` untuk `verify.sh`) sebelum `docker compose up -d`.
+ - Drupal core diperbarui dengan `docker compose exec drupal composer update "drupal/core-*" -W`, lalu `drush updatedb -y` dan `drush cr`.
+diff --git a/modules/kh_home/kh_home.module b/modules/kh_home/kh_home.module
+new file mode 100644
+index 0000000..ae87dde
+--- /dev/null
++++ b/modules/kh_home/kh_home.module
+@@ -0,0 +1,27 @@
++<?php
++
++/**
++ * @file
++ * Beranda Knowledge Hub.
++ */
++
++/**
++ * Implements hook_theme().
++ *
++ * Markup beranda ada di templates/kh-home.html.twig. Untuk mengubah teks atau
++ * urutan bagian tanpa menyentuh modul, salin file itu ke templates/ tema
++ * (themes/kh_theme/templates/kh-home.html.twig) lalu kosongkan cache.
++ */
++function kh_home_theme() {
++  return [
++    'kh_home' => [
++      'variables' => [
++        'hero' => [],
++        'areas' => [],
++        'latest' => [],
++        'faq' => [],
++      ],
++      'template' => 'kh-home',
++    ],
++  ];
++}
+diff --git a/modules/kh_home/src/Controller/HomeController.php b/modules/kh_home/src/Controller/HomeController.php
+index e61c24a..466781f 100644
+--- a/modules/kh_home/src/Controller/HomeController.php
++++ b/modules/kh_home/src/Controller/HomeController.php
+@@ -4,7 +4,6 @@ namespace Drupal\kh_home\Controller;
+ 
+ use Drupal\Component\Utility\Html;
+ use Drupal\Core\Controller\ControllerBase;
+-use Drupal\Core\Render\Markup;
+ use Drupal\Core\Url;
+ 
+ /**
+@@ -56,17 +55,6 @@ class HomeController extends ControllerBase {
+     ],
+   ];
+ 
+-  /**
+-   * Ikon SVG outline 24x24 untuk kartu area. Dekoratif, jadi aria-hidden.
+-   */
+-  const ICONS = [
+-    'steps' => '<path d="M4 7h16M4 12h10M4 17h13"/>',
+-    'book' => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7h8M8 11h6"/>',
+-    'play' => '<circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5z"/>',
+-    'help' => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8v.5"/><path d="M12 17.2h.01"/>',
+-    'doc' => '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/>',
+-  ];
+-
+   const MONTHS = [
+     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+@@ -104,15 +92,6 @@ class HomeController extends ControllerBase {
+       ->condition('status', 1);
+   }
+ 
+-  /**
+-   * Ikon SVG untuk kartu area.
+-   */
+-  private function icon($key) {
+-    $path = self::ICONS[$key] ?? self::ICONS['doc'];
+-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
+-      . 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $path . '</svg>';
+-  }
+-
+   /**
+    * URL daftar konten dengan filter facet opsional.
+    *
+@@ -123,37 +102,41 @@ class HomeController extends ControllerBase {
+     foreach ($facets as $i => $facet) {
+       $query['f[' . $i . ']'] = $facet[0] . ':' . $facet[1];
+     }
+-    return $path . ($query ? '?' . http_build_query($query, '', '&amp;') : '');
++    return $path . ($query ? '?' . http_build_query($query, '', '&') : '');
+   }
+ 
+   /**
+-   * HTML kartu lima area, lengkap dengan jumlah konten.
++   * Data kartu lima area, lengkap dengan jumlah konten.
++   *
++   * Tiap item: label, url, description, types, icon (nama ikon), count.
+    */
+-  private function buildAreaCards() {
+-    $html = '';
++  private function buildAreas() {
++    $areas = [];
+     foreach (self::AREAS as $bundle => $area) {
+       $count = $this->publishedQuery()
+         ->condition('type', $bundle)
+         ->count()
+         ->execute();
+ 
+-      $html .= '<article class="area-card">';
+-      $html .= '<span class="area-icon">' . $this->icon($area['icon']) . '</span>';
+-      $html .= '<h3><a href="' . $area['path'] . '">' . Html::escape($area['label']) . '</a></h3>';
+-      $html .= '<p>' . Html::escape($area['description']) . '</p>';
+-      $html .= '<div class="area-foot"><span>' . $count . ' konten</span>';
+-      $html .= '<span class="goto" aria-hidden="true">Buka &rarr;</span></div>';
+-      $html .= '</article>';
++      $areas[] = [
++        'label' => $area['label'],
++        'url' => $area['path'],
++        'description' => $area['description'],
++        'types' => $area['types'],
++        'icon' => $area['icon'],
++        'count' => (int) $count,
++      ];
+     }
+-    return $html;
++    return $areas;
+   }
+ 
+   /**
+-   * HTML kartu konten terbaru: enam konten dengan tanggal terbaru.
++   * Render array teaser untuk enam konten dengan tanggal terbaru.
+    *
+    * Bila tanggal sama, judul menentukan urutan supaya daftar tidak berganti-ganti.
++   * Render array (bukan HTML jadi) dikembalikan agar cache tag tiap node ikut naik.
+    */
+-  private function buildLatestCards() {
++  private function buildLatest() {
+     $ids = $this->publishedQuery()
+       ->condition('type', array_keys(self::AREAS), 'IN')
+       ->condition('field_tanggal', '', '<>')
+@@ -165,12 +148,11 @@ class HomeController extends ControllerBase {
+     $nodes = $this->entityTypeManager()->getStorage('node')->loadMultiple($ids);
+     $view_builder = $this->entityTypeManager()->getViewBuilder('node');
+ 
+-    $html = '';
++    $cards = [];
+     foreach ($nodes as $node) {
+-      $build = $view_builder->view($node, 'teaser');
+-      $html .= \Drupal::service('renderer')->renderPlain($build);
++      $cards[] = $view_builder->view($node, 'teaser');
+     }
+-    return $html;
++    return $cards;
+   }
+ 
+   /**
+@@ -178,12 +160,15 @@ class HomeController extends ControllerBase {
+    *
+    * shortcut: hitung dari node Published per term, cukup untuk 33 konten seed.
+    * Ganti ke View agregasi bila katalog tumbuh besar.
++   *
++   * @return array
++   *   Daftar ['label' => ..., 'url' => ...].
+    */
+   private function buildTopicChips() {
+     $storage = $this->entityTypeManager()->getStorage('taxonomy_term');
+     $terms = $storage->loadByProperties(['vid' => 'topik']);
+     if (empty($terms)) {
+-      return '';
++      return [];
+     }
+ 
+     $counts = [];
+@@ -198,18 +183,24 @@ class HomeController extends ControllerBase {
+     }
+     arsort($counts);
+ 
+-    $html = '';
++    $chips = [];
+     foreach (array_slice($counts, 0, 5, TRUE) as $tid => $count) {
+-      $html .= '<li><a class="chip" href="/cari?' . Html::escape('search_api_fulltext=' . rawurlencode($terms[$tid]->label())) . '">'
+-        . Html::escape($terms[$tid]->label()) . '</a></li>';
++      $label = $terms[$tid]->label();
++      $chips[] = [
++        'label' => $label,
++        'url' => '/cari?search_api_fulltext=' . rawurlencode($label),
++      ];
+     }
+-    return $html;
++    return $chips;
+   }
+ 
+   /**
+-   * Pertanyaan populer: chip kategori di kiri dan akordeon <details> di kanan.
++   * Pertanyaan populer, dikelompokkan menurut Topik.
+    *
+-   * Sumber: FAQ dan Troubleshooting di area Bantuan, dikelompokkan menurut Topik.
++   * Sumber: FAQ dan Troubleshooting di area Bantuan.
++   *
++   * @return array
++   *   Daftar grup: ['label', 'anchor', 'questions' => [['title', 'url', 'answer']]].
+    */
+   private function buildFaq() {
+     $ids = $this->publishedQuery()
+@@ -219,9 +210,6 @@ class HomeController extends ControllerBase {
+       ->execute();
+ 
+     $nodes = $this->entityTypeManager()->getStorage('node')->loadMultiple($ids);
+-    if (empty($nodes)) {
+-      return '';
+-    }
+ 
+     $groups = [];
+     foreach ($nodes as $node) {
+@@ -236,117 +224,61 @@ class HomeController extends ControllerBase {
+       $groups[$label][] = ['title' => $node->label(), 'url' => $node->toUrl()->toString(), 'answer' => $answer];
+     }
+ 
+-    $side = '';
+-    $panels = '';
+-    $first = TRUE;
++    $result = [];
+     foreach ($groups as $label => $items) {
+-      $anchor = Html::cleanCssIdentifier($label);
+-      $side .= '<a href="#faq-' . $anchor . '"' . ($first ? ' aria-current="true"' : '') . '>'
+-        . Html::escape($label) . '</a>';
+-
+-      $panels .= '<div class="accordion" id="faq-' . $anchor . '">';
+-      foreach ($items as $item) {
+-        $panels .= '<details>';
+-        $panels .= '<summary>' . Html::escape($item['title']) . '</summary>';
+-        $panels .= '<p>' . Html::escape($item['answer']);
+-        $panels .= ' <a href="' . $item['url'] . '">Buka jawaban lengkap</a></p>';
+-        $panels .= '</details>';
+-      }
+-      $panels .= '</div>';
+-      $first = FALSE;
++      $result[] = [
++        'label' => $label,
++        'anchor' => 'faq-' . Html::cleanCssIdentifier($label),
++        'questions' => $items,
++      ];
+     }
+-
+-    return '<div class="faq-layout"><div class="faq-side">' . $side . '</div><div>' . $panels . '</div></div>';
++    return $result;
+   }
+ 
+   /**
+-   * Chip di bawah pencarian: pintasan ke filter bawaan.
++   * Chip pintasan di bawah pencarian: filter bawaan dan jalan pintas ke area.
++   *
++   * @return array
++   *   Daftar ['label' => ..., 'url' => ...].
+    */
+   private function buildShortcuts() {
+-    $html = '';
++    $chips = [];
+ 
+     $new_employee = $this->findTermId('audience', 'Pegawai Baru');
+     $basic = $this->findTermId('difficulty', 'Dasar');
+     if ($new_employee && $basic) {
+-      $html .= '<li><a class="chip" href="'
+-        . $this->filteredUrl('/pembelajaran', [['audience', $new_employee], ['difficulty', $basic]])
+-        . '">Pegawai baru</a></li>';
++      $chips[] = [
++        'label' => 'Pegawai baru',
++        'url' => $this->filteredUrl('/pembelajaran', [['audience', $new_employee], ['difficulty', $basic]]),
++      ];
+     }
+ 
+     $troubleshooting = $this->findTermId('jenis_bantuan', 'Troubleshooting');
+     if ($troubleshooting) {
+-      $html .= '<li><a class="chip" href="'
+-        . $this->filteredUrl('/bantuan', [['jenis', $troubleshooting]])
+-        . '">Ada kendala sistem</a></li>';
++      $chips[] = [
++        'label' => 'Ada kendala sistem',
++        'url' => $this->filteredUrl('/bantuan', [['jenis', $troubleshooting]]),
++      ];
+     }
+ 
+-    $html .= '<li><a class="chip" href="/prosedur">Prosedur kerja</a></li>';
+-    $html .= '<li><a class="chip" href="/alat-kerja">Template siap pakai</a></li>';
+-    return $html;
++    $chips[] = ['label' => 'Prosedur kerja', 'url' => '/prosedur'];
++    $chips[] = ['label' => 'Template siap pakai', 'url' => '/alat-kerja'];
++    return $chips;
+   }
+ 
+   /**
+-   * HTML hero dengan pencarian besar dan chip topik populer.
+-   */
+-  private function buildHero() {
+-    $search_url = Url::fromRoute('view.kh_katalog.page_cari')->toString();
+-
+-    $html = '<section class="hero blob-field">';
+-    $html .= '<h1>Temukan jawaban untuk<span>setiap pertanyaan kerja</span></h1>';
+-    $html .= '<p>SOP, kebijakan, tutorial, FAQ, dan template untuk satu proses ada di satu tempat.</p>';
+-    $html .= '<form class="hero-search" action="' . $search_url . '" method="get" role="search">';
+-    $html .= '<label for="q-hero" class="visually-hidden">Cari di Knowledge Hub</label>';
+-    $html .= '<input id="q-hero" name="search_api_fulltext" type="search" ';
+-    $html .= 'placeholder="Contoh: bagaimana mengajukan perjalanan dinas?">';
+-    $html .= '<button class="button button--primary" type="submit">Cari</button>';
+-    $html .= '</form>';
+-    $html .= '<p class="chip-label">Topik populer</p>';
+-    $html .= '<ul class="chips">' . $this->buildShortcuts() . $this->buildTopicChips() . '</ul>';
+-    $html .= '</section>';
+-    return $html;
+-  }
+-
+-  /**
+-   * Halaman beranda.
++   * Halaman beranda. Markup ada di templates/kh-home.html.twig.
+    */
+   public function page() {
+-    $html = '<div class="wrap">';
+-    $html .= $this->buildHero();
+-
+-    $html .= '<section class="section">';
+-    $html .= '<div class="section-head"><div><h2>Jelajahi lima area</h2>';
+-    $html .= '<p>Mulai dari jenis bantuan yang paling dekat dengan kebutuhan Anda.</p></div></div>';
+-    $html .= '<div class="area-grid">' . $this->buildAreaCards() . '</div>';
+-    $html .= '</section>';
+-
+-    $html .= '<section class="section">';
+-    $html .= '<div class="section-head"><div><h2>Baru diperbarui</h2>';
+-    $html .= '<p>Dokumen dengan pembaruan terakhir.</p></div>';
+-    $html .= '<a class="section-link" href="/cari">Lihat semua</a></div>';
+-    $html .= '<div class="teaser-grid">' . $this->buildLatestCards() . '</div>';
+-    $html .= '</section>';
+-
+-    $faq = $this->buildFaq();
+-    if ($faq) {
+-      $html .= '<section class="section">';
+-      $html .= '<div class="section-head"><div><h2>Pertanyaan populer</h2>';
+-      $html .= '<p>Jawaban singkat untuk kendala yang paling sering muncul.</p></div></div>';
+-      $html .= $faq;
+-      $html .= '</section>';
+-    }
+-
+-    $html .= '<section class="section"><div class="cta">';
+-    $html .= '<h2>Butuh jawaban yang belum ada di sini?</h2>';
+-    $html .= '<p>Hubungi Helpdesk IT atau kirim pertanyaan ke Knowledge Manager. Kami bantu arahkan ke dokumen yang tepat.</p>';
+-    $html .= '<div class="cta-actions">';
+-    $html .= '<a class="button button--primary" href="/bantuan">Lihat Bantuan</a>';
+-    $html .= '<a class="button" href="/cari">Telusuri semua konten</a>';
+-    $html .= '</div></div></section>';
+-
+-    $html .= '</div>';
+-
+     return [
+-      '#markup' => Markup::create($html),
++      '#theme' => 'kh_home',
++      '#hero' => [
++        'search_url' => Url::fromRoute('view.kh_katalog.page_cari')->toString(),
++        'chips' => array_merge($this->buildShortcuts(), $this->buildTopicChips()),
++      ],
++      '#areas' => $this->buildAreas(),
++      '#latest' => $this->buildLatest(),
++      '#faq' => $this->buildFaq(),
+       '#cache' => [
+         'tags' => ['node_list', 'taxonomy_term_list'],
+         'contexts' => ['user.permissions'],
+diff --git a/modules/kh_home/templates/kh-home-icon.html.twig b/modules/kh_home/templates/kh-home-icon.html.twig
+new file mode 100644
+index 0000000..5d6dc7a
+--- /dev/null
++++ b/modules/kh_home/templates/kh-home-icon.html.twig
+@@ -0,0 +1,21 @@
++{#
++/**
++ * @file
++ * Ikon outline 24x24 untuk kartu area. Dekoratif, jadi aria-hidden.
++ *
++ * Variabel: name = steps | book | play | help | doc (selain itu memakai doc).
++ */
++#}
++<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++  {%- if name == 'steps' -%}
++    <path d="M4 7h16M4 12h10M4 17h13"/>
++  {%- elseif name == 'book' -%}
++    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7h8M8 11h6"/>
++  {%- elseif name == 'play' -%}
++    <circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5z"/>
++  {%- elseif name == 'help' -%}
++    <circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8v.5"/><path d="M12 17.2h.01"/>
++  {%- else -%}
++    <path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/>
++  {%- endif -%}
++</svg>
+diff --git a/modules/kh_home/templates/kh-home.html.twig b/modules/kh_home/templates/kh-home.html.twig
+new file mode 100644
+index 0000000..a55c345
+--- /dev/null
++++ b/modules/kh_home/templates/kh-home.html.twig
+@@ -0,0 +1,112 @@
++{#
++/**
++ * @file
++ * Beranda Knowledge Hub: hero pencarian, kartu lima area, konten terbaru,
++ * pertanyaan populer, dan banner bantuan.
++ *
++ * Variabel:
++ * - hero.search_url: alamat halaman Cari.
++ * - hero.chips: daftar {label, url} pintasan dan topik populer.
++ * - areas: daftar {label, url, description, types, icon, count}.
++ * - latest: daftar render array teaser node (sudah berisi cache tag).
++ * - faq: daftar grup {label, anchor, questions: [{title, url, answer}]}.
++ *
++ * Teks yang tetap (judul, paragraf, tombol) boleh diubah langsung di sini.
++ */
++#}
++<div class="wrap">
++
++  <section class="hero blob-field">
++    <h1>Temukan jawaban untuk<span>setiap pertanyaan kerja</span></h1>
++    <p>SOP, kebijakan, tutorial, FAQ, dan template untuk satu proses ada di satu tempat.</p>
++    <form class="hero-search" action="{{ hero.search_url }}" method="get" role="search">
++      <label for="q-hero" class="visually-hidden">Cari di Knowledge Hub</label>
++      <input id="q-hero" name="search_api_fulltext" type="search" placeholder="Contoh: bagaimana mengajukan perjalanan dinas?">
++      <button class="button button--primary" type="submit">Cari</button>
++    </form>
++    {% if hero.chips %}
++      <p class="chip-label">Topik populer</p>
++      <ul class="chips">
++        {% for chip in hero.chips %}
++          <li><a class="chip" href="{{ chip.url }}">{{ chip.label }}</a></li>
++        {% endfor %}
++      </ul>
++    {% endif %}
++  </section>
++
++  <section class="section">
++    <div class="section-head">
++      <div>
++        <h2>Jelajahi lima area</h2>
++        <p>Mulai dari jenis bantuan yang paling dekat dengan kebutuhan Anda.</p>
++      </div>
++    </div>
++    <div class="area-grid">
++      {% for area in areas %}
++        <article class="area-card">
++          <span class="area-icon">{% include '@kh_home/kh-home-icon.html.twig' with { name: area.icon } only %}</span>
++          <h3><a href="{{ area.url }}">{{ area.label }}</a></h3>
++          <p>{{ area.description }}</p>
++          <div class="area-foot"><span>{{ area.count }} konten</span><span class="goto" aria-hidden="true">Buka &rarr;</span></div>
++        </article>
++      {% endfor %}
++    </div>
++  </section>
++
++  {% if latest %}
++    <section class="section">
++      <div class="section-head">
++        <div>
++          <h2>Baru diperbarui</h2>
++          <p>Dokumen dengan pembaruan terakhir.</p>
++        </div>
++        <a class="section-link" href="/cari">Lihat semua</a>
++      </div>
++      <div class="teaser-grid">
++        {% for card in latest %}{{ card }}{% endfor %}
++      </div>
++    </section>
++  {% endif %}
++
++  {% if faq %}
++    <section class="section">
++      <div class="section-head">
++        <div>
++          <h2>Pertanyaan populer</h2>
++          <p>Jawaban singkat untuk kendala yang paling sering muncul.</p>
++        </div>
++      </div>
++      <div class="faq-layout">
++        <div class="faq-side">
++          {% for group in faq %}
++            <a href="#{{ group.anchor }}"{% if loop.first %} aria-current="true"{% endif %}>{{ group.label }}</a>
++          {% endfor %}
++        </div>
++        <div>
++          {% for group in faq %}
++            <div class="accordion" id="{{ group.anchor }}">
++              {% for item in group.questions %}
++                <details>
++                  <summary>{{ item.title }}</summary>
++                  <p>{{ item.answer }} <a href="{{ item.url }}">Buka jawaban lengkap</a></p>
++                </details>
++              {% endfor %}
++            </div>
++          {% endfor %}
++        </div>
++      </div>
++    </section>
++  {% endif %}
++
++  <section class="section">
++    <div class="cta">
++      <h2>Butuh jawaban yang belum ada di sini?</h2>
++      <p>Hubungi Helpdesk IT atau kirim pertanyaan ke Knowledge Manager. Kami bantu arahkan ke dokumen yang tepat.</p>
++      <div class="cta-actions">
++        <a class="button button--primary" href="/bantuan">Lihat Bantuan</a>
++        <a class="button" href="/cari">Telusuri semua konten</a>
++      </div>
++    </div>
++  </section>
++
++</div>
+diff --git a/setup/checks/theme.php b/setup/checks/theme.php
+index 8a7b998..5484c44 100644
+--- a/setup/checks/theme.php
++++ b/setup/checks/theme.php
+@@ -25,17 +25,19 @@ if (\Drupal::config('system.theme')->get('default') !== 'kh_theme') {
+   $bad[] = 'tema default bukan kh_theme';
+ }
+ 
+-// ---- Beranda: hero, tombol mode gelap, Info Terbaru, dan lima kartu area.
++// ---- Beranda: hero, tombol mode gelap, Baru diperbarui, dan lima kartu area.
++// Markup beranda dari modul kh_home (templates/kh-home.html.twig).
+ $home = kh_check_page('/', $bad);
+ kh_theme_expect_all($home, [
+-  'Temukan cara kerja',
++  'Temukan jawaban untuk',
+   'id="theme-toggle"',
+   'class="site-branding"',
+-  'class="hero"',
+-  'Info Terbaru',
++  'class="hero blob-field"',
++  'Baru diperbarui',
++  'Jelajahi lima area',
+ ], 'beranda', $bad);
+ 
+-$card_count = substr_count($home, 'class="card c-');
++$card_count = substr_count($home, 'class="area-card"');
+ if ($card_count !== 5) {
+   $bad[] = 'beranda harus punya 5 kartu area, ada ' . $card_count;
+ }
