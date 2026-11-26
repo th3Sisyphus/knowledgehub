@@ -1,0 +1,10 @@
+{#
+  Tombol simpan (bookmark). Status dan label diatur js/bookmarks.js.
+
+  Variabel: nid, title, url, jenis, snippet, icon_only (true = hanya ikon).
+  Nama aksesibel tetap ("Simpan: judul"); status lewat aria-pressed.
+#}
+<button type="button" class="bookmark-btn{% if icon_only %} bookmark-btn--icon{% endif %}" data-kh-bookmark data-nid="{{ nid }}" data-title="{{ title }}" data-url="{{ url }}" data-jenis="{{ jenis }}" data-snippet="{{ (snippet|default(''))|striptags|slice(0, 160) }}" aria-pressed="false" aria-label="Simpan: {{ title }}">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></svg>
+  {%- if not icon_only %}<span class="bookmark-label" aria-hidden="true">Simpan</span>{% endif -%}
+</button>

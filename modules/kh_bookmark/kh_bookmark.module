@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Bookmark Knowledge Hub: halaman /tersimpan.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * Markup halaman ada di templates/kh-bookmark-page.html.twig. Isi daftar dibuat
+ * oleh themes/kh_theme/js/bookmarks.js dari localStorage pengunjung.
+ */
+function kh_bookmark_theme() {
+  return [
+    'kh_bookmark_page' => [
+      'variables' => [],
+      'template' => 'kh-bookmark-page',
+    ],
+  ];
+}

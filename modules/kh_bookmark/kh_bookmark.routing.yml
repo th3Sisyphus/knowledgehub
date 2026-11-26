@@ -1,0 +1,15 @@
+kh_bookmark.page:
+  path: '/tersimpan'
+  defaults:
+    _controller: '\Drupal\kh_bookmark\Controller\BookmarkController::page'
+    _title: 'Tersimpan'
+  requirements:
+    _permission: 'access content'
+
+kh_bookmark.data:
+  path: '/kh/tersimpan-data'
+  defaults:
+    _controller: '\Drupal\kh_bookmark\Controller\BookmarkController::data'
+  methods: [GET]
+  requirements:
+    _permission: 'access content'

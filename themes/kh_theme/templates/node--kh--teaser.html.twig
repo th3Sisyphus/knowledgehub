@@ -3,6 +3,7 @@
   ringkasan, dan tag. Seluruh kartu bisa diklik lewat pseudo-element di tautan judul.
 #}
 <article{{ attributes.addClass('teaser') }}>
+  {% if kh.bookmark %}{% include '@kh_theme/kh-bookmark-button.html.twig' with { nid: node.id, title: node.label, url: url, jenis: kh.jenis, snippet: kh.ringkasan, icon_only: true } only %}{% endif %}
   <div class="teaser-row">
     {% if kh.jenis %}<span class="teaser-type">{{ kh.jenis }}</span>{% endif %}
     {% if kh.diff %}<span class="teaser-level">{{ kh.diff }}</span>{% endif %}
