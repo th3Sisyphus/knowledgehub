@@ -1,0 +1,112 @@
+{#
+/**
+ * @file
+ * Beranda Knowledge Hub: hero pencarian, kartu lima area, konten terbaru,
+ * pertanyaan populer, dan banner bantuan.
+ *
+ * Variabel:
+ * - hero.search_url: alamat halaman Cari.
+ * - hero.chips: daftar {label, url} pintasan dan topik populer.
+ * - areas: daftar {label, url, description, types, icon, count}.
+ * - latest: daftar render array teaser node (sudah berisi cache tag).
+ * - faq: daftar grup {label, anchor, questions: [{title, url, answer}]}.
+ *
+ * Teks yang tetap (judul, paragraf, tombol) boleh diubah langsung di sini.
+ */
+#}
+<div class="wrap">
+
+  <section class="hero blob-field">
+    <h1>Temukan jawaban untuk<span>setiap pertanyaan kerja</span></h1>
+    <p>SOP, kebijakan, tutorial, FAQ, dan template untuk satu proses ada di satu tempat.</p>
+    <form class="hero-search" action="{{ hero.search_url }}" method="get" role="search">
+      <label for="q-hero" class="visually-hidden">Cari di Knowledge Hub</label>
+      <input id="q-hero" name="search_api_fulltext" type="search" placeholder="Contoh: bagaimana mengajukan perjalanan dinas?">
+      <button class="button button--primary" type="submit">Cari</button>
+    </form>
+    {% if hero.chips %}
+      <p class="chip-label">Topik populer</p>
+      <ul class="chips">
+        {% for chip in hero.chips %}
+          <li><a class="chip" href="{{ chip.url }}">{{ chip.label }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <h2>Jelajahi lima area</h2>
+        <p>Mulai dari jenis bantuan yang paling dekat dengan kebutuhan Anda.</p>
+      </div>
+    </div>
+    <div class="area-grid">
+      {% for area in areas %}
+        <article class="area-card">
+          <span class="area-icon">{% include '@kh_home/kh-home-icon.html.twig' with { name: area.icon } only %}</span>
+          <h3><a href="{{ area.url }}">{{ area.label }}</a></h3>
+          <p>{{ area.description }}</p>
+          <div class="area-foot"><span>{{ area.count }} konten</span><span class="goto" aria-hidden="true">Buka &rarr;</span></div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if latest %}
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Baru diperbarui</h2>
+          <p>Dokumen dengan pembaruan terakhir.</p>
+        </div>
+        <a class="section-link" href="/cari">Lihat semua</a>
+      </div>
+      <div class="teaser-grid">
+        {% for card in latest %}{{ card }}{% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if faq %}
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Pertanyaan populer</h2>
+          <p>Jawaban singkat untuk kendala yang paling sering muncul.</p>
+        </div>
+      </div>
+      <div class="faq-layout">
+        <div class="faq-side">
+          {% for group in faq %}
+            <a href="#{{ group.anchor }}"{% if loop.first %} aria-current="true"{% endif %}>{{ group.label }}</a>
+          {% endfor %}
+        </div>
+        <div>
+          {% for group in faq %}
+            <div class="accordion" id="{{ group.anchor }}">
+              {% for item in group.questions %}
+                <details>
+                  <summary>{{ item.title }}</summary>
+                  <p>{{ item.answer }} <a href="{{ item.url }}">Buka jawaban lengkap</a></p>
+                </details>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="section">
+    <div class="cta">
+      <h2>Butuh jawaban yang belum ada di sini?</h2>
+      <p>Hubungi Helpdesk IT atau kirim pertanyaan ke Knowledge Manager. Kami bantu arahkan ke dokumen yang tepat.</p>
+      <div class="cta-actions">
+        <a class="button button--primary" href="/bantuan">Lihat Bantuan</a>
+        <a class="button" href="/cari">Telusuri semua konten</a>
+      </div>
+    </div>
+  </section>
+
+</div>

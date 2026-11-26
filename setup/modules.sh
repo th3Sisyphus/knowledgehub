@@ -29,4 +29,4 @@ if [ "$state" -eq 1 ]; then
   fi
 fi
 
-dc vendor/bin/drush en -y pathauto token schema_metatag schema_article schema_web_page schema_course facets search_api search_api_db content_moderation workflows kh_workflow kh_home
+dc vendor/bin/drush en -y pathauto token schema_metatag schema_article schema_web_page schema_course facets search_api search_api_db content_moderation workflows kh_workflow kh_home kh_feedback kh_search

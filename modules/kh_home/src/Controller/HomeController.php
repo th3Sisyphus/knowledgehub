@@ -4,18 +4,18 @@ namespace Drupal\kh_home\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 
 /**
- * Beranda Knowledge Hub: hero, kartu 5 area, info terbaru, pintasan.
+ * Beranda Knowledge Hub: hero pencarian, kartu lima area, konten terbaru,
+ * pertanyaan populer, dan banner bantuan.
  */
 class HomeController extends ControllerBase {
 
   /**
    * Lima area utama.
    *
-   * Kunci = content type. Isi: path, nama, deskripsi, daftar jenis, kelas CSS.
+   * Kunci = content type. Isi: path, nama, deskripsi, daftar jenis, key ikon.
    */
   const AREAS = [
     'prosedur' => [
@@ -23,35 +23,35 @@ class HomeController extends ControllerBase {
       'label' => 'Prosedur',
       'description' => 'Langkah terstruktur yang harus diikuti untuk menyelesaikan tugas.',
       'types' => 'SOP · Panduan Kerja · Checklist',
-      'css' => 'prosedur',
+      'icon' => 'steps',
     ],
     'referensi' => [
       'path' => '/referensi',
       'label' => 'Referensi',
       'description' => 'Informasi untuk dipahami atau dirujuk, bukan instruksi langkah demi langkah.',
-      'types' => 'Knowledge Article · Kebijakan · Glossary · Studi Kasus',
-      'css' => 'referensi',
+      'types' => 'Knowledge Article · Kebijakan · Glossary',
+      'icon' => 'book',
     ],
     'pembelajaran' => [
       'path' => '/pembelajaran',
       'label' => 'Pembelajaran',
       'description' => 'Materi belajar berurutan, terutama untuk pegawai baru.',
       'types' => 'Tutorial · Video Tutorial',
-      'css' => 'pembelajaran',
+      'icon' => 'play',
     ],
     'bantuan' => [
       'path' => '/bantuan',
       'label' => 'Bantuan',
       'description' => 'Jawaban saat ada pertanyaan atau hambatan kerja.',
       'types' => 'FAQ · Troubleshooting',
-      'css' => 'bantuan',
+      'icon' => 'help',
     ],
     'alat_kerja' => [
       'path' => '/alat-kerja',
       'label' => 'Alat Kerja',
       'description' => 'Dokumen siap diisi yang langsung dipakai dalam pekerjaan.',
       'types' => 'Template',
-      'css' => 'alat-kerja',
+      'icon' => 'doc',
     ],
   ];
 
@@ -93,115 +93,192 @@ class HomeController extends ControllerBase {
   }
 
   /**
-   * HTML kartu untuk lima area, lengkap dengan jumlah konten.
+   * URL daftar konten dengan filter facet opsional.
+   *
+   * $facets = [['audience', 12], ['difficulty', 3]] menghasilkan ?f[0]=audience:12&f[1]=difficulty:3.
    */
-  private function buildCards() {
-    $html = '';
-    $number = 0;
+  private function filteredUrl($path, array $facets = []) {
+    $query = [];
+    foreach ($facets as $i => $facet) {
+      $query['f[' . $i . ']'] = $facet[0] . ':' . $facet[1];
+    }
+    return $path . ($query ? '?' . http_build_query($query, '', '&') : '');
+  }
 
+  /**
+   * Data kartu lima area, lengkap dengan jumlah konten.
+   *
+   * Tiap item: label, url, description, types, icon (nama ikon), count.
+   */
+  private function buildAreas() {
+    $areas = [];
     foreach (self::AREAS as $bundle => $area) {
-      $number++;
       $count = $this->publishedQuery()
         ->condition('type', $bundle)
         ->count()
         ->execute();
 
-      $html .= '<article class="card c-' . $area['css'] . '">';
-      $html .= '<span class="card-num" aria-hidden="true">0' . $number . '</span>';
-      $html .= '<h3><a href="' . $area['path'] . '">' . Html::escape($area['label']) . '</a></h3>';
-      $html .= '<p>' . Html::escape($area['description']) . '</p>';
-      $html .= '<p class="card-types">' . Html::escape($area['types']) . '</p>';
-      $html .= '<p class="card-count">' . $count . ' konten</p>';
-      $html .= '</article>';
+      $areas[] = [
+        'label' => $area['label'],
+        'url' => $area['path'],
+        'description' => $area['description'],
+        'types' => $area['types'],
+        'icon' => $area['icon'],
+        'count' => (int) $count,
+      ];
     }
-
-    return $html;
+    return $areas;
   }
 
   /**
-   * HTML daftar Info Terbaru: empat konten dengan tanggal terbaru.
+   * Render array teaser untuk enam konten dengan tanggal terbaru.
    *
    * Bila tanggal sama, judul menentukan urutan supaya daftar tidak berganti-ganti.
+   * Render array (bukan HTML jadi) dikembalikan agar cache tag tiap node ikut naik.
    */
-  private function buildNews() {
+  private function buildLatest() {
     $ids = $this->publishedQuery()
       ->condition('type', array_keys(self::AREAS), 'IN')
       ->condition('field_tanggal', '', '<>')
       ->sort('field_tanggal', 'DESC')
       ->sort('title', 'ASC')
-      ->range(0, 4)
+      ->range(0, 6)
+      ->execute();
+
+    $nodes = $this->entityTypeManager()->getStorage('node')->loadMultiple($ids);
+    $view_builder = $this->entityTypeManager()->getViewBuilder('node');
+
+    $cards = [];
+    foreach ($nodes as $node) {
+      $cards[] = $view_builder->view($node, 'teaser');
+    }
+    return $cards;
+  }
+
+  /**
+   * Chip topik populer: lima term Topik dengan konten terbanyak.
+   *
+   * shortcut: hitung dari node Published per term, cukup untuk 33 konten seed.
+   * Ganti ke View agregasi bila katalog tumbuh besar.
+   *
+   * @return array
+   *   Daftar ['label' => ..., 'url' => ...].
+   */
+  private function buildTopicChips() {
+    $storage = $this->entityTypeManager()->getStorage('taxonomy_term');
+    $terms = $storage->loadByProperties(['vid' => 'topik']);
+    if (empty($terms)) {
+      return [];
+    }
+
+    $counts = [];
+    foreach ($terms as $tid => $term) {
+      $count = $this->publishedQuery()
+        ->condition('field_topik', $tid)
+        ->count()
+        ->execute();
+      if ($count > 0) {
+        $counts[$tid] = $count;
+      }
+    }
+    arsort($counts);
+
+    $chips = [];
+    foreach (array_slice($counts, 0, 5, TRUE) as $tid => $count) {
+      $label = $terms[$tid]->label();
+      $chips[] = [
+        'label' => $label,
+        'url' => '/cari?search_api_fulltext=' . rawurlencode($label),
+      ];
+    }
+    return $chips;
+  }
+
+  /**
+   * Pertanyaan populer, dikelompokkan menurut Topik.
+   *
+   * Sumber: FAQ dan Troubleshooting di area Bantuan.
+   *
+   * @return array
+   *   Daftar grup: ['label', 'anchor', 'questions' => [['title', 'url', 'answer']]].
+   */
+  private function buildFaq() {
+    $ids = $this->publishedQuery()
+      ->condition('type', 'bantuan')
+      ->sort('title', 'ASC')
+      ->range(0, 12)
       ->execute();
 
     $nodes = $this->entityTypeManager()->getStorage('node')->loadMultiple($ids);
 
-    $html = '';
+    $groups = [];
     foreach ($nodes as $node) {
-      $date = $node->get('field_tanggal')->value;
-      $html .= '<li>';
-      $html .= '<time datetime="' . $date . '">' . $this->formatDate($date) . '</time> ';
-      $html .= '<a href="' . $node->toUrl()->toString() . '">' . Html::escape($node->label()) . '</a>';
-      $html .= '</li>';
+      $label = 'Umum';
+      if ($node->hasField('field_topik') && !$node->get('field_topik')->isEmpty()) {
+        $label = $node->get('field_topik')->entity->label();
+      }
+      $answer = '';
+      if ($node->hasField('field_ringkasan')) {
+        $answer = $node->get('field_ringkasan')->value;
+      }
+      $groups[$label][] = ['title' => $node->label(), 'url' => $node->toUrl()->toString(), 'answer' => $answer];
     }
-    return $html;
+
+    $result = [];
+    foreach ($groups as $label => $items) {
+      $result[] = [
+        'label' => $label,
+        'anchor' => 'faq-' . Html::cleanCssIdentifier($label),
+        'questions' => $items,
+      ];
+    }
+    return $result;
   }
 
   /**
-   * HTML pintasan "Mulai dari kebutuhan Anda".
+   * Chip pintasan di bawah pencarian: filter bawaan dan jalan pintas ke area.
+   *
+   * @return array
+   *   Daftar ['label' => ..., 'url' => ...].
    */
   private function buildShortcuts() {
-    $html = '';
+    $chips = [];
 
     $new_employee = $this->findTermId('audience', 'Pegawai Baru');
     $basic = $this->findTermId('difficulty', 'Dasar');
     if ($new_employee && $basic) {
-      $html .= '<li><a href="/pembelajaran?f%5B0%5D=audience%3A' . $new_employee;
-      $html .= '&amp;f%5B1%5D=difficulty%3A' . $basic . '">Pegawai baru: materi dasar</a></li>';
+      $chips[] = [
+        'label' => 'Pegawai baru',
+        'url' => $this->filteredUrl('/pembelajaran', [['audience', $new_employee], ['difficulty', $basic]]),
+      ];
     }
 
     $troubleshooting = $this->findTermId('jenis_bantuan', 'Troubleshooting');
     if ($troubleshooting) {
-      $html .= '<li><a href="/bantuan?f%5B0%5D=jenis%3A' . $troubleshooting;
-      $html .= '">Ada kendala sistem: Troubleshooting</a></li>';
+      $chips[] = [
+        'label' => 'Ada kendala sistem',
+        'url' => $this->filteredUrl('/bantuan', [['jenis', $troubleshooting]]),
+      ];
     }
 
-    $html .= '<li><a href="/cari">Cari semua konten</a></li>';
-    return $html;
+    $chips[] = ['label' => 'Prosedur kerja', 'url' => '/prosedur'];
+    $chips[] = ['label' => 'Template siap pakai', 'url' => '/alat-kerja'];
+    return $chips;
   }
 
   /**
-   * HTML bagian hero dengan kotak pencarian.
-   */
-  private function buildHero() {
-    $search_url = Url::fromRoute('view.kh_katalog.page_cari')->toString();
-
-    $html = '<div class="hero">';
-    $html .= '<h1>Temukan cara kerja tanpa harus hafal nama dokumen</h1>';
-    $html .= '<p>SOP, kebijakan, tutorial, FAQ, dan template untuk satu proses ada di satu tempat.</p>';
-    $html .= '<form class="hero-search" action="' . $search_url . '" method="get" role="search">';
-    $html .= '<label for="q-hero" class="visually-hidden">Cari di Knowledge Hub</label>';
-    $html .= '<input id="q-hero" name="search_api_fulltext" type="search" ';
-    $html .= 'placeholder="Contoh: Bagaimana mengajukan perjalanan dinas?">';
-    $html .= '<button class="button button--primary" type="submit">Cari</button>';
-    $html .= '</form></div>';
-    return $html;
-  }
-
-  /**
-   * Halaman beranda.
+   * Halaman beranda. Markup ada di templates/kh-home.html.twig.
    */
   public function page() {
-    $html = $this->buildHero();
-    $html .= '<h2 class="section-title">5 Area Utama</h2>';
-    $html .= '<div class="cards">' . $this->buildCards() . '</div>';
-    $html .= '<div class="two-col">';
-    $html .= '<div><h2 class="section-title">Info Terbaru</h2>';
-    $html .= '<ul class="news">' . $this->buildNews() . '</ul></div>';
-    $html .= '<div><h2 class="section-title">Mulai dari kebutuhan Anda</h2>';
-    $html .= '<ul class="role-links">' . $this->buildShortcuts() . '</ul></div>';
-    $html .= '</div>';
-
     return [
-      '#markup' => Markup::create($html),
+      '#theme' => 'kh_home',
+      '#hero' => [
+        'search_url' => Url::fromRoute('view.kh_katalog.page_cari')->toString(),
+        'chips' => array_merge($this->buildShortcuts(), $this->buildTopicChips()),
+      ],
+      '#areas' => $this->buildAreas(),
+      '#latest' => $this->buildLatest(),
+      '#faq' => $this->buildFaq(),
       '#cache' => [
         'tags' => ['node_list', 'taxonomy_term_list'],
         'contexts' => ['user.permissions'],

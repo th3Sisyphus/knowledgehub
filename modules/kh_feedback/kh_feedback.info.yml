@@ -1,0 +1,7 @@
+name: 'KH Feedback'
+type: module
+description: 'Menyimpan umpan balik "Apakah halaman ini membantu?" per konten dan menampilkan laporannya.'
+package: Knowledge Hub
+core_version_requirement: ^11
+dependencies:
+  - drupal:node

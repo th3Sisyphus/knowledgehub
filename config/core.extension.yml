@@ -22,7 +22,9 @@ module:
   filter: 0
   help: 0
   image: 0
+  kh_feedback: 0
   kh_home: 0
+  kh_search: 0
   kh_workflow: 0
   language: 0
   layout_builder: 0

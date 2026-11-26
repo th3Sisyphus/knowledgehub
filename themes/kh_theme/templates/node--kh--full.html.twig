@@ -1,13 +1,51 @@
+{#
+  Node penuh Knowledge Hub: kartu besar dengan kicker, judul, meta, callout,
+  chip field, daftar isi, isi, dan blok review.
+#}
 <article{{ attributes.addClass('node', 'jenis-' ~ kh.jenis_class) }}>
-  <span class="teaser-type">{{ kh.jenis }}{% if kh.diff %} · {{ kh.diff }}{% endif %}</span>
-  <div class="node-head"><h1 class="page-title">{{ label }}</h1></div>
-  <p class="node-meta">{{ kh.meta }} · <span class="status status--{{ kh.status_class }}">{{ kh.status }}</span></p>
-  {% if kh.callout %}<div class="callout{% if kh.jenis == 'Kebijakan' %} callout--policy{% endif %}">{{ kh.callout }}</div>{% endif %}
-  <dl class="fields">
-    {% for f in kh.fields %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
-  </dl>
-  <div class="node-body">{{ content.body }}</div>
-  <dl class="review">
-    {% for f in kh.review %}<div><dt>{{ f.label }}</dt><dd>{% if f.href %}<a href="{{ f.href }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd></div>{% endfor %}
-  </dl>
+  <div class="node-card">
+    <div class="node-kicker">
+      {% if kh.jenis %}<span class="pill pill--jenis">{{ kh.jenis }}</span>{% endif %}
+      {% if kh.diff %}<span class="pill pill--level">{{ kh.diff }}</span>{% endif %}
+      <span class="status status--{{ kh.status_class }}">{{ kh.status }}</span>
+    </div>
+    <div class="node-head"><h1 class="page-title">{{ label }}</h1></div>
+    {% if kh.meta %}<p class="node-meta">{{ kh.meta }}</p>{% endif %}
+    {% if kh.freshness %}
+      <div class="freshness freshness--{{ kh.freshness.level }}" role="note"><strong>{{ kh.freshness.title }}</strong>{{ kh.freshness.text }}</div>
+    {% endif %}
+    {% if kh.callout %}<div class="callout{% if kh.jenis == 'Kebijakan' %} callout--policy{% endif %}">{{ kh.callout }}</div>{% endif %}
+    {% if kh.fields %}
+      <dl class="fields">
+        {% for f in kh.fields %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
+      </dl>
+    {% endif %}
+    {% if kh.toc %}
+      <nav class="toc" aria-label="Daftar isi">
+        <p>Di halaman ini</p>
+        <ol>
+          {% for item in kh.toc %}<li><a href="#{{ item.id }}">{{ item.text }}</a></li>{% endfor %}
+        </ol>
+      </nav>
+    {% endif %}
+    <div class="node-body">{{ content.body }}</div>
+    {% if kh.feedback %}
+      <section class="feedback" data-kh-feedback="{{ node.id }}" aria-labelledby="fb-title-{{ node.id }}">
+        <p id="fb-title-{{ node.id }}">Apakah halaman ini membantu?</p>
+        <div class="feedback-actions">
+          <button type="button" class="button" data-helpful="1"><span aria-hidden="true">👍</span> Ya</button>
+          <button type="button" class="button" data-helpful="0"><span aria-hidden="true">👎</span> Belum</button>
+        </div>
+        <div class="feedback-more" hidden>
+          <label for="fb-comment-{{ node.id }}">Apa yang kurang? (opsional)</label>
+          <textarea id="fb-comment-{{ node.id }}" rows="3" maxlength="500"></textarea>
+          <button type="button" class="button button--primary" data-send>Kirim masukan</button>
+        </div>
+        <p class="feedback-thanks" role="status" hidden>Terima kasih atas masukan Anda.</p>
+      </section>
+    {% endif %}
+    <dl class="review">
+      {% for f in kh.review %}<div><dt>{{ f.label }}</dt><dd>{% if f.href %}<a href="{{ f.href }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</dd></div>{% endfor %}
+    </dl>
+  </div>
 </article>

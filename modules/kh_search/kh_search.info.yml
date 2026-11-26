@@ -1,0 +1,8 @@
+name: 'KH Pencarian Cepat'
+type: module
+description: 'Endpoint JSON untuk command palette (Ctrl+K): judul berawalan kata + teks lengkap Search API.'
+package: Knowledge Hub
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - search_api:search_api

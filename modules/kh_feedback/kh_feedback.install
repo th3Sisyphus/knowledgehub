@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Skema tabel umpan balik konten.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function kh_feedback_schema() {
+  $schema['kh_feedback'] = [
+    'description' => 'Umpan balik pengunjung per konten.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'nid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'helpful' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'comment' => ['type' => 'text', 'size' => 'normal'],
+      'uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'nid' => ['nid'],
+      'created' => ['created'],
+    ],
+  ];
+  return $schema;
+}

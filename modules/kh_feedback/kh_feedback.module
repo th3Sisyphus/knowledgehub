@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Umpan balik konten Knowledge Hub.
+ */
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() untuk node.
+ *
+ * Umpan balik ikut dihapus bersama kontennya.
+ */
+function kh_feedback_node_delete($node) {
+  \Drupal::database()->delete('kh_feedback')
+    ->condition('nid', $node->id())
+    ->execute();
+}
