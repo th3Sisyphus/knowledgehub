@@ -1,0 +1,7 @@
+name: 'KH Tersimpan'
+type: module
+description: 'Halaman Tersimpan (/tersimpan) dan endpoint penyegar daftar bookmark. Daftar disimpan di browser, tanpa login.'
+package: Knowledge Hub
+core_version_requirement: ^11
+dependencies:
+  - drupal:node

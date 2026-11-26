@@ -356,6 +356,7 @@ function kh_theme_preprocess_node(array &$variables) {
     'toc' => [],
     'freshness' => kh_theme_freshness($state, $date),
     'feedback' => \Drupal::moduleHandler()->moduleExists('kh_feedback') && $state === 'published',
+    'bookmark' => \Drupal::moduleHandler()->moduleExists('kh_bookmark'),
   ];
 
   // Daftar isi dari heading h2 isi konten, plus id anchor agar bisa dilompati.
@@ -405,6 +406,8 @@ function kh_theme_preprocess_page(array &$variables) {
   // Simbol logo header (gradient) dan footer (putih), dipakai page.html.twig.
   $variables['kh_mark_gradient'] = Markup::create(kh_theme_logo_mark('gradient', 36));
   $variables['kh_mark_white'] = Markup::create(kh_theme_logo_mark('putih', 40));
+  // Tautan Tersimpan di header hanya bila modul kh_bookmark aktif.
+  $variables['kh_bookmarks'] = \Drupal::moduleHandler()->moduleExists('kh_bookmark');
 }
 
 /**

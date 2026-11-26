@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Halaman Tersimpan. Daftar diisi oleh js/bookmarks.js dari localStorage.
+ * Judul halaman (h1) datang dari route, jadi tidak diulang di sini.
+ */
+#}
+<div class="saved" data-kh-bookmarks-page>
+  <p class="saved-intro">Konten yang Anda simpan muncul di sini. Daftar ini tersimpan di browser ini saja: tidak perlu login dan tidak ikut berpindah ke perangkat lain.</p>
+
+  <div class="saved-toolbar" hidden>
+    <h2 class="saved-count" tabindex="-1"><span data-count>0</span> konten tersimpan</h2>
+    <button type="button" class="saved-clear">Hapus semua</button>
+  </div>
+
+  <p class="saved-note" role="status" aria-live="polite" hidden></p>
+
+  <ul class="saved-list teaser-grid" hidden></ul>
+
+  <div class="saved-empty" hidden>
+    <h2>Belum ada konten tersimpan</h2>
+    <p>Ketuk ikon penanda pada kartu atau halaman konten untuk menyimpannya di sini.</p>
+    <a class="button button--primary" href="/cari">Telusuri konten</a>
+  </div>
+
+  <noscript><p class="saved-note">Halaman ini memerlukan JavaScript untuk menampilkan daftar tersimpan.</p></noscript>
+</div>

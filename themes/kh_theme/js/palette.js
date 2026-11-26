@@ -143,6 +143,11 @@
             addGroup('Pintasan');
             links.forEach((a) => addOption({ title: a.textContent.trim(), href: a.getAttribute('href'), tag: 'Buka' }));
           }
+          const saved = Drupal.khBookmarks ? Drupal.khBookmarks.list().slice(0, 5) : [];
+          if (saved.length) {
+            addGroup('Tersimpan');
+            saved.forEach((s) => addOption({ title: s.title || 'Tanpa judul', href: s.url, tag: s.jenis || 'Buka' }));
+          }
           const recent = readRecent();
           if (recent.length) {
             addGroup('Pencarian terakhir');

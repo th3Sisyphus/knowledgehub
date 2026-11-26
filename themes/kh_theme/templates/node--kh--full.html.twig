@@ -8,6 +8,7 @@
       {% if kh.jenis %}<span class="pill pill--jenis">{{ kh.jenis }}</span>{% endif %}
       {% if kh.diff %}<span class="pill pill--level">{{ kh.diff }}</span>{% endif %}
       <span class="status status--{{ kh.status_class }}">{{ kh.status }}</span>
+      {% if kh.bookmark %}{% include '@kh_theme/kh-bookmark-button.html.twig' with { nid: node.id, title: node.label, url: url, jenis: kh.jenis, snippet: kh.ringkasan, icon_only: false } only %}{% endif %}
     </div>
     <div class="node-head"><h1 class="page-title">{{ label }}</h1></div>
     {% if kh.meta %}<p class="node-meta">{{ kh.meta }}</p>{% endif %}

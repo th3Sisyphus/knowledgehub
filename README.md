@@ -80,6 +80,7 @@ Untuk mengubah tampilan beranda tanpa menyentuh modul, salin `kh-home.html.twig`
 |-------|---------------------------|--------|
 | Command palette | Tekan **Ctrl+K** (⌘K di Mac) atau **/**, atau klik kolom cari di header. Kolom kosong menampilkan pintasan menu dan pencarian terakhir. Mengetik dua huruf atau lebih memunculkan hasil langsung. Panah memilih, Enter membuka, Esc menutup. | `themes/kh_theme/js/palette.js`, `modules/kh_search` |
 | Filter di mobile | Di layar ≤860px muncul tombol **Filter** (dengan jumlah filter aktif) di atas hasil. Ketuk untuk membuka panel dari bawah; Esc, Tutup, atau ketuk di luar panel menutupnya. Setiap pilihan memuat ulang halaman dan panel terbuka lagi. Filter aktif tampil sebagai chip di semua ukuran layar, bisa dihapus satu per satu atau lewat "Hapus semua". | `themes/kh_theme/js/facets.js` |
+| Bookmark (Tersimpan) | Ikon penanda di tiap kartu dan tombol **Simpan** di halaman konten. Ikon di header menunjukkan jumlahnya dan membuka `/tersimpan`. Daftar juga muncul di command palette (Ctrl+K). Tanpa login: daftar disimpan di browser (maksimal 100 konten) dan tidak ikut berpindah perangkat. | `themes/kh_theme/js/bookmarks.js`, `modules/kh_bookmark` |
 | Umpan balik "Apakah halaman ini membantu?" | Muncul di bawah isi konten Published. Pilih 👍 atau 👎 (👎 membuka kolom komentar). Laporan: `/admin/reports/kh-feedback`. | `modules/kh_feedback`, `templates/node--kh--full.html.twig` |
 | Banner kesegaran | Di halaman konten: "Perlu review" bila Review Date terlewat, "Segera direview" 30 hari sebelumnya, "Diarsipkan", dan "Pratinjau" untuk konten belum terbit. | `kh_theme_freshness()` di `kh_theme.theme` |
 | Cetak | Ctrl+P di halaman konten. Header, footer, facet, dan umpan balik disembunyikan, warna dipaksa terang, URL tautan eksternal dicetak. | `@media print` di `css/style.css` |
@@ -90,6 +91,7 @@ Catatan teknis:
 
 - **Umpan balik tanpa login**, sesuai arahan dosen. Dibatasi 5 kiriman per jam per perangkat per konten, komentar maksimal 500 karakter, dan hanya untuk konten Published dari lima content type Knowledge Hub. Data disimpan di tabel `kh_feedback` dan ikut terhapus bersama kontennya. Laporan perlu role dengan izin *access content overview*.
 - **Pencarian cepat** (`/kh/cari-cepat?q=...`) menggabungkan dua sumber: judul yang memuat kata (supaya kata yang belum selesai diketik cocok) dan teks lengkap dari indeks Search API `kh_index` (yang memakai `matching: words`). Hanya konten yang boleh dilihat pengguna yang dikembalikan.
+- **Bookmark** disimpan di localStorage, bukan di server, sesuai arahan "tanpa login". Halaman `/tersimpan` menampilkan daftar dari browser, lalu memanggil `/kh/tersimpan-data?ids=...` untuk menyegarkan judul dan membuang konten yang sudah tidak Published atau tidak boleh dilihat. Isi localStorage dianggap tidak tepercaya: hanya alamat relatif yang diterima.
 - Favicon dan gambar OG dipasang oleh `kh_theme_page_attachments_alter()`. Gambar OG tidak ditimpa bila modul metatag sudah mengisinya.
 - Banner kesegaran membatasi cache node menjadi satu hari agar tanggalnya ikut berganti.
 
@@ -98,7 +100,7 @@ Catatan teknis:
 Instalasi bersih (`setup.bat` atau `setup/restore.sh`) sudah mengaktifkan semuanya. Untuk situs yang sudah jalan:
 
 ```bash
-docker compose exec drupal vendor/bin/drush en kh_feedback kh_search -y
+docker compose exec drupal vendor/bin/drush en kh_feedback kh_search kh_bookmark -y
 docker compose exec drupal vendor/bin/drush cr
 ```
 

@@ -550,6 +550,36 @@ dialog.palette::backdrop { background: rgba(11, 20, 55, .45); backdrop-filter: b
 @media (prefers-reduced-motion: reduce) { .facets-js .facets, .facets-js .facets-backdrop { transition: none !important; } }
 @media print { .facets-bar, .facets-backdrop { display: none !important; } }
 
+/* ---------- Bookmark (Tersimpan) ---------- */
+.bookmark-btn { display: inline-flex; align-items: center; gap: .4rem; height: 2.1rem; padding: 0 .85rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--surface); color: var(--ink-soft); font: 500 .8rem var(--font); cursor: pointer; transition: color .15s, border-color .15s, background .15s; }
+.bookmark-btn svg { width: 1rem; height: 1rem; flex: none; }
+.bookmark-btn:hover { color: var(--accent); border-color: var(--accent); }
+.bookmark-btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.bookmark-btn[aria-pressed="true"] svg { fill: currentColor; }
+.node-kicker .bookmark-btn { margin-left: auto; }
+.bookmark-btn--icon { position: absolute; top: .85rem; right: .85rem; z-index: 2; width: 2.1rem; padding: 0; justify-content: center; }
+.teaser { position: relative; }
+.teaser .teaser-row { padding-right: 2.6rem; }
+.bookmarks-link { position: relative; display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); }
+.bookmarks-link:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+.bookmarks-link svg { width: 1.1rem; height: 1.1rem; }
+.bookmarks-count { position: absolute; top: -.3rem; right: -.3rem; min-width: 1.2rem; height: 1.2rem; padding: 0 .3rem; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font: 600 .68rem/1.2rem var(--font); text-align: center; }
+.bookmarks-count[hidden] { display: none; }
+.saved-intro { margin: 0 0 1.5rem; color: var(--ink-soft); max-width: 42rem; }
+.saved-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 0 1.25rem; }
+.saved-count { margin: 0; font-size: 1.1rem; }
+.saved-count:focus { outline: none; }
+.saved-clear, .saved-remove { border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--surface); color: var(--ink-soft); font: 500 .85rem var(--font); cursor: pointer; }
+.saved-clear { padding: .45rem 1rem; }
+.saved-clear:hover, .saved-remove:hover { color: var(--danger); border-color: var(--danger); }
+.saved-remove { position: relative; z-index: 2; align-self: flex-start; margin-top: auto; padding: .3rem .8rem; }
+.saved-item { display: flex; flex-direction: column; gap: .5rem; list-style: none; }
+.saved-note { margin: 0 0 1.25rem; padding: .75rem 1rem; border-radius: var(--r-md); background: var(--warn-soft); border-left: 4px solid var(--warn); font-size: .9rem; }
+.saved-empty { padding: 3rem 1.5rem; text-align: center; border: 1px dashed var(--line); border-radius: var(--r-lg); background: var(--surface); }
+.saved-empty p { margin: 0 auto 1.25rem; max-width: 30rem; color: var(--ink-soft); }
+.saved-list { margin: 0; padding: 0; }
+@media print { .bookmark-btn, .bookmarks-link, .saved-remove, .saved-clear { display: none !important; } }
+
 /* ---------- Cetak (SOP, Template, Kebijakan) ---------- */
 @media print {
   :root, [data-theme="dark"] { --bg: #fff; --surface: #fff; --ink: #000; --ink-soft: #333; --line: #bbb; --accent: #000; --accent-soft: #fff; --mute: #444; --shadow: none; color-scheme: light; }
